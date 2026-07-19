@@ -1,0 +1,80 @@
+.header-nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 50;
+  transition: padding 0.3s ease;
+  padding: 1rem 1.5rem;
+}
+
+.header-nav.scrolled {
+  padding: 0.5rem 1.5rem;
+}
+
+.header-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(241, 235, 224, 0.85); /* Soft Cream semi-transparent */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(66, 26, 33, 0.1); /* Plum border */
+  border-radius: var(--radius-pill);
+  padding: 0.5rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.brand-logo {
+  font-family: var(--font-header);
+  font-size: 1.5rem;
+  color: var(--plum);
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  display: none;
+  gap: 2rem;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .nav-links {
+    display: flex;
+  }
+}
+
+.nav-link {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--plum);
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+  opacity: 1;
+}
+
+.nav-icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.icon-btn {
+  color: var(--plum);
+  transition: opacity 0.2s ease, transform 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+}
+
+.icon-btn:hover {
+  opacity: 1;
+  transform: scale(0.95);
+}
