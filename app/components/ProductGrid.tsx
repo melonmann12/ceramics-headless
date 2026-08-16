@@ -1,7 +1,19 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
+import Image from 'next/image';
 import './ProductGrid.css';
 
-const products = [
+interface Product {
+  id: string;
+  title: string;
+  price: number;
+  originalPrice?: number;
+  badge?: string;
+  reviews: number;
+  image: string;
+}
+
+// Static fallback data — will be replaced by Shopify Storefront API data in Phase 4
+const staticProducts: Product[] = [
   {
     id: 'sage-cloud-ceramic-matcha-bowl',
     title: 'SAGE CLOUD CERAMIC MATCHA BOWL',
@@ -29,17 +41,28 @@ const products = [
   }
 ];
 
-export default function ProductGrid() {
+interface ProductGridProps {
+  products?: Product[];
+}
+
+export default function ProductGrid({ products = staticProducts }: ProductGridProps) {
   return (
     <section className="products-section" id="bestsellers">
       <div className="container">
         <div className="products-grid">
           {products.map((product) => (
             <div key={product.id} className="product-card">
-              <Link to={`/product/${product.id}`} className="product-link">
+              <Link href={`/product/${product.id}`} className="product-link">
                 <div className="product-image-wrapper">
                   {product.badge && <span className="product-badge">{product.badge}</span>}
-                  <img src={product.image} alt={product.title} className="product-image" />
+                  <Image
+                    src={product.image}
+                    alt={product.title}
+                    className="product-image"
+                    width={600}
+                    height={600}
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
                 </div>
                 <div className="product-info">
                   <div className="product-reviews">
@@ -58,7 +81,7 @@ export default function ProductGrid() {
                 </div>
               </Link>
               <div className="product-actions">
-                <button className="add-to-cart-btn" onClick={() => alert('Added to cart!')}>
+                <button className="add-to-cart-btn">
                   <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>shopping_bag</span>
                   ADD TO CART
                 </button>

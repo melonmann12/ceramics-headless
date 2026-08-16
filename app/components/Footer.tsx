@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import './Footer.css';
 
@@ -26,19 +28,19 @@ export default function Footer() {
             <div className="footer-nav-col">
               <h4 className="footer-heading">OURA CERAMICS</h4>
               <div className="footer-links">
-                <a href="#" className="footer-link">SHOP ALL</a>
-                <a href="#" className="footer-link">OUR STORY</a>
-                <a href="#" className="footer-link">JOURNAL</a>
+                <a href="/#bestsellers" className="footer-link">SHOP ALL</a>
+                <a href="/story" className="footer-link">OUR STORY</a>
+                <a href="/blog" className="footer-link">JOURNAL</a>
               </div>
             </div>
             
             <div className="footer-nav-col">
               <h4 className="footer-heading">HELP</h4>
               <div className="footer-links">
-                <a href="#" className="footer-link">FAQ</a>
-                <a href="#" className="footer-link">SHIPPING</a>
-                <a href="#" className="footer-link">RETURNS</a>
-                <a href="#" className="footer-link">CONTACT</a>
+                <a href="/faq" className="footer-link">FAQ</a>
+                <a href="/shipping" className="footer-link">SHIPPING</a>
+                <a href="/returns" className="footer-link">RETURNS</a>
+                <a href="/contact" className="footer-link">CONTACT</a>
               </div>
             </div>
           </div>
@@ -65,10 +67,10 @@ export default function Footer() {
             <span>© 2026 OURA CERAMICS. ALL RIGHTS RESERVED.</span>
           </div>
           <div className="footer-social-icons">
-            <a href="#" className="icon-btn" aria-label="Instagram">
+            <a href="https://instagram.com" className="icon-btn" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
               <span className="material-symbols-outlined">camera_alt</span>
             </a>
-            <a href="#" className="icon-btn" aria-label="TikTok">
+            <a href="https://tiktok.com" className="icon-btn" aria-label="TikTok" target="_blank" rel="noopener noreferrer">
               <span className="material-symbols-outlined">play_circle</span>
             </a>
           </div>
@@ -78,6 +80,7 @@ export default function Footer() {
       <button 
         className={`back-to-top ${showTopBtn ? 'visible' : ''}`} 
         onClick={scrollToTop}
+        aria-label="Back to top"
       >
         ↑ Back to Top
       </button>

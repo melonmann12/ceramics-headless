@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import './Benefits.css';
 
 const benefitsData = [
@@ -14,7 +15,7 @@ const benefitsData = [
   {
     title: 'ONE-OF-A-KIND CERAMIC CHARACTER',
     description: 'Because each piece is thrown and glazed by hand, no two bowls are exactly alike. Your bowl carries the unique marks of its maker.',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCZtO7Jfm9fIiZR4T3afNKj1qwfQDl2m5d1FdNBb9jQBcoc9gMxp_osMUSravy8DaNI2o6gCR_ElmV596kH65U0cVbRqve4qJY5K8MHTmV6hhUDVjVWYOi2USvH2GgzCiXgBq48ISv1XIof8vEXSjg_G853vu0jr2P71RiONRyCZtMcVNb1GndjPk0EAhemcZIQIK3XUyJ_Rnh3FnMfSxoTNYof9mJ0AaaSI5fGCd6ae7W7o1TMHIpz'
+    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCZtO7Jfm9fIiZR4T3afNKj1qwfQDl2m5d1FdNBb9jQBcoc9gMxp_osMUSravy8DaNI2o6gMxp_osMUSravy8DaNI2o6gGYVCZtMcVNb1GndjPk0EAhemcZIQIK3XUyJ_Rnh3FnMfSxoTNYof9mJ0AaaSI5fGCd6ae7W7o1TMHIpz'
   }
 ];
 
@@ -27,7 +28,14 @@ export default function Benefits() {
         {benefitsData.map((item, index) => (
           <div key={index} className="benefit-item">
             <div className="benefit-image-container">
-              <img src={item.image} alt={item.title} />
+              <Image
+                src={item.image}
+                alt={item.title}
+                width={600}
+                height={600}
+                sizes="(max-width: 768px) 100vw, 33vw"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
             </div>
             <h3 className="benefit-title">{item.title}</h3>
             <p className="benefit-description">{item.description}</p>

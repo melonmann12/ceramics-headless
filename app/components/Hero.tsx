@@ -1,12 +1,17 @@
+import Image from 'next/image';
 import './Hero.css';
 
 export default function Hero() {
   return (
     <header className="hero-section">
       <div className="hero-background">
-        <img 
+        <Image 
           src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLCFQVhXe57-dOU0kgXerLw8dOY8xHZ1lNUN0rqalM21h0xs7n0TqODg1_jEreH04h-irbDj96NeLjvP7lqCbAXZYGhMGF9ZxO6pBFDGHugqF7rffuATaYxs6Tu_y8I2soIg36keqc7AfEFcQqjZxQjatgtd-YFni7cV8mywxWGPJ1osGcd_sJOvK0dB4mv2sgCY4IwMRoFX4ABNLyz5a2rql6r5OR15iT40WBT9bcjuVI1kWhoQP3" 
-          alt="Overhead flat-lay composition of colorful, textured handcrafted ceramic matcha bowls" 
+          alt="Overhead flat-lay composition of colorful, textured handcrafted ceramic matcha bowls"
+          fill
+          priority
+          sizes="100vw"
+          style={{ objectFit: 'cover' }}
         />
         <div className="hero-overlay"></div>
       </div>
@@ -17,9 +22,9 @@ export default function Hero() {
       </div>
 
       <div className="hero-cta-wrapper">
-        <button className="pill-btn">
+        <a href="/#bestsellers" className="pill-btn">
           EXPLORE COLLECTION
-        </button>
+        </a>
       </div>
     </header>
   );
