@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   await connection();
-  const products = await getProducts(12);
+  const products = await getProducts(4);
 
   return (
     <>
@@ -29,7 +29,7 @@ export default async function HomePage() {
         <Hero />
         <Marquee />
         <SubHeader />
-        <ProductGrid products={products} />
+        <ProductGrid products={products} className="homepage-featured" />
         <Benefits />
         <SocialGallery />
       </main>

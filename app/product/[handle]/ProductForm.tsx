@@ -220,11 +220,13 @@ export default function ProductForm({ product }: ProductFormProps) {
           {!isAvailable ? 'OUT OF STOCK' : isAdding ? 'ADDING...' : 'ADD TO CART'}
         </button>
 
+        {/* 
         <div className="pdp-payment-icons">
           <span className="material-symbols-outlined">credit_card</span>
           <span className="material-symbols-outlined">payments</span>
           <span className="material-symbols-outlined">account_balance_wallet</span>
         </div>
+        */}
 
         {/* Accordions */}
         <div className="pdp-accordions">

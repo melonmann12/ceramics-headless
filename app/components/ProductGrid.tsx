@@ -57,7 +57,7 @@ export default function ProductGrid({ products, title, className = '' }: Product
                       href={href}
                       className="add-to-cart-btn"
                     >
-                      <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>shopping_bag</span>
+                      <span className="material-symbols-outlined add-to-cart-icon">shopping_bag</span>
                       {product.availableForSale ? 'VIEW OPTIONS' : 'OUT OF STOCK'}
                     </Link>
                   </div>

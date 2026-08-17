@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '@/app/context/CartContext';
@@ -10,6 +10,17 @@ export default function CartDrawer() {
   const { cart, isOpen, closeCart, updateCartItem, removeCartItem, isCartLoading, updatingLineId } = useCart();
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [checkoutError, setCheckoutError] = useState('');
+
+  // Reset redirecting state if user navigates back via bfcache
+  useEffect(() => {
+    const handlePageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) {
+        setIsRedirecting(false);
+      }
+    };
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
+  }, []);
 
   const lines = cart?.lines?.edges || [];
 
