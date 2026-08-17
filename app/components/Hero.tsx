@@ -18,14 +18,13 @@ export default function Hero() {
       </div>
       
       <div className="hero-content">
-        <h1 className="hero-title">THE HEART OF YOUR CEREMONY</h1>
-        <p className="hero-subtitle">Handcrafted Ceramic Bowls, Built for Daily Rituals.</p>
-      </div>
-
-      <div className="hero-cta-wrapper">
-        <Link href="/shop" className="pill-btn">
-          EXPLORE COLLECTION
-        </Link>
+        <h1 className="hero-title">HANDCRAFTED CERAMIC MATCHA BOWLS</h1>
+        <p className="hero-subtitle">Tactile forms for whisking, holding, and returning to your daily matcha ritual.</p>
+        <div className="hero-actions">
+          <Link href="/shop" className="pill-btn">
+            SHOP ALL
+          </Link>
+        </div>
       </div>
     </header>
   );

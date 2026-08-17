@@ -2,11 +2,9 @@ import type { Metadata } from 'next';
 import { connection } from 'next/server';
 import Header from '@/app/components/Header';
 import Hero from '@/app/components/Hero';
-import Marquee from '@/app/components/Marquee';
-import SubHeader from '@/app/components/SubHeader';
 import ProductGrid from '@/app/components/ProductGrid';
 import Benefits from '@/app/components/Benefits';
-import SocialGallery from '@/app/components/SocialGallery';
+import HomepageMerchandising from '@/app/components/HomepageMerchandising';
 import Footer from '@/app/components/Footer';
 import { getProducts } from '@/lib/shopify/queries';
 
@@ -27,11 +25,17 @@ export default async function HomePage() {
       <Header />
       <main>
         <Hero />
-        <Marquee />
-        <SubHeader />
-        <ProductGrid products={products} className="homepage-featured" />
+        <ProductGrid
+          products={products}
+          className="homepage-featured"
+          eyebrow="FEATURED CERAMICS"
+          title="Ceramics chosen for daily use, not display alone."
+          intro="OURA CERAMICS focuses on rounded forms, textured surfaces, and bowls that make a quiet matcha ritual feel grounded in the hand."
+          ctaHref="/shop"
+          ctaLabel="SHOP ALL"
+        />
         <Benefits />
-        <SocialGallery />
+        <HomepageMerchandising />
       </main>
       <Footer />
     </>

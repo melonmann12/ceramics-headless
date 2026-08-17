@@ -6,14 +6,34 @@ import './ProductGrid.css';
 interface ProductGridProps {
   products: NormalizedProduct[];
   title?: string;
+  eyebrow?: string;
+  intro?: string;
+  ctaHref?: string;
+  ctaLabel?: string;
   className?: string;
 }
 
-export default function ProductGrid({ products, title, className = '' }: ProductGridProps) {
+export default function ProductGrid({
+  products,
+  title,
+  eyebrow,
+  intro,
+  ctaHref,
+  ctaLabel,
+  className = '',
+}: ProductGridProps) {
+  const shouldEagerLoadImages = className.split(' ').includes('homepage-featured');
+
   return (
     <section className={`products-section ${className}`.trim()} id="bestsellers">
       <div className="container">
-        {title && <h2 className="products-heading">{title}</h2>}
+        {(eyebrow || title || intro) && (
+          <div className="products-header">
+            {eyebrow && <p className="products-eyebrow">{eyebrow}</p>}
+            {title && <h2 className="products-heading">{title}</h2>}
+            {intro && <p className="products-intro">{intro}</p>}
+          </div>
+        )}
         
         {products.length === 0 ? (
           <div className="products-empty">
@@ -37,6 +57,7 @@ export default function ProductGrid({ products, title, className = '' }: Product
                           width={600}
                           height={600}
                           sizes="(max-width: 768px) 100vw, 33vw"
+                          loading={shouldEagerLoadImages ? 'eager' : 'lazy'}
                         />
                       ) : (
                         <div className="product-image-placeholder">Product image unavailable</div>
@@ -64,6 +85,14 @@ export default function ProductGrid({ products, title, className = '' }: Product
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {ctaHref && ctaLabel && (
+          <div className="products-cta">
+            <Link href={ctaHref} className="pill-btn pill-btn-outline">
+              {ctaLabel}
+            </Link>
           </div>
         )}
       </div>

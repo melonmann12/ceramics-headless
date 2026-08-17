@@ -40,8 +40,23 @@
 }
 
 @media (min-width: 768px) {
+  .header-container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+  }
+
+  .brand-logo {
+    justify-self: start;
+  }
+
   .nav-links {
     display: flex;
+    justify-self: center;
+  }
+
+  .nav-icons {
+    justify-self: end;
   }
 }
 

@@ -1,0 +1,164 @@
+.craft-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  background: var(--cream);
+  color: var(--plum);
+}
+
+.craft-media {
+  position: relative;
+  min-height: 22rem;
+}
+
+.craft-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-6) 1.5rem;
+}
+
+.craft-copy h2,
+.ritual-section h2,
+.final-cta-section h2 {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  letter-spacing: 0;
+}
+
+.craft-copy p:not(.section-eyebrow),
+.ritual-section p:not(.section-eyebrow) {
+  max-width: 34rem;
+  color: rgba(66, 26, 33, 0.78);
+  font-size: 1rem;
+}
+
+.section-eyebrow {
+  color: rgba(66, 26, 33, 0.62);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.ritual-section {
+  padding: var(--space-6) 1.5rem;
+  background: var(--plum);
+  color: var(--cream);
+  text-align: center;
+}
+
+.ritual-inner {
+  max-width: 50rem;
+  margin: 0 auto;
+}
+
+.ritual-section .section-eyebrow,
+.ritual-section p:not(.section-eyebrow) {
+  color: rgba(241, 235, 224, 0.84);
+}
+
+.ritual-section h2 {
+  margin: var(--space-2) auto var(--space-3);
+}
+
+.ritual-section p:not(.section-eyebrow) {
+  margin: 0 auto;
+}
+
+.trust-strip {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: rgba(66, 26, 33, 0.14);
+  border-top: 1px solid rgba(66, 26, 33, 0.14);
+  border-bottom: 1px solid rgba(66, 26, 33, 0.14);
+}
+
+.trust-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  min-height: 8rem;
+  padding: var(--space-4);
+  background: var(--cream);
+  color: var(--plum);
+}
+
+.trust-item .material-symbols-outlined {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: rgba(30, 46, 36, 0.1);
+  color: var(--sage);
+  font-size: 1.25rem;
+}
+
+.trust-item span:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  color: rgba(66, 26, 33, 0.72);
+  font-size: 0.875rem;
+}
+
+.trust-item strong {
+  color: var(--plum);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.final-cta-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-6) 1.5rem;
+  background: var(--cream);
+  color: var(--plum);
+  text-align: center;
+}
+
+.final-cta-section h2 {
+  max-width: 48rem;
+}
+
+@media (min-width: 900px) {
+  .craft-section {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .craft-media {
+    min-height: 34rem;
+  }
+
+  .craft-copy {
+    padding: var(--space-7);
+  }
+
+  .trust-strip {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .craft-media {
+    min-height: 18rem;
+  }
+
+  .craft-copy,
+  .ritual-section,
+  .final-cta-section {
+    padding: var(--space-5) 1rem;
+  }
+
+  .trust-item {
+    min-height: 0;
+    padding: var(--space-3) 1rem;
+  }
+}

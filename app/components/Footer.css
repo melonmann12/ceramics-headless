@@ -207,3 +207,9 @@
 .back-to-top:hover {
   transform: translateY(-2px);
 }
+
+@media (max-width: 768px) {
+  .back-to-top {
+    display: none;
+  }
+}
