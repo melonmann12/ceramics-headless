@@ -2,10 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useCart } from '@/app/context/CartContext';
+import CartDrawer from './CartDrawer';
+import SearchOverlay from './SearchOverlay';
 import './Header.css';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const { cart, openCart } = useCart();
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,24 +28,26 @@ export default function Header() {
         <Link href="/" className="brand-logo">OURA CERAMICS</Link>
 
         <div className="nav-links">
-          <Link href="/#bestsellers" className="nav-link active">SHOP ALL</Link>
-          <Link href="/story" className="nav-link">OUR STORY</Link>
-          <Link href="/blog" className="nav-link">BLOG</Link>
-          <Link href="/b2b" className="nav-link">B2B</Link>
+          <Link href="/shop" className={`nav-link ${pathname === '/shop' ? 'active' : ''}`}>SHOP ALL</Link>
+          <Link href="/shipping-policy" className={`nav-link ${pathname === '/shipping-policy' ? 'active' : ''}`}>SHIPPING</Link>
+          <Link href="/returns" className={`nav-link ${pathname === '/returns' ? 'active' : ''}`}>RETURNS</Link>
+          <Link href="/contact" className={`nav-link ${pathname === '/contact' ? 'active' : ''}`}>CONTACT</Link>
         </div>
 
         <div className="nav-icons">
-          <button className="icon-btn" aria-label="Search">
+          <button className="icon-btn" aria-label="Search products" onClick={() => setSearchOpen(true)}>
             <span className="material-symbols-outlined">search</span>
           </button>
-          <button className="icon-btn" aria-label="Account">
-            <span className="material-symbols-outlined">person</span>
-          </button>
-          <button className="icon-btn relative" aria-label="Shopping bag">
+          <button className="icon-btn" aria-label="Shopping bag" onClick={openCart}>
             <span className="material-symbols-outlined">shopping_bag</span>
+            {cart && cart.totalQuantity > 0 && (
+              <span className="cart-badge">{cart.totalQuantity}</span>
+            )}
           </button>
         </div>
       </div>
+      <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      <CartDrawer />
     </nav>
   );
 }

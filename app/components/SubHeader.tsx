@@ -1,15 +1,16 @@
 import './SubHeader.css';
+import Link from 'next/link';
 
 export default function SubHeader() {
   return (
     <section className="subheader-section">
       <div className="subheader-content">
         <h2 className="subheader-title">
-          &quot;A DAILY RITUAL, ELEVATED BY THE FINEST HAND-THROWN CERAMICS - SMOOTH, BALANCED, AND UNIQUE.&quot;
+          &quot;A DAILY RITUAL, ELEVATED BY HANDCRAFTED CERAMICS - TACTILE, BALANCED, AND UNIQUE.&quot;
         </h2>
-        <a href="#bestsellers" className="pill-btn pill-btn-outline subheader-link">
-          OUR BESTSELLERS
-        </a>
+        <Link href="/shop" className="pill-btn pill-btn-outline subheader-link">
+          SHOP ALL
+        </Link>
       </div>
     </section>
   );

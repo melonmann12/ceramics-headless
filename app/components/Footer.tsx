@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import './Footer.css';
 
 export default function Footer() {
@@ -28,34 +29,31 @@ export default function Footer() {
             <div className="footer-nav-col">
               <h4 className="footer-heading">OURA CERAMICS</h4>
               <div className="footer-links">
-                <a href="/#bestsellers" className="footer-link">SHOP ALL</a>
-                <a href="/story" className="footer-link">OUR STORY</a>
-                <a href="/blog" className="footer-link">JOURNAL</a>
+                <Link href="/" className="footer-link">HOME</Link>
+                <Link href="/shop" className="footer-link">SHOP ALL</Link>
+                <Link href="/contact" className="footer-link">CONTACT</Link>
               </div>
             </div>
             
             <div className="footer-nav-col">
               <h4 className="footer-heading">HELP</h4>
               <div className="footer-links">
-                <a href="/faq" className="footer-link">FAQ</a>
-                <a href="/shipping" className="footer-link">SHIPPING</a>
-                <a href="/returns" className="footer-link">RETURNS</a>
-                <a href="/contact" className="footer-link">CONTACT</a>
+                <Link href="/shipping-policy" className="footer-link">SHIPPING</Link>
+                <Link href="/returns" className="footer-link">RETURNS</Link>
+                <Link href="/privacy-policy" className="footer-link">PRIVACY</Link>
+                <Link href="/terms" className="footer-link">TERMS</Link>
               </div>
             </div>
           </div>
 
-          {/* Right Side: Newsletter Card Container */}
           <div className="footer-newsletter-wrapper">
-            <div className="newsletter-card">
-              <h3 className="newsletter-heading">JOIN THE CERAMIC COMMUNITY AND ENJOY 10% OFF</h3>
-              <p className="newsletter-subtext">Sign up for exclusive launch updates, special offers, and ceramic care tips. Plus, enjoy a discount on your first order!</p>
-              <div className="newsletter-form">
-                <input type="email" placeholder="Email address" className="newsletter-input" />
-                <button className="newsletter-submit" aria-label="Subscribe">
-                  <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_forward</span>
-                </button>
-              </div>
+            <div className="footer-care-card">
+              <h3 className="footer-care-heading">CUSTOMER CARE</h3>
+              <p className="footer-care-text">Questions about an order, shipping, returns, or product care?</p>
+              <Link href="/contact" className="footer-care-link">
+                CONTACT US
+                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_forward</span>
+              </Link>
             </div>
           </div>
         </div>
@@ -65,14 +63,6 @@ export default function Footer() {
           <div className="footer-copyright">
             <span className="material-symbols-outlined footer-copyright-logo">local_cafe</span>
             <span>© 2026 OURA CERAMICS. ALL RIGHTS RESERVED.</span>
-          </div>
-          <div className="footer-social-icons">
-            <a href="https://instagram.com" className="icon-btn" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
-              <span className="material-symbols-outlined">camera_alt</span>
-            </a>
-            <a href="https://tiktok.com" className="icon-btn" aria-label="TikTok" target="_blank" rel="noopener noreferrer">
-              <span className="material-symbols-outlined">play_circle</span>
-            </a>
           </div>
         </div>
       </div>

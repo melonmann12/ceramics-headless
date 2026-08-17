@@ -79,6 +79,18 @@
   transition: transform 0.5s ease;
 }
 
+.product-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  color: rgba(66, 26, 33, 0.65);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
 .product-info {
   text-align: center;
   display: flex;
@@ -86,23 +98,6 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0 0.5rem;
-}
-
-.product-reviews {
-  display: flex;
-  gap: 0.25rem;
-  color: var(--sage);
-  align-items: center;
-}
-
-.star-icon {
-  font-size: 1rem;
-}
-
-.review-count {
-  font-size: 0.75rem;
-  color: rgba(66, 26, 33, 0.6); /* plum with opacity */
-  margin-left: 0.25rem;
 }
 
 .product-title {

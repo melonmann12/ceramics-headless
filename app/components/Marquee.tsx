@@ -1,7 +1,7 @@
 import './Marquee.css';
 
 export default function Marquee() {
-  const content = "• SHIPS WORLDWIDE • FREE SHIPPING OVER €80 • ARTISANAL CERAMICS • HAND-GLAZED IN KILNS • SHIPS IN 24H •";
+  const content = "• HANDCRAFTED CERAMICS • SHOPIFY CHECKOUT • REAL PRODUCT AVAILABILITY • CAREFULLY PACKED ORDERS •";
   
   return (
     <div className="ticker-wrapper marquee-container">

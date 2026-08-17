@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import './Hero.css';
 
 export default function Hero() {
@@ -22,9 +23,9 @@ export default function Hero() {
       </div>
 
       <div className="hero-cta-wrapper">
-        <a href="/#bestsellers" className="pill-btn">
+        <Link href="/shop" className="pill-btn">
           EXPLORE COLLECTION
-        </a>
+        </Link>
       </div>
     </header>
   );

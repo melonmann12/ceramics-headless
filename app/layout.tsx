@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { CartProvider } from "./context/CartContext";
 
 export const metadata: Metadata = {
   title: {
@@ -16,6 +17,9 @@ export const metadata: Metadata = {
     "matcha ceremony",
   ],
   metadataBase: new URL("https://oura-ceramics.com"),
+  icons: {
+    icon: "/favicon.svg",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -44,16 +48,20 @@ export default function RootLayout({
         />
         {/*
           Material Symbols Outlined icon font.
-          display=swap — do NOT use display=block, it prevents rendering until loaded.
+          display=swap keeps icon text from remaining visible while the font loads.
           The <link> tag inside <head> in App Router layout.tsx is correctly merged
           by Next.js with its own injected head tags.
         */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <CartProvider>
+          {children}
+        </CartProvider>
+      </body>
     </html>
   );
 }

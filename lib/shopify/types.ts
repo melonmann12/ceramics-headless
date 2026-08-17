@@ -18,7 +18,6 @@ export interface ShopifyProductVariant {
   id: string;
   title: string;
   availableForSale: boolean;
-  quantityAvailable: number;
   price: MoneyV2;
   compareAtPrice: MoneyV2 | null;
   selectedOptions: {
@@ -42,6 +41,11 @@ export interface ShopifyProduct {
   images: {
     edges: { node: ShopifyImage }[];
   };
+  options: {
+    id: string;
+    name: string;
+    values: string[];
+  }[];
   variants: {
     edges: { node: ShopifyProductVariant }[];
   };
@@ -79,6 +83,10 @@ export interface ShopifyCartLine {
   merchandise: {
     id: string;
     title: string;
+    selectedOptions: {
+      name: string;
+      value: string;
+    }[];
     product: {
       title: string;
       handle: string;
@@ -104,18 +112,23 @@ export interface ShopifyCart {
 
 // ─── Helper types ─────────────────────────────────────────────────────────────
 
-/** Flattened product suitable for use in UI components */
+  /** Flattened product suitable for use in UI components */
 export interface NormalizedProduct {
   id: string;
   handle: string;
   title: string;
   description: string;
+  descriptionHtml: string;
   price: string;
   compareAtPrice: string | null;
   badge?: string;
-  reviews: number;
   image: string;
   images: string[];
+  options: {
+    id: string;
+    name: string;
+    values: string[];
+  }[];
   variants: ShopifyProductVariant[];
   availableForSale: boolean;
 }

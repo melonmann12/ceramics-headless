@@ -1,3 +1,5 @@
+import type { Metadata } from 'next';
+import { connection } from 'next/server';
 import Header from '@/app/components/Header';
 import Hero from '@/app/components/Hero';
 import Marquee from '@/app/components/Marquee';
@@ -6,11 +8,19 @@ import ProductGrid from '@/app/components/ProductGrid';
 import Benefits from '@/app/components/Benefits';
 import SocialGallery from '@/app/components/SocialGallery';
 import Footer from '@/app/components/Footer';
+import { getProducts } from '@/lib/shopify/queries';
 
-// Phase 4: import { getProducts } from '@/lib/shopify/queries';
+export const metadata: Metadata = {
+  title: 'Handcrafted Matcha Bowls',
+  description: 'Shop handcrafted ceramic matcha bowls from OURA CERAMICS.',
+  alternates: {
+    canonical: '/',
+  },
+};
 
 export default async function HomePage() {
-  // Phase 4: const products = await getProducts(12);
+  await connection();
+  const products = await getProducts(12);
 
   return (
     <>
@@ -19,8 +29,7 @@ export default async function HomePage() {
         <Hero />
         <Marquee />
         <SubHeader />
-        {/* Phase 4: <ProductGrid products={products} /> */}
-        <ProductGrid />
+        <ProductGrid products={products} />
         <Benefits />
         <SocialGallery />
       </main>

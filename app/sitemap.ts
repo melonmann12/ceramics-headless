@@ -1,17 +1,18 @@
 import type { MetadataRoute } from 'next';
-// Phase 4: import { getAllProductHandles } from '@/lib/shopify/queries';
+import { connection } from 'next/server';
+import { getAllProductHandles } from '@/lib/shopify/queries';
 
 const baseUrl = 'https://oura-ceramics.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Phase 4: uncomment to pull real handles from Shopify
-  // const handles = await getAllProductHandles();
-  // const productUrls: MetadataRoute.Sitemap = handles.map((handle) => ({
-  //   url: `${baseUrl}/product/${handle}`,
-  //   lastModified: new Date(),
-  //   changeFrequency: 'weekly',
-  //   priority: 0.8,
-  // }));
+  await connection();
+  const handles = await getAllProductHandles();
+  const productUrls: MetadataRoute.Sitemap = handles.map((handle) => ({
+    url: `${baseUrl}/product/${handle}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }));
 
   const staticUrls: MetadataRoute.Sitemap = [
     {
@@ -21,15 +22,45 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/story`,
+      url: `${baseUrl}/shop`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/shipping-policy`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
-      priority: 0.5,
+      priority: 0.4,
+    },
+    {
+      url: `${baseUrl}/returns`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.4,
+    },
+    {
+      url: `${baseUrl}/privacy-policy`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.4,
     },
   ];
 
   return [
     ...staticUrls,
-    // Phase 4: ...productUrls,
+    ...productUrls,
   ];
 }

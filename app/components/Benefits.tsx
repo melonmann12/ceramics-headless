@@ -4,18 +4,18 @@ import './Benefits.css';
 const benefitsData = [
   {
     title: 'SHAPED FOR BETTER WHISKING',
-    description: 'The wide, flat base and curved walls of our bowls provide the perfect surface area for vigorous whisking, resulting in a smooth, creamy foam every time.',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB-QUiMDjfLtTKqb9uOFjukzcRQDV4JM5mm2esGB0zs3f37RGTi8-DplssNmXtoUf80FJxLaeUGgezjoDX-X8j0am2VX4yh8jGsn38M-Eh_LKsPK3sILL3kZ_cgNrRshznSrl6kJdAmNO_fbMlY4Jj3rjN2pcmnJBawPjN1oaSb3DqrhdfTyfZ5XGhu_4RDvIzx_7Hou3BCj0qCkRJ-KCDzoeRepLJSMX_bTUTOmPa0MQc5T2Tut4hH'
+    description: 'Wide bases and curved walls are selected for daily matcha preparation and comfortable whisking.',
+    image: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&q=80&w=900&sig=benefit-1'
   },
   {
     title: 'MADE TO FEEL GOOD IN YOUR HANDS',
-    description: 'Tactile textures and ergonomic shapes designed to rest comfortably in both hands, encouraging you to slow down and savor the warmth of your tea.',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDBV0Y2TzDOiyMkg5Nuevx8qfBkPq1JkHA-eaxuhSzJ0N1Av5gjg019jJBQcHcZDpOHgGYND5OotqhzrCJ36Rr0ziLpiY-1W3LmnROztBjdjspC6eF4PzeuR4wSX9okqlu4r4z7731TYGaTQoiZelu2bmeslQk9zG2WWqPxNn5_xNcgDKhKJcrG1MjZGIgHVcfXnAHpBAf_BlAs5cQ9NqedEradDCbHjUx7jPN19e2NihcG7mqhVTvY'
+    description: 'Tactile textures and rounded forms are chosen for a grounded, two-handed tea ritual.',
+    image: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&q=80&w=900&sig=benefit-2'
   },
   {
     title: 'ONE-OF-A-KIND CERAMIC CHARACTER',
-    description: 'Because each piece is thrown and glazed by hand, no two bowls are exactly alike. Your bowl carries the unique marks of its maker.',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCZtO7Jfm9fIiZR4T3afNKj1qwfQDl2m5d1FdNBb9jQBcoc9gMxp_osMUSravy8DaNI2o6gMxp_osMUSravy8DaNI2o6gGYVCZtMcVNb1GndjPk0EAhemcZIQIK3XUyJ_Rnh3FnMfSxoTNYof9mJ0AaaSI5fGCd6ae7W7o1TMHIpz'
+    description: 'Handmade ceramics can vary naturally in finish, color, and form, giving each piece its own character.',
+    image: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&q=80&w=900&sig=benefit-3'
   }
 ];
 

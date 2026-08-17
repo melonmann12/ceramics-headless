@@ -56,8 +56,3 @@
 .social-item img:hover {
   transform: scale(1.02);
 }
-
-.social-cta {
-  display: flex;
-  justify-content: center;
-}

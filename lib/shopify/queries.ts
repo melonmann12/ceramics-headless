@@ -29,13 +29,17 @@ const PRODUCT_FIELDS = /* GraphQL */ `
         }
       }
     }
+    options {
+      id
+      name
+      values
+    }
     variants(first: 20) {
       edges {
         node {
           id
           title
           availableForSale
-          quantityAvailable
           price {
             amount
             currencyCode
@@ -105,18 +109,18 @@ function normalizeProduct(product: ShopifyProduct): NormalizedProduct {
     handle: product.handle,
     title: product.title,
     description: product.description,
+    descriptionHtml: product.descriptionHtml,
     price,
     compareAtPrice,
     image: product.featuredImage?.url ?? images[0] ?? '',
     images,
+    options: product.options,
     variants: product.variants.edges.map((e) => e.node),
     availableForSale: product.variants.edges.some((e) => e.node.availableForSale),
     // Derive a badge from tags if the store uses them (e.g. tag: "bestseller")
     badge: product.tags.find((t) =>
       ['bestseller', 'new', 'set', 'sale'].includes(t.toLowerCase()),
     )?.toUpperCase(),
-    // TODO: replace with real review count from a review app integration
-    reviews: 0,
   };
 }
 
@@ -166,6 +170,44 @@ export async function getProducts(first = 12): Promise<NormalizedProduct[]> {
 
   if (errors || !data?.products) {
     console.error('[Shopify] getProducts errors:', errors);
+    return [];
+  }
+
+  return (data.products as { edges: { node: ShopifyProduct }[] }).edges.map((e) =>
+    normalizeProduct(e.node),
+  );
+}
+
+/** Search published Shopify products by a shopper-entered query */
+export async function searchProducts(queryText: string, first = 8): Promise<NormalizedProduct[]> {
+  const trimmedQuery = queryText.trim();
+
+  if (!trimmedQuery) {
+    return [];
+  }
+
+  const query = /* GraphQL */ `
+    ${PRODUCT_FIELDS}
+    query SearchProducts($first: Int!, $query: String!) {
+      products(first: $first, query: $query) {
+        edges {
+          node {
+            ...ProductFields
+          }
+        }
+      }
+    }
+  `;
+
+  const { data, errors } = await shopifyClient.request(query, {
+    variables: {
+      first,
+      query: trimmedQuery,
+    },
+  });
+
+  if (errors || !data?.products) {
+    console.error('[Shopify] searchProducts errors:', errors);
     return [];
   }
 
