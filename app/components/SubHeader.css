@@ -1,7 +1,7 @@
 .subheader-section {
   background-color: var(--cream);
   color: var(--plum);
-  padding: 6rem 1.5rem;
+  padding: var(--space-7) 1.5rem;
   text-align: center;
 }
 
@@ -11,7 +11,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: var(--space-5);
 }
 
 .subheader-title {
@@ -24,4 +24,10 @@
 
 .subheader-link {
   /* Using global pill-btn-outline class */
+}
+
+@media (max-width: 768px) {
+  .subheader-section {
+    padding: var(--space-6) 1rem;
+  }
 }

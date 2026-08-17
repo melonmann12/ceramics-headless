@@ -6,16 +6,17 @@ import './ProductGrid.css';
 interface ProductGridProps {
   products: NormalizedProduct[];
   title?: string;
+  className?: string;
 }
 
-export default function ProductGrid({ products, title }: ProductGridProps) {
+export default function ProductGrid({ products, title, className = '' }: ProductGridProps) {
   return (
-    <section className="products-section" id="bestsellers">
+    <section className={`products-section ${className}`.trim()} id="bestsellers">
       <div className="container">
-        {title && <h2 style={{ textAlign: 'center', marginBottom: '40px', fontSize: '2rem', letterSpacing: '0.05em' }}>{title}</h2>}
+        {title && <h2 className="products-heading">{title}</h2>}
         
         {products.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '100px 0', fontSize: '1.2rem', color: '#5C635B' }}>
+          <div className="products-empty">
             No products available at the moment. Please check back later!
           </div>
         ) : (

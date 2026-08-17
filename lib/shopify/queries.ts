@@ -13,6 +13,7 @@ const PRODUCT_FIELDS = /* GraphQL */ `
     tags
     vendor
     productType
+    createdAt
     featuredImage {
       url
       altText
@@ -117,6 +118,7 @@ function normalizeProduct(product: ShopifyProduct): NormalizedProduct {
     options: product.options,
     variants: product.variants.edges.map((e) => e.node),
     availableForSale: product.variants.edges.some((e) => e.node.availableForSale),
+    createdAt: product.createdAt || new Date().toISOString(),
     // Derive a badge from tags if the store uses them (e.g. tag: "bestseller")
     badge: product.tags.find((t) =>
       ['bestseller', 'new', 'set', 'sale'].includes(t.toLowerCase()),
@@ -150,7 +152,7 @@ export async function getProductByHandle(handle: string): Promise<NormalizedProd
 }
 
 /** Fetch products for the homepage grid (and sitemap) */
-export async function getProducts(first = 12): Promise<NormalizedProduct[]> {
+export async function getProducts(first = 100): Promise<NormalizedProduct[]> {
   const query = /* GraphQL */ `
     ${PRODUCT_FIELDS}
     query GetProducts($first: Int!) {

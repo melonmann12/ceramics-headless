@@ -60,6 +60,7 @@ export interface ShopifyProduct {
     title: string;
     description: string;
   };
+  createdAt: string;
 }
 
 // ─── Collection ──────────────────────────────────────────────────────────────
@@ -131,4 +132,5 @@ export interface NormalizedProduct {
   }[];
   variants: ShopifyProductVariant[];
   availableForSale: boolean;
+  createdAt: string;
 }

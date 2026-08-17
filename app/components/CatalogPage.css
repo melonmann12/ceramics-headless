@@ -1,0 +1,75 @@
+.catalog-page {
+  min-height: 60vh;
+  padding: 7rem 1.5rem 3rem;
+  background: var(--cream);
+}
+
+.catalog-container {
+  width: min(100%, 1280px);
+  margin: 0 auto;
+}
+
+.catalog-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.catalog-title {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  color: var(--plum);
+  letter-spacing: 0.05em;
+}
+
+.catalog-count {
+  color: var(--sage);
+  font-size: 0.95rem;
+}
+
+.catalog-controls {
+  width: min(100%, 920px);
+  margin: 0 auto 1.5rem;
+}
+
+.catalog-product-grid {
+  padding: 0;
+}
+
+.catalog-product-grid .container {
+  max-width: none;
+  padding: 0;
+}
+
+.catalog-product-grid .products-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 320px));
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 0;
+}
+
+.catalog-empty {
+  padding: 3rem 0;
+  color: var(--plum);
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .catalog-page {
+    padding: 6.5rem 1rem 2.5rem;
+  }
+
+  .catalog-header {
+    margin-bottom: 1.25rem;
+  }
+
+  .catalog-controls {
+    margin-bottom: 1.25rem;
+  }
+
+  .catalog-product-grid .products-grid {
+    gap: 1.5rem;
+  }
+}

@@ -1,9 +1,9 @@
 'use client';
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import './SearchFilters.css';
+import './CatalogFilters.css';
 
-export default function SearchFilters() {
+export default function CatalogFilters() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -43,7 +43,8 @@ export default function SearchFilters() {
           value={searchParams.get('sort') || ''}
           onChange={(e) => handleFilterChange('sort', e.target.value)}
         >
-          <option value="">Relevance</option>
+          <option value="">Relevance / Featured</option>
+          <option value="newest">Newest</option>
           <option value="price-asc">Price: Low to High</option>
           <option value="price-desc">Price: High to Low</option>
         </select>
