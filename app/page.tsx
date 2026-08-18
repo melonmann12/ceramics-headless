@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { connection } from 'next/server';
 import Header from '@/app/components/Header';
 import Hero from '@/app/components/Hero';
+import Marquee from '@/app/components/Marquee';
 import ProductGrid from '@/app/components/ProductGrid';
 import Benefits from '@/app/components/Benefits';
 import HomepageMerchandising from '@/app/components/HomepageMerchandising';
@@ -25,6 +26,7 @@ export default async function HomePage() {
       <Header />
       <main>
         <Hero />
+        <Marquee />
         <ProductGrid
           products={products}
           className="homepage-featured"
