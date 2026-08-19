@@ -1,7 +1,7 @@
 .catalog-page {
   min-height: 60vh;
   padding: 7rem 1.5rem 3rem;
-  background: var(--cream);
+  background: var(--page-background);
 }
 
 .catalog-container {

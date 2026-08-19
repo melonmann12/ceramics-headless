@@ -9,12 +9,13 @@
 :root {
   /* Color Palette */
   --cream: #F5F0E8; /* Light Oatmeal/Cream */
+  --page-background: #FDFBF7; /* PDP Soft Cream */
   --plum: #421A21; /* Deep Plum / Burgundy */
   --sage: #1E2E24; /* Deep Charcoal Sage */
   --white: #FFFFFF;
   --transparent: transparent;
   
-  --bg-primary: var(--cream);
+  --bg-primary: var(--page-background);
   --bg-secondary: var(--cream);
   --text-deep: var(--plum);
   --accent-pop: var(--plum);

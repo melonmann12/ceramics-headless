@@ -124,7 +124,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
               }}
               className="search-input"
               type="search"
-              placeholder="Search matcha bowls"
+              placeholder="Search ceramics"
               autoComplete="off"
             />
             <button className="search-submit-btn" type="submit" disabled={isPending}>

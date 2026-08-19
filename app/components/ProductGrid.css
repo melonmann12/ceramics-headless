@@ -1,6 +1,6 @@
 .products-section {
   padding: var(--space-6) 0;
-  background-color: var(--cream);
+  background-color: var(--page-background);
 }
 
 .products-section.homepage-featured {

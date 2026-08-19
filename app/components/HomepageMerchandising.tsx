@@ -9,7 +9,7 @@ export default function HomepageMerchandising() {
         <div className="craft-media">
           <Image
             src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&q=85&w=1400"
-            alt="Ceramic bowls arranged in soft natural light"
+            alt="Ceramic pieces arranged in soft natural light"
             fill
             sizes="(max-width: 900px) 100vw, 50vw"
             loading="eager"
@@ -18,12 +18,12 @@ export default function HomepageMerchandising() {
         </div>
         <div className="craft-copy">
           <p className="section-eyebrow">PRODUCT PHILOSOPHY</p>
-          <h2>Texture, form, and the pace of preparation.</h2>
-          <p>
-            A matcha bowl is used before it is displayed. OURA CERAMICS chooses pieces for the way they meet the hand, hold space for the whisk, and bring visual quiet to a daily ritual.
+          <h2 className="section-title">The weight of daily objects.</h2>
+          <p className="section-desc">
+            A ceramic piece is used before it is displayed. OURA CERAMICS chooses pieces for the way they meet the hand, serve a daily purpose, and bring visual quiet to your home.
           </p>
           <Link href="/shop" className="pill-btn pill-btn-outline">
-            SHOP MATCHA BOWLS
+            SHOP THE COLLECTION
           </Link>
         </div>
       </section>
@@ -31,9 +31,9 @@ export default function HomepageMerchandising() {
       <section className="ritual-section" aria-labelledby="ritual-title">
         <div className="ritual-inner">
           <p className="section-eyebrow">DAILY USE</p>
-          <h2 id="ritual-title">Morning matcha, slow afternoons, and bowls chosen for the hand.</h2>
-          <p>
-            Explore ceramic forms that turn preparation into a small pause: measure, whisk, hold, sip, and return the bowl to the shelf for tomorrow.
+          <h2 id="ritual-title">Morning routines, slow afternoons, and pieces chosen for the hand.</h2>
+          <p className="ritual-desc">
+            Explore ceramic forms that turn daily moments into a small pause: prepare, hold, use, and return the piece to the shelf for tomorrow.
           </p>
         </div>
       </section>
@@ -70,7 +70,7 @@ export default function HomepageMerchandising() {
       </section>
 
       <section className="final-cta-section">
-        <h2>Find the bowl for your daily matcha ritual.</h2>
+        <h2>Find the pieces for your daily rituals.</h2>
         <Link href="/shop" className="pill-btn">
           SHOP ALL
         </Link>

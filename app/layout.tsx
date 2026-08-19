@@ -4,17 +4,16 @@ import { CartProvider } from "./context/CartContext";
 
 export const metadata: Metadata = {
   title: {
-    default: "OURA CERAMICS — Handcrafted Matcha Bowls",
+    default: "OURA CERAMICS — Handcrafted Ceramics",
     template: "%s | OURA CERAMICS",
   },
   description:
-    "Handcrafted ceramic matcha bowls built for daily rituals. Hand-glazed in kilns, shipped worldwide.",
+    "Handcrafted ceramic pieces built for daily use. Hand-glazed in kilns, shipped worldwide.",
   keywords: [
-    "matcha bowl",
-    "ceramic matcha bowl",
-    "handcrafted ceramics",
-    "Japanese ceramics",
-    "matcha ceremony",
+    "handmade ceramics",
+    "ceramic pieces",
+    "daily ceramics",
+    "functional pottery",
   ],
   metadataBase: new URL("https://oura-ceramics.com"),
   icons: {

@@ -42,7 +42,23 @@ export default function ProductForm({ product }: ProductFormProps) {
   }, [product.variants, selectedOptions]);
 
   const [activeImage, setActiveImage] = useState(product.image);
-  const [activeTab, setActiveTab] = useState('DESCRIPTION');
+  
+  const currentIndex = product.images.indexOf(activeImage);
+  const hasMultipleImages = product.images.length > 1;
+  const isFirstImage = currentIndex === 0;
+  const isLastImage = currentIndex === product.images.length - 1;
+
+  const handlePrevImage = () => {
+    if (!isFirstImage) setActiveImage(product.images[currentIndex - 1]);
+  };
+
+  const handleNextImage = () => {
+    if (!isLastImage) setActiveImage(product.images[currentIndex + 1]);
+  };
+
+  // Temporarily hide DESCRIPTION by changing default active tab
+  // const [activeTab, setActiveTab] = useState('DESCRIPTION');
+  const [activeTab, setActiveTab] = useState('');
   const [qty, setQty] = useState(1);
   const [errorMsg, setErrorMsg] = useState('');
   const [isAdding, setIsAdding] = useState(false);
@@ -70,7 +86,9 @@ export default function ProductForm({ product }: ProductFormProps) {
     setActiveTab(activeTab === tab ? '' : tab);
   };
 
-  const accordionTabs = ['DESCRIPTION', 'SHIPPING & RETURNS'];
+  // Temporarily hide DESCRIPTION tab
+  // const accordionTabs = ['DESCRIPTION', 'SHIPPING & RETURNS'];
+  const accordionTabs = ['SHIPPING & RETURNS'];
 
   // Format currency
   const price = selectedVariant 
@@ -92,15 +110,39 @@ export default function ProductForm({ product }: ProductFormProps) {
     <>
       {/* LEFT COLUMN — Gallery */}
       <div className="pdp-left-col">
-        <Image
-          src={activeImage || 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&q=80&w=1200'}
-          alt={`${product.title} — Main product image`}
-          className="pdp-main-image"
-          width={1200}
-          height={1200}
-          priority
-          sizes="(max-width: 1024px) 100vw, 50vw"
-        />
+        <div className="pdp-main-image-wrapper">
+          <Image
+            src={activeImage || 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&q=80&w=1200'}
+            alt={`${product.title} — Main product image`}
+            className="pdp-main-image"
+            width={1200}
+            height={1200}
+            priority
+            sizes="(max-width: 1024px) 100vw, 50vw"
+          />
+          {hasMultipleImages && (
+            <>
+              {!isFirstImage && (
+                <button 
+                  className="pdp-image-nav-btn prev"
+                  onClick={handlePrevImage}
+                  aria-label="Previous product image"
+                >
+                  <span className="material-symbols-outlined">chevron_left</span>
+                </button>
+              )}
+              {!isLastImage && (
+                <button 
+                  className="pdp-image-nav-btn next"
+                  onClick={handleNextImage}
+                  aria-label="Next product image"
+                >
+                  <span className="material-symbols-outlined">chevron_right</span>
+                </button>
+              )}
+            </>
+          )}
+        </div>
 
         {product.images.length > 1 && (
           <div className="pdp-thumbnail-gallery">
@@ -125,9 +167,9 @@ export default function ProductForm({ product }: ProductFormProps) {
         )}
 
         <div className="pdp-handmade-note">
-          <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>local_florist</span>
-          100% handmade • Slight variations make each piece unique.
-          <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>local_florist</span>
+          <span className="material-symbols-outlined pdp-handmade-icon">local_florist</span>
+          <span>100% handmade • Each piece is unique.</span>
+          <span className="material-symbols-outlined pdp-handmade-icon">local_florist</span>
         </div>
       </div>
 
@@ -245,9 +287,15 @@ export default function ProductForm({ product }: ProductFormProps) {
                 </span>
               </div>
               <div className="pdp-accordion-content">
+                {/* Temporarily hidden DESCRIPTION block
                 {tab === 'DESCRIPTION' && (
-                  <div dangerouslySetInnerHTML={{ __html: product.descriptionHtml || product.description }} />
+                  product.descriptionHtml || product.description ? (
+                    <div dangerouslySetInnerHTML={{ __html: product.descriptionHtml || product.description }} />
+                  ) : (
+                    <p style={{ fontStyle: 'italic', color: 'rgba(30, 46, 36, 0.6)' }}>No description provided.</p>
+                  )
                 )}
+                */}
                 {tab === 'SHIPPING & RETURNS' && (
                   <p>
                     Shipping and return details are available on the{' '}

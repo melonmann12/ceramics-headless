@@ -1,5 +1,5 @@
 .policy-page {
-  background-color: var(--cream);
+  background-color: var(--page-background);
   color: var(--plum);
   min-height: 100vh;
 }

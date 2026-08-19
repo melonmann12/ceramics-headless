@@ -10,7 +10,7 @@ import '@/app/components/CatalogPage.css';
 
 export const metadata: Metadata = {
   title: 'Shop All',
-  description: 'Browse our collection of handcrafted ceramic matcha bowls and ritual tools.',
+  description: 'Browse our collection of handcrafted ceramic pieces and functional objects.',
   alternates: {
     canonical: '/shop',
   },

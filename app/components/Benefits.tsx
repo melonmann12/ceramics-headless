@@ -36,12 +36,12 @@ const benefitsData = [
   {
     icon: <IconBowl />,
     title: 'BALANCED FOR THE HAND',
-    description: 'Rounded silhouettes and considered proportions make each bowl feel calm to hold and easy to return to.',
+    description: 'Rounded silhouettes and considered proportions make each piece feel calm to hold and easy to return to.',
   },
   {
     icon: <IconCup />,
-    title: 'MADE FOR MATCHA RITUALS',
-    description: 'The collection centers matcha bowls and ceramic pieces meant for everyday preparation and quiet use.',
+    title: 'DESIGNED FOR DAILY USE',
+    description: 'The collection centers handcrafted ceramic pieces meant for everyday life and quiet use.',
   },
   {
     icon: <IconBox />,
@@ -60,7 +60,7 @@ export default function Benefits() {
     <section className="benefits-section">
       <div className="benefits-heading-block">
         <p className="benefits-eyebrow">WHY OURA CERAMICS</p>
-        <h2 className="benefits-header">A calmer way to choose matcha ware.</h2>
+        <h2 className="benefits-header">A calmer way to choose handmade ceramics.</h2>
       </div>
       
       <div className="benefits-grid">
