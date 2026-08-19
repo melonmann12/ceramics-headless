@@ -18,7 +18,7 @@
   grid-template-columns: 1fr;
   gap: var(--space-6);
   padding: var(--space-6) 1.5rem;
-  max-width: 1440px;
+  max-width: 1280px;
   margin: 0 auto;
 }
 
@@ -36,7 +36,7 @@
 @media (min-width: 1024px) {
   .pdp-main {
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-    gap: var(--space-6);
+    gap: var(--space-5);
   }
 
   .pdp-main-image {
@@ -127,9 +127,45 @@
   gap: 1rem;
 }
 
+@media (max-width: 1023px) {
+  .pdp-thumbnail-gallery {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 0.75rem;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(30, 46, 36, 0.2) transparent;
+  }
+  
+  .pdp-thumbnail-gallery::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  .pdp-thumbnail-gallery::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .pdp-thumbnail-gallery::-webkit-scrollbar-thumb {
+    background-color: rgba(30, 46, 36, 0.2);
+    border-radius: 4px;
+  }
+
+  .pdp-thumbnail {
+    flex: 0 0 22%;
+    width: 22%;
+    scroll-snap-align: start;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+}
+
 .pdp-thumbnail {
   background: transparent;
   padding: 0;
+  margin: 0;
   width: 100%;
   aspect-ratio: 1 / 1;
   border-radius: 20px;
@@ -139,13 +175,17 @@
   cursor: pointer;
   border: 2px solid transparent;
   transition: border-color 0.2s ease, transform 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+  /* Fix Safari overflow clipping bug */
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 .pdp-thumbnail img {
   width: 100%;
   height: 100%;
   display: block;
-  border-radius: inherit;
+  border-radius: 18px; /* 20px wrapper radius - 2px border */
   object-fit: cover;
 }
 
@@ -190,15 +230,15 @@
 .pdp-right-col {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-4);
   width: 100%;
-  max-width: 650px;
+  max-width: 550px;
 }
 
 /* Metadata */
 .pdp-title {
   font-family: var(--font-header);
-  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
   text-transform: uppercase;
   color: var(--sage);
   line-height: 1.05;
@@ -509,4 +549,49 @@
   font-family: var(--font-body);
   font-size: 0.75rem;
   color: rgba(30, 46, 36, 0.8);
+}
+
+/* Desktop Compaction */
+@media (min-width: 1024px) {
+  .pdp-main {
+    max-width: 1100px;
+  }
+  
+  .pdp-right-col {
+    gap: var(--space-3);
+    max-width: 480px;
+  }
+
+  .pdp-title {
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+  }
+
+  .pdp-price-current {
+    font-size: 1.25rem;
+  }
+
+  .pdp-price-original {
+    font-size: 0.875rem;
+  }
+
+  .pdp-swatch-color {
+    width: 40px;
+    height: 40px;
+  }
+
+  .pdp-pill-swatch {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.8125rem;
+  }
+
+  .pdp-qty-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 1.1rem;
+  }
+
+  .pdp-add-to-cart {
+    padding: 1rem;
+    font-size: 1.125rem;
+  }
 }

@@ -24,6 +24,7 @@ export interface ShopifyProductVariant {
     name: string;
     value: string;
   }[];
+  image?: ShopifyImage | null;
 }
 
 // ─── Product ─────────────────────────────────────────────────────────────────

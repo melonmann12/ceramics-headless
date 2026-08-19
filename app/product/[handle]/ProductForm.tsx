@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { NormalizedProduct } from '@/lib/shopify/types';
@@ -42,6 +42,18 @@ export default function ProductForm({ product }: ProductFormProps) {
   }, [product.variants, selectedOptions]);
 
   const [activeImage, setActiveImage] = useState(product.image);
+  const [isImageLoaded, setIsImageLoaded] = useState(true);
+  const lastVariantIdRef = useRef(selectedVariant?.id);
+
+  useEffect(() => {
+    if (selectedVariant && selectedVariant.id !== lastVariantIdRef.current) {
+      lastVariantIdRef.current = selectedVariant.id;
+      if (selectedVariant.image?.url && activeImage !== selectedVariant.image.url) {
+        setIsImageLoaded(false);
+        setActiveImage(selectedVariant.image.url);
+      }
+    }
+  }, [selectedVariant, activeImage]);
   
   const currentIndex = product.images.indexOf(activeImage);
   const hasMultipleImages = product.images.length > 1;
@@ -49,11 +61,17 @@ export default function ProductForm({ product }: ProductFormProps) {
   const isLastImage = currentIndex === product.images.length - 1;
 
   const handlePrevImage = () => {
-    if (!isFirstImage) setActiveImage(product.images[currentIndex - 1]);
+    if (!isFirstImage && activeImage !== product.images[currentIndex - 1]) {
+      setIsImageLoaded(false);
+      setActiveImage(product.images[currentIndex - 1]);
+    }
   };
 
   const handleNextImage = () => {
-    if (!isLastImage) setActiveImage(product.images[currentIndex + 1]);
+    if (!isLastImage && activeImage !== product.images[currentIndex + 1]) {
+      setIsImageLoaded(false);
+      setActiveImage(product.images[currentIndex + 1]);
+    }
   };
 
   // Temporarily hide DESCRIPTION by changing default active tab
@@ -119,6 +137,11 @@ export default function ProductForm({ product }: ProductFormProps) {
             height={1200}
             priority
             sizes="(max-width: 1024px) 100vw, 50vw"
+            onLoad={() => setIsImageLoaded(true)}
+            style={{
+              opacity: isImageLoaded ? 1 : 0.8,
+              transition: 'opacity 0.2s ease-in-out',
+            }}
           />
           {hasMultipleImages && (
             <>
@@ -150,7 +173,12 @@ export default function ProductForm({ product }: ProductFormProps) {
               <button
                 key={i}
                 className={`pdp-thumbnail${activeImage === src ? ' active' : ''}`}
-                onClick={() => setActiveImage(src)}
+                onClick={() => {
+                  if (activeImage !== src) {
+                    setIsImageLoaded(false);
+                    setActiveImage(src);
+                  }
+                }}
                 aria-label={`Show product image ${i + 1}`}
                 aria-pressed={activeImage === src}
               >
@@ -171,6 +199,26 @@ export default function ProductForm({ product }: ProductFormProps) {
           <span>100% handmade • Each piece is unique.</span>
           <span className="material-symbols-outlined pdp-handmade-icon">local_florist</span>
         </div>
+
+        {/* Silent Eager Preload for current product gallery (Vercel optimized URLs) */}
+        {product.images.length > 1 && (
+          <div style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden', visibility: 'hidden' }} aria-hidden="true">
+            {product.images.map((src, i) => {
+              if (i === 0) return null; // Main image is already loaded with priority
+              return (
+                <Image
+                  key={src}
+                  src={src}
+                  width={1200}
+                  height={1200}
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  alt=""
+                  loading="eager"
+                />
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* RIGHT COLUMN */}

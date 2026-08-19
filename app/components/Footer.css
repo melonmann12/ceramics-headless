@@ -41,6 +41,8 @@
 .footer-nav-col {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
   gap: var(--space-4);
 }
 
@@ -52,6 +54,8 @@
   letter-spacing: 0.05em;
   color: var(--cream);
   opacity: 0.8;
+  margin: 0;
+  padding: 0;
 }
 
 .footer-logo-img {
@@ -115,6 +119,14 @@
 
   .footer-nav-col {
     min-width: 8rem;
+  }
+
+  .footer-heading {
+    font-size: 1rem;
+  }
+
+  .footer-link {
+    font-size: 1.05rem;
   }
 
   .footer-care-card {

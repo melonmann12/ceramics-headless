@@ -53,6 +53,12 @@ const PRODUCT_FIELDS = /* GraphQL */ `
             name
             value
           }
+          image {
+            url
+            altText
+            width
+            height
+          }
         }
       }
     }
