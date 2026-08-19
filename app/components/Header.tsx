@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/app/context/CartContext';
@@ -52,7 +53,7 @@ export default function Header() {
         </button>
 
         <Link href="/" className="brand-logo" onClick={() => setMobileMenuOpen(false)}>
-          OURA CERAMICS
+          <Image src="/logo/ashpialogo.png" alt="Ashpia" width={120} height={37} priority className="header-logo-img" />
         </Link>
 
         <div className="nav-links">

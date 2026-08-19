@@ -3,14 +3,14 @@ import PolicyPage from '@/app/components/PolicyPage';
 
 export const metadata: Metadata = {
   title: 'Shipping Policy',
-  description: 'Shipping information for OURA CERAMICS orders.',
+  description: 'Shipping information for ASHPIA orders.',
 };
 
 export default function ShippingPolicyPage() {
   return (
     <PolicyPage
       title="Shipping Policy"
-      intro="This page summarizes how OURA CERAMICS handles order processing and shipping. Final shipping options and costs are shown during Shopify Checkout before payment."
+      intro="This page summarizes how ASHPIA handles order processing and shipping. Final shipping options and costs are shown during Shopify Checkout before payment."
       note="Launch item: add confirmed shipping regions, carrier names, processing time, and support email before paid traffic begins."
       sections={[
         {
@@ -28,7 +28,7 @@ export default function ShippingPolicyPage() {
         {
           title: 'Delivery Issues',
           body: [
-            'If an order arrives damaged or a shipment appears delayed, customers should contact OURA CERAMICS with the order number and relevant photos. A support email still needs to be added.',
+            'If an order arrives damaged or a shipment appears delayed, customers should contact ASHPIA with the order number and relevant photos. A support email still needs to be added.',
           ],
         },
       ]}

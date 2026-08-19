@@ -59,7 +59,7 @@ export default function Benefits() {
   return (
     <section className="benefits-section">
       <div className="benefits-heading-block">
-        <p className="benefits-eyebrow">WHY OURA CERAMICS</p>
+        <p className="benefits-eyebrow">WHY ASHPIA</p>
         <h2 className="benefits-header">A calmer way to choose handmade ceramics.</h2>
       </div>
       

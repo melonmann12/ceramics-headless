@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import './Footer.css';
 
@@ -27,7 +28,9 @@ export default function Footer() {
           {/* Left Side: Navigation Columns */}
           <div className="footer-nav-wrapper">
             <div className="footer-nav-col">
-              <h4 className="footer-heading">OURA CERAMICS</h4>
+              <div className="footer-heading">
+                <Image src="/logo/ashpialogo.png" alt="Ashpia" width={100} height={31} className="footer-logo-img" />
+              </div>
               <div className="footer-links">
                 <Link href="/" className="footer-link">HOME</Link>
                 <Link href="/shop" className="footer-link">SHOP ALL</Link>
@@ -62,7 +65,7 @@ export default function Footer() {
         <div className="footer-bottom">
           <div className="footer-copyright">
             <span className="material-symbols-outlined footer-copyright-logo">local_cafe</span>
-            <span>© 2026 OURA CERAMICS. ALL RIGHTS RESERVED.</span>
+            <span>© 2026 ASHPIA. ALL RIGHTS RESERVED.</span>
           </div>
         </div>
       </div>

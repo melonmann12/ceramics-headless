@@ -102,7 +102,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
       <section className="search-overlay" role="dialog" aria-modal="true" aria-labelledby="search-title">
         <div className="search-overlay-header">
           <div>
-            <h2 id="search-title" className="search-overlay-title">Search OURA CERAMICS</h2>
+            <h2 id="search-title" className="search-overlay-title">Search ASHPIA</h2>
             <p className="search-overlay-subtitle">Find products from the live Shopify catalog.</p>
           </div>
           <button className="search-close-btn" onClick={onClose} aria-label="Close search">

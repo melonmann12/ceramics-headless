@@ -20,7 +20,7 @@ export default function HomepageMerchandising() {
           <p className="section-eyebrow">PRODUCT PHILOSOPHY</p>
           <h2 className="section-title">The weight of daily objects.</h2>
           <p className="section-desc">
-            A ceramic piece is used before it is displayed. OURA CERAMICS chooses pieces for the way they meet the hand, serve a daily purpose, and bring visual quiet to your home.
+            A ceramic piece is used before it is displayed. ASHPIA chooses pieces for the way they meet the hand, serve a daily purpose, and bring visual quiet to your home.
           </p>
           <Link href="/shop" className="pill-btn pill-btn-outline">
             SHOP THE COLLECTION

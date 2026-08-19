@@ -3,14 +3,14 @@ import PolicyPage from '@/app/components/PolicyPage';
 
 export const metadata: Metadata = {
   title: 'Terms of Service',
-  description: 'Terms of Service for the OURA CERAMICS storefront.',
+  description: 'Terms of Service for the ASHPIA storefront.',
 };
 
 export default function TermsPage() {
   return (
     <PolicyPage
       title="Terms of Service"
-      intro="These terms describe general use of the OURA CERAMICS storefront. They should be reviewed and completed by the business owner or legal advisor before launch."
+      intro="These terms describe general use of the ASHPIA storefront. They should be reviewed and completed by the business owner or legal advisor before launch."
       note="Launch item: add the legal business entity, governing law, support email, and final commercial terms."
       sections={[
         {
@@ -34,7 +34,7 @@ export default function TermsPage() {
         {
           title: 'Policy Changes',
           body: [
-            'OURA CERAMICS may update storefront policies as business operations are finalized. Customers should review the policy pages before placing an order.',
+            'ASHPIA may update storefront policies as business operations are finalized. Customers should review the policy pages before placing an order.',
           ],
         },
       ]}

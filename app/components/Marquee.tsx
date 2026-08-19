@@ -1,7 +1,7 @@
 import './Marquee.css';
 
 export default function Marquee() {
-  const content = "• OURA CERAMICS • CERAMICS FOR DAILY USE • HANDMADE CERAMICS • THOUGHTFUL FORMS • PIECES FOR THE HOME ";
+  const content = "• ASHPIA • CERAMICS FOR DAILY USE • HANDMADE CERAMICS • THOUGHTFUL FORMS • PIECES FOR THE HOME ";
   
   return (
     <div className="ticker-wrapper marquee-container">

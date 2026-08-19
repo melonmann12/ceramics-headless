@@ -6,7 +6,7 @@ export default function SubHeader() {
       <div className="subheader-content">
         <h2 className="subheader-title">Ceramics chosen for daily use, not display alone.</h2>
         <p className="subheader-copy">
-          OURA CERAMICS focuses on rounded forms, textured surfaces, and functional pieces that make daily use feel grounded in the hand.
+          ASHPIA focuses on rounded forms, textured surfaces, and functional pieces that make daily use feel grounded in the hand.
         </p>
       </div>
     </section>

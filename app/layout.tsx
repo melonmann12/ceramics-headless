@@ -4,8 +4,8 @@ import { CartProvider } from "./context/CartContext";
 
 export const metadata: Metadata = {
   title: {
-    default: "OURA CERAMICS — Handcrafted Ceramics",
-    template: "%s | OURA CERAMICS",
+    default: "ASHPIA CERAMICS",
+    template: "%s | ASHPIA CERAMICS",
   },
   description:
     "Handcrafted ceramic pieces built for daily use. Hand-glazed in kilns, shipped worldwide.",
@@ -16,13 +16,10 @@ export const metadata: Metadata = {
     "functional pottery",
   ],
   metadataBase: new URL("https://oura-ceramics.com"),
-  icons: {
-    icon: "/favicon.svg",
-  },
   openGraph: {
     type: "website",
     locale: "en_US",
-    siteName: "OURA CERAMICS",
+    siteName: "ASHPIA CERAMICS",
   },
 };
 

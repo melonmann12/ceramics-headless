@@ -3,20 +3,20 @@ import PolicyPage from '@/app/components/PolicyPage';
 
 export const metadata: Metadata = {
   title: 'Returns & Refunds',
-  description: 'Returns and refunds information for OURA CERAMICS orders.',
+  description: 'Returns and refunds information for ASHPIA orders.',
 };
 
 export default function ReturnsPage() {
   return (
     <PolicyPage
       title="Returns & Refunds"
-      intro="This page outlines the returns structure for OURA CERAMICS. Specific eligibility rules must be confirmed by the store owner before launch."
+      intro="This page outlines the returns structure for ASHPIA. Specific eligibility rules must be confirmed by the store owner before launch."
       note="Launch item: add the confirmed return window, refund conditions, damaged-item process, and support email."
       sections={[
         {
           title: 'Return Requests',
           body: [
-            'Customers should contact OURA CERAMICS before sending any item back. Return eligibility depends on the final store policy and the condition of the item.',
+            'Customers should contact ASHPIA before sending any item back. Return eligibility depends on the final store policy and the condition of the item.',
           ],
         },
         {

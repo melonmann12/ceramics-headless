@@ -54,6 +54,12 @@
   opacity: 0.8;
 }
 
+.footer-logo-img {
+  width: 100px;
+  height: auto;
+  object-fit: contain;
+}
+
 .footer-links {
   display: flex;
   flex-direction: column;

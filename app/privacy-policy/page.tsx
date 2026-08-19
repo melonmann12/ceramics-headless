@@ -3,14 +3,14 @@ import PolicyPage from '@/app/components/PolicyPage';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: 'Privacy information for OURA CERAMICS customers.',
+  description: 'Privacy information for ASHPIA customers.',
 };
 
 export default function PrivacyPolicyPage() {
   return (
     <PolicyPage
       title="Privacy Policy"
-      intro="OURA CERAMICS uses Shopify to operate the storefront, cart, and checkout. This policy should be reviewed by the business owner or legal advisor before launch."
+      intro="ASHPIA uses Shopify to operate the storefront, cart, and checkout. This policy should be reviewed by the business owner or legal advisor before launch."
       note="Launch item: add the legal business entity, contact email, jurisdiction, and any region-specific privacy disclosures."
       sections={[
         {

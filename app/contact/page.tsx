@@ -3,7 +3,7 @@ import PolicyPage from '@/app/components/PolicyPage';
 
 export const metadata: Metadata = {
   title: 'Contact',
-  description: 'Contact OURA CERAMICS about orders, shipping, returns, and product questions.',
+  description: 'Contact ASHPIA about orders, shipping, returns, and product questions.',
 };
 
 export default function ContactPage() {
