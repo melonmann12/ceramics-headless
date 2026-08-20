@@ -62,18 +62,48 @@ export function trackViewContent(params: ViewContentParams): void {
   fbq('track', 'ViewContent', params);
 }
 
+export interface MetaCartContent {
+  id: string;
+  quantity: number;
+  item_price: number;
+}
+
+export interface AddToCartParams {
+  content_ids: string[];
+  content_type: 'product';
+  content_name: string;
+  value: number;
+  currency: string;
+  contents: MetaCartContent[];
+}
+
 /**
  * Fire a standard Meta "AddToCart" event.
- * @stub – not wired up yet.
  */
-export function trackAddToCart(params: Record<string, unknown>): void {
+export function trackAddToCart(params: AddToCartParams): void {
   fbq('track', 'AddToCart', params);
+}
+
+export interface InitiateCheckoutParams {
+  content_ids: string[];
+  content_type: 'product';
+  num_items: number;
+  value: number;
+  currency: string;
+  contents: MetaCartContent[];
 }
 
 /**
  * Fire a standard Meta "InitiateCheckout" event.
- * @stub – not wired up yet.
  */
-export function trackInitiateCheckout(params: Record<string, unknown>): void {
+export function trackInitiateCheckout(params: InitiateCheckoutParams): void {
   fbq('track', 'InitiateCheckout', params);
+}
+
+/**
+ * Normalizes a Shopify GID to its numeric ID.
+ * e.g. "gid://shopify/ProductVariant/54346604446009" -> "54346604446009"
+ */
+export function normalizeVariantId(gid: string): string {
+  return gid.split('/').pop()?.split('?')[0] || gid;
 }

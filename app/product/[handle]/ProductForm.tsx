@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { NormalizedProduct } from '@/lib/shopify/types';
 import { useCart } from '@/app/context/CartContext';
-import { trackViewContent } from '@/lib/meta-pixel';
+import { trackViewContent, trackAddToCart, normalizeVariantId } from '@/lib/meta-pixel';
 
 interface ProductFormProps {
   product: NormalizedProduct;
@@ -63,7 +63,7 @@ export default function ProductForm({ product }: ProductFormProps) {
       trackedProductIdRef.current = product.id;
 
       // Extract numeric ID from gid://shopify/ProductVariant/123456
-      const numericVariantId = selectedVariant.id.split('/').pop()?.split('?')[0];
+      const numericVariantId = normalizeVariantId(selectedVariant.id);
 
       if (numericVariantId) {
         trackViewContent({
@@ -111,6 +111,25 @@ export default function ProductForm({ product }: ProductFormProps) {
     setIsAdding(true);
     try {
       await addCartItem(selectedVariant.id, qty);
+      
+      const itemPrice = parseFloat(selectedVariant.price.amount);
+      const numericVariantId = normalizeVariantId(selectedVariant.id);
+      
+      trackAddToCart({
+        content_ids: [numericVariantId],
+        content_type: 'product',
+        content_name: product.title,
+        value: itemPrice * qty,
+        currency: selectedVariant.price.currencyCode,
+        contents: [
+          {
+            id: numericVariantId,
+            quantity: qty,
+            item_price: itemPrice,
+          }
+        ]
+      });
+      
     } catch (err: any) {
       setErrorMsg(err.message || 'Failed to add item to cart.');
     } finally {
