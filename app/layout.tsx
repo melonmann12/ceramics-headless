@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { CartProvider } from "./context/CartContext";
+import MetaPixel from "./components/MetaPixel";
 
 export const metadata: Metadata = {
   title: {
@@ -57,6 +58,7 @@ export default function RootLayout({
         <CartProvider>
           {children}
         </CartProvider>
+        <MetaPixel />
       </body>
     </html>
   );
