@@ -47,11 +47,18 @@ export function trackPageView(): void {
   fbq('track', 'PageView');
 }
 
+export interface ViewContentParams {
+  content_ids: string[];
+  content_name: string;
+  content_type: 'product';
+  value: number;
+  currency: string;
+}
+
 /**
  * Fire a standard Meta "ViewContent" event.
- * @stub – not wired up yet.
  */
-export function trackViewContent(params: Record<string, unknown>): void {
+export function trackViewContent(params: ViewContentParams): void {
   fbq('track', 'ViewContent', params);
 }
 

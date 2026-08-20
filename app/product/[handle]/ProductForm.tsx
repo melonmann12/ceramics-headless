@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { NormalizedProduct } from '@/lib/shopify/types';
 import { useCart } from '@/app/context/CartContext';
+import { trackViewContent } from '@/lib/meta-pixel';
 
 interface ProductFormProps {
   product: NormalizedProduct;
@@ -54,6 +55,27 @@ export default function ProductForm({ product }: ProductFormProps) {
       }
     }
   }, [selectedVariant, activeImage]);
+
+  const trackedProductIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (product && selectedVariant && trackedProductIdRef.current !== product.id) {
+      trackedProductIdRef.current = product.id;
+
+      // Extract numeric ID from gid://shopify/ProductVariant/123456
+      const numericVariantId = selectedVariant.id.split('/').pop()?.split('?')[0];
+
+      if (numericVariantId) {
+        trackViewContent({
+          content_ids: [numericVariantId],
+          content_type: 'product',
+          content_name: product.title,
+          value: parseFloat(selectedVariant.price.amount),
+          currency: selectedVariant.price.currencyCode,
+        });
+      }
+    }
+  }, [product, selectedVariant]);
   
   const currentIndex = product.images.indexOf(activeImage);
   const hasMultipleImages = product.images.length > 1;
