@@ -247,8 +247,9 @@
 
 .pdp-prices {
   display: flex;
-  align-items: baseline;
-  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
   margin-bottom: var(--space-1);
 }
 
@@ -257,6 +258,11 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--sage);
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
 }
 
 .pdp-price-original {
@@ -264,6 +270,27 @@
   font-size: 1rem;
   text-decoration: line-through;
   color: rgba(30, 46, 36, 0.5);
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+}
+
+.pdp-discount-badge {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  background-color: var(--plum);
+  color: #FDFBF7;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  height: 1.5rem;
+  padding: 0 0.625rem;
+  border-radius: 12px;
+  margin: 0;
 }
 
 .pdp-installments {
@@ -593,5 +620,69 @@
   .pdp-add-to-cart {
     padding: 1rem;
     font-size: 1.125rem;
+  }
+}
+
+/* Cart actions container - desktop default */
+.pdp-cart-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Mobile Compaction */
+@media (max-width: 767px) {
+  /* thumbnail row → handmade note */
+  .pdp-left-col {
+    gap: 1rem;
+  }
+  
+  /* handmade note → product title */
+  .pdp-main {
+    gap: 1.5rem; 
+  }
+
+  /* Right column major sections */
+  .pdp-right-col {
+    gap: 1.5rem;
+  }
+
+  /* Title → price row */
+  .pdp-title {
+    margin-bottom: 0.5rem;
+  }
+
+  /* Price row → Checkout note */
+  .pdp-prices {
+    margin-bottom: 0.75rem;
+  }
+
+  /* Checkout note align text and tighten spacing */
+  .pdp-installments {
+    align-items: flex-start;
+  }
+  .pdp-installments .material-symbols-outlined {
+    margin-top: 0.125rem;
+  }
+
+  /* OPTION heading → option pills */
+  .pdp-selector-section {
+    gap: 0.75rem;
+  }
+
+  /* Option rows / wrapped options */
+  .pdp-swatches-grid,
+  .pdp-pill-swatches {
+    gap: 0.75rem;
+  }
+
+  /* Make pill swatches slightly shorter so they are compact */
+  .pdp-pill-swatch {
+    padding: 0.5rem 1.25rem;
+  }
+
+  /* Qty → Add to cart */
+  .pdp-cart-actions {
+    gap: 1rem;
   }
 }

@@ -114,11 +114,13 @@ export default function ProductForm({ product }: ProductFormProps) {
     : product.price;
 
   let compareAtPrice = null;
+  let discountPercent = null;
   if (selectedVariant?.compareAtPrice) {
     const cpAmount = parseFloat(selectedVariant.compareAtPrice.amount);
     const pAmount = parseFloat(selectedVariant.price.amount);
     if (cpAmount > pAmount) {
       compareAtPrice = new Intl.NumberFormat('en-EU', { style: 'currency', currency: selectedVariant.compareAtPrice.currencyCode }).format(cpAmount);
+      discountPercent = Math.round(((cpAmount - pAmount) / cpAmount) * 100);
     }
   }
 
@@ -230,6 +232,9 @@ export default function ProductForm({ product }: ProductFormProps) {
             {compareAtPrice && (
               <span className="pdp-price-original">{compareAtPrice}</span>
             )}
+            {discountPercent && (
+              <span className="pdp-discount-badge">-{discountPercent}%</span>
+            )}
           </div>
           
           <div className="pdp-installments">
@@ -290,25 +295,28 @@ export default function ProductForm({ product }: ProductFormProps) {
           }
         })}
 
-        {/* Quantity + Availability */}
-        <div className="pdp-actions-row">
-          <div className="pdp-quantity-pill">
-            <button className="pdp-qty-btn" onClick={() => handleQtyChange(-1)} aria-label="Decrease quantity">-</button>
-            <span className="pdp-qty-value">{qty}</span>
-            <button className="pdp-qty-btn" onClick={() => handleQtyChange(1)} aria-label="Increase quantity">+</button>
+        {/* Cart Actions Container */}
+        <div className="pdp-cart-actions">
+          {/* Quantity + Availability */}
+          <div className="pdp-actions-row">
+            <div className="pdp-quantity-pill">
+              <button className="pdp-qty-btn" onClick={() => handleQtyChange(-1)} aria-label="Decrease quantity">-</button>
+              <span className="pdp-qty-value">{qty}</span>
+              <button className="pdp-qty-btn" onClick={() => handleQtyChange(1)} aria-label="Increase quantity">+</button>
+            </div>
           </div>
-        </div>
 
-        {/* Add to Cart */}
-        {errorMsg && <div style={{ color: 'red', fontSize: '0.875rem', marginBottom: '0.5rem', textAlign: 'center' }}>{errorMsg}</div>}
-        <button 
-          className="pdp-add-to-cart" 
-          disabled={!isAvailable || isAdding}
-          style={{ opacity: isAvailable && !isAdding ? 1 : 0.5, cursor: isAvailable && !isAdding ? 'pointer' : 'not-allowed' }}
-          onClick={handleAddToCart}
-        >
-          {!isAvailable ? 'OUT OF STOCK' : isAdding ? 'ADDING...' : 'ADD TO CART'}
-        </button>
+          {/* Add to Cart */}
+          {errorMsg && <div style={{ color: 'red', fontSize: '0.875rem', marginBottom: '0.5rem', textAlign: 'center' }}>{errorMsg}</div>}
+          <button 
+            className="pdp-add-to-cart" 
+            disabled={!isAvailable || isAdding}
+            style={{ opacity: isAvailable && !isAdding ? 1 : 0.5, cursor: isAvailable && !isAdding ? 'pointer' : 'not-allowed' }}
+            onClick={handleAddToCart}
+          >
+            {!isAvailable ? 'OUT OF STOCK' : isAdding ? 'ADDING...' : 'ADD TO CART'}
+          </button>
+        </div>
 
         {/* 
         <div className="pdp-payment-icons">
