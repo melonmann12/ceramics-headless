@@ -24,6 +24,15 @@ export default function CartDrawer() {
 
   const lines = cart?.lines?.edges || [];
 
+  useEffect(() => {
+    if (isOpen) {
+      console.log(`[Diagnostic] CartDrawer rendering with ${lines.length} lines. Subtotal: ${cart?.cost?.subtotalAmount?.amount}`);
+      lines.forEach(({ node }) => {
+        console.log(`[Diagnostic]  - Rendered line ${node.id.slice(-5)} (variant ${node.merchandise.id.slice(-5)}), qty: ${node.quantity}`);
+      });
+    }
+  }, [cart, isOpen, lines]);
+
   const handleCheckout = () => {
     if (!cart?.checkoutUrl) {
       setCheckoutError('Checkout is currently unavailable. Please try again later.');
@@ -33,6 +42,16 @@ export default function CartDrawer() {
 
     setCheckoutError('');
     setIsRedirecting(true);
+    
+    try {
+      const parsedUrl = new URL(cart.checkoutUrl);
+      console.log('checkout host:', parsedUrl.hostname);
+      console.log('checkout path:', parsedUrl.pathname);
+      console.log('has key param:', parsedUrl.searchParams.has('key') || parsedUrl.searchParams.has('token'));
+    } catch (e) {
+      console.log('checkoutUrl is not a valid URL:', cart.checkoutUrl);
+    }
+    
     window.location.href = cart.checkoutUrl;
   };
 
@@ -104,7 +123,7 @@ export default function CartDrawer() {
                         <button 
                           className="cart-qty-btn" 
                           onClick={() => updateCartItem(node.id, node.quantity - 1)}
-                          disabled={updatingLineId === node.id || node.quantity <= 1 || isRedirecting}
+                          disabled={updatingLineId === node.id || isRedirecting}
                           aria-label="Decrease quantity"
                         >
                           -

@@ -107,6 +107,9 @@ export interface ShopifyCart {
     totalAmount: MoneyV2;
     totalTaxAmount: MoneyV2 | null;
   };
+  buyerIdentity?: {
+    countryCode?: string;
+  };
   lines: {
     edges: { node: ShopifyCartLine }[];
   };

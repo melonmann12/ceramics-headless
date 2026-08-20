@@ -1,6 +1,9 @@
 import { shopifyClient } from './client';
 import type { ShopifyCart } from './types';
 
+export const DEFAULT_BUYER_COUNTRY = 'US';
+
+
 const CART_FRAGMENT = /* GraphQL */ `
   fragment CartFragment on Cart {
     id
@@ -19,6 +22,9 @@ const CART_FRAGMENT = /* GraphQL */ `
         amount
         currencyCode
       }
+    }
+    buyerIdentity {
+      countryCode
     }
     lines(first: 100) {
       edges {
@@ -96,19 +102,58 @@ export async function createCart(lines: { merchandiseId: string; quantity: numbe
     variables: {
       input: {
         lines,
+        buyerIdentity: {
+          countryCode: DEFAULT_BUYER_COUNTRY,
+        },
       },
     },
   });
 
   if (errors || data?.cartCreate?.userErrors?.length) {
-    console.error('Create cart errors', errors || data?.cartCreate?.userErrors);
+    console.error('[Shopify cartCreate error]', JSON.stringify(errors), JSON.stringify(data?.cartCreate?.userErrors));
     if (data?.cartCreate?.userErrors?.length) {
       throw new Error(data.cartCreate.userErrors[0].message);
     }
-    return null;
+    throw new Error('GraphQL error creating cart');
   }
 
   return data?.cartCreate?.cart as ShopifyCart;
+}
+
+export async function updateCartBuyerIdentity(cartId: string, countryCode: string): Promise<ShopifyCart | null> {
+  const mutation = /* GraphQL */ `
+    ${CART_FRAGMENT}
+    mutation cartBuyerIdentityUpdate($cartId: ID!, $buyerIdentity: CartBuyerIdentityInput!) {
+      cartBuyerIdentityUpdate(cartId: $cartId, buyerIdentity: $buyerIdentity) {
+        cart {
+          ...CartFragment
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  const { data, errors } = await shopifyClient.request(mutation, {
+    variables: {
+      cartId,
+      buyerIdentity: {
+        countryCode,
+      },
+    },
+  });
+
+  if (errors || data?.cartBuyerIdentityUpdate?.userErrors?.length) {
+    console.error('[Shopify cartBuyerIdentityUpdate error]', JSON.stringify(errors), JSON.stringify(data?.cartBuyerIdentityUpdate?.userErrors));
+    if (data?.cartBuyerIdentityUpdate?.userErrors?.length) {
+      throw new Error(data.cartBuyerIdentityUpdate.userErrors[0].message);
+    }
+    throw new Error('GraphQL error updating cart buyer identity');
+  }
+
+  return data?.cartBuyerIdentityUpdate?.cart as ShopifyCart;
 }
 
 export async function addToCart(cartId: string, lines: { merchandiseId: string; quantity: number }[]): Promise<ShopifyCart | null> {
@@ -135,11 +180,11 @@ export async function addToCart(cartId: string, lines: { merchandiseId: string; 
   });
 
   if (errors || data?.cartLinesAdd?.userErrors?.length) {
-    console.error('Add to cart errors', errors || data?.cartLinesAdd?.userErrors);
+    console.error('[Shopify cartLinesAdd error]', JSON.stringify(errors), JSON.stringify(data?.cartLinesAdd?.userErrors));
     if (data?.cartLinesAdd?.userErrors?.length) {
       throw new Error(data.cartLinesAdd.userErrors[0].message);
     }
-    return null;
+    throw new Error('GraphQL error adding to cart');
   }
 
   return data?.cartLinesAdd?.cart as ShopifyCart;
