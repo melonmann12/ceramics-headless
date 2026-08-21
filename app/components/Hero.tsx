@@ -7,7 +7,7 @@ export default function Hero() {
     <header className="hero-section">
       <div className="hero-background">
         <Image 
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLCFQVhXe57-dOU0kgXerLw8dOY8xHZ1lNUN0rqalM21h0xs7n0TqODg1_jEreH04h-irbDj96NeLjvP7lqCbAXZYGhMGF9ZxO6pBFDGHugqF7rffuATaYxs6Tu_y8I2soIg36keqc7AfEFcQqjZxQjatgtd-YFni7cV8mywxWGPJ1osGcd_sJOvK0dB4mv2sgCY4IwMRoFX4ABNLyz5a2rql6r5OR15iT40WBT9bcjuVI1kWhoQP3" 
+          src="/homepage/homepage.png" 
           alt="Overhead flat-lay composition of colorful, textured handcrafted ceramic pieces"
           fill
           priority
