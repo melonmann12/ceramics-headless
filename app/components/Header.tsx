@@ -58,9 +58,8 @@ export default function Header() {
 
         <div className="nav-links">
           <Link href="/shop" className={`nav-link ${pathname === '/shop' ? 'active' : ''}`}>SHOP ALL</Link>
-          <Link href="/shipping-policy" className={`nav-link ${pathname === '/shipping-policy' ? 'active' : ''}`}>SHIPPING</Link>
-          <Link href="/returns" className={`nav-link ${pathname === '/returns' ? 'active' : ''}`}>RETURNS</Link>
-          <Link href="/contact" className={`nav-link ${pathname === '/contact' ? 'active' : ''}`}>CONTACT</Link>
+          <Link href="/collections/matcha-set" className={`nav-link ${pathname === '/collections/matcha-set' ? 'active' : ''}`}>MATCHA SET</Link>
+          <Link href="/shop?sort=newest" className="nav-link">NEW ARRIVALS</Link>
         </div>
 
         <div className="nav-icons">
@@ -78,9 +77,8 @@ export default function Header() {
         {/* Mobile Navigation Drawer */}
         <div className={`mobile-nav-drawer ${mobileMenuOpen ? 'open' : ''}`}>
           <Link href="/shop" className={`mobile-nav-link ${pathname === '/shop' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>SHOP ALL</Link>
-          <Link href="/shipping-policy" className={`mobile-nav-link ${pathname === '/shipping-policy' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>SHIPPING</Link>
-          <Link href="/returns" className={`mobile-nav-link ${pathname === '/returns' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>RETURNS</Link>
-          <Link href="/contact" className={`mobile-nav-link ${pathname === '/contact' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>CONTACT</Link>
+          <Link href="/collections/matcha-set" className={`mobile-nav-link ${pathname === '/collections/matcha-set' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>MATCHA SET</Link>
+          <Link href="/shop?sort=newest" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>NEW ARRIVALS</Link>
         </div>
       </div>
       <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />

@@ -39,7 +39,6 @@ export default function Footer() {
             </div>
             
             <div className="footer-nav-col">
-              <h4 className="footer-heading">HELP</h4>
               <div className="footer-links">
                 <Link href="/shipping-policy" className="footer-link">SHIPPING</Link>
                 <Link href="/returns" className="footer-link">RETURNS</Link>

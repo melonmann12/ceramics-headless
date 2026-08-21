@@ -70,7 +70,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
       setHasSearched(true);
       startTransition(async () => {
         try {
-          const products = await searchProductsAction(trimmedQuery, 5); // Limit autocomplete to 5
+          const products = await searchProductsAction(trimmedQuery, 3); // Limit autocomplete to 3
           setResults(products);
         } catch (searchError) {
           console.error('Search failed:', searchError);
@@ -139,7 +139,10 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
           {isPending && <p className="search-message">Searching Shopify products...</p>}
 
           {!isPending && hasSearched && results.length === 0 && !error && (
-            <p className="search-message">No products found for “{query.trim()}”.</p>
+            <div className="search-empty-state">
+              <p className="search-message">No products found.</p>
+              <Link href="/shop" onClick={onClose} className="search-view-all-btn">VIEW ALL PRODUCTS</Link>
+            </div>
           )}
 
           {!isPending && results.map((product) => (
@@ -172,6 +175,16 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
               <span className="material-symbols-outlined search-result-arrow">arrow_forward</span>
             </Link>
           ))}
+
+          {!isPending && hasSearched && results.length > 0 && !error && (
+            <Link 
+              href={`/search?q=${encodeURIComponent(query.trim())}`} 
+              onClick={onClose} 
+              className="search-view-all-btn"
+            >
+              VIEW ALL RESULTS
+            </Link>
+          )}
         </div>
       </section>
     </>

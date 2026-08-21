@@ -186,6 +186,41 @@ export async function getProducts(first = 100): Promise<NormalizedProduct[]> {
   );
 }
 
+/** Fetch products for a specific collection by handle */
+export async function getCollectionProducts(handle: string, first = 50): Promise<{ title: string; products: NormalizedProduct[] } | null> {
+  const query = /* GraphQL */ `
+    ${PRODUCT_FIELDS}
+    query GetCollectionProducts($handle: String!, $first: Int!) {
+      collection(handle: $handle) {
+        title
+        products(first: $first) {
+          edges {
+            node {
+              ...ProductFields
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const { data, errors } = await shopifyClient.request(query, {
+    variables: { handle, first },
+  });
+
+  if (errors || !data?.collection) {
+    console.error('[Shopify] getCollectionProducts errors:', errors);
+    return null;
+  }
+
+  const title = data.collection.title;
+  const products = (data.collection.products as { edges: { node: ShopifyProduct }[] }).edges.map((e) =>
+    normalizeProduct(e.node),
+  );
+
+  return { title, products };
+}
+
 /** Search published Shopify products by a shopper-entered query */
 export async function searchProducts(queryText: string, first = 8): Promise<NormalizedProduct[]> {
   const trimmedQuery = queryText.trim();

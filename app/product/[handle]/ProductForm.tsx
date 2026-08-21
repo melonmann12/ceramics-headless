@@ -409,14 +409,12 @@ export default function ProductForm({ product }: ProductFormProps) {
                   </div>
                 )}
                 {tab === 'HANDMADE & CARE' && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <p>Each piece is handmade, so slight variations in size, shape, and color may occur compared to the photos.</p>
-                    <p>Made from food-safe glazed ceramic, suitable for everyday eating and drinking.</p>
-                    <p>
-                      Not microwave safe.<br />
-                      Wash with soap and water. Colors are designed to remain vibrant with normal use.
-                    </p>
-                  </div>
+                  <ul className="pdp-care-list">
+                    <li>Each piece is handmade, so slight variations in size, shape, and color may occur compared to the photos.</li>
+                    <li>Made from food-safe glazed ceramic, suitable for everyday eating and drinking.</li>
+                    <li>Not microwave safe.</li>
+                    <li>Wash with soap and water. Colors are designed to remain vibrant with normal use.</li>
+                  </ul>
                 )}
               </div>
             </div>
@@ -429,10 +427,10 @@ export default function ProductForm({ product }: ProductFormProps) {
           <h3 className="pdp-wcu-title">Why Choose Us?</h3>
           <div className="pdp-wcu-grid">
             {[
-              { icon: 'local_shipping', title: 'CHECKOUT RATES', desc: 'Shipping is calculated before payment' },
-              { icon: 'verified_user', title: 'SHOPIFY CHECKOUT', desc: 'Orders are completed through hosted checkout' },
-              { icon: 'assignment_return', title: 'RETURNS POLICY', desc: 'Review eligibility before ordering' },
-              { icon: 'inventory_2', title: 'REAL AVAILABILITY', desc: 'Variants come directly from Shopify' },
+              { icon: 'local_shipping', title: 'FREE SHIPPING', desc: 'Free standard shipping on all orders.' },
+              { icon: 'assignment_return', title: '14-DAY RETURNS', desc: 'Returns accepted within 14 days of delivery.' },
+              { icon: 'verified_user', title: 'SHOPIFY CHECKOUT', desc: 'Secure checkout powered by Shopify.' },
+              { icon: 'local_florist', title: 'HANDMADE CERAMICS', desc: 'Each piece is individually handmade with care.' },
             ].map(({ icon, title, desc }) => (
               <div key={title} className="pdp-wcu-item">
                 <span className="material-symbols-outlined pdp-wcu-icon">{icon}</span>

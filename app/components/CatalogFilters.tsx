@@ -78,11 +78,13 @@ export default function CatalogFilters() {
         </select>
       </div>
 
-      {hasFilters && (
-        <button onClick={clearFilters} className="search-filter-clear">
-          Clear Filters
-        </button>
-      )}
+      <button 
+        onClick={clearFilters} 
+        className="search-filter-clear"
+        style={{ visibility: hasFilters ? 'visible' : 'hidden' }}
+      >
+        Clear Filters
+      </button>
     </div>
   );
 }

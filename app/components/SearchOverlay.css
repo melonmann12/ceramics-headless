@@ -113,6 +113,19 @@
   color: rgba(66, 26, 33, 0.74);
 }
 
+.search-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+  padding: 2rem 1rem;
+}
+
+.search-empty-state .search-message {
+  padding: 0;
+}
+
 .search-error {
   color: #9f1d35;
 }
@@ -193,6 +206,27 @@
 
 .search-result-arrow {
   color: rgba(66, 26, 33, 0.62);
+}
+
+.search-view-all-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 3rem;
+  margin-top: 0.5rem;
+  border-radius: var(--radius-pill);
+  background: var(--plum);
+  color: var(--cream);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.search-view-all-btn:hover {
+  opacity: 0.9;
 }
 
 @media (max-width: 520px) {
