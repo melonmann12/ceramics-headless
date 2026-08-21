@@ -399,14 +399,12 @@ export default function ProductForm({ product }: ProductFormProps) {
                 )}
                 */}
                 {tab === 'SHIPPING & DELIVERY' && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <p>Each piece is made to order with care.</p>
-                    <p>
-                      <strong>Standard:</strong> 15–20 days making + 8–10 days shipping.<br />
-                      <strong>Priority:</strong> 8–15 days making + 8–10 days shipping.
-                    </p>
-                    <p>Timelines may vary slightly during busy periods because every piece is handmade.</p>
-                  </div>
+                  <ul className="pdp-care-list">
+                    <li>Each piece is made to order with care.</li>
+                    <li><strong>Standard:</strong> 15–20 days making + 8–10 days shipping.</li>
+                    <li><strong>Priority:</strong> 8–15 days making + 8–10 days shipping.</li>
+                    <li>Timelines may vary slightly during busy periods because every piece is handmade.</li>
+                  </ul>
                 )}
                 {tab === 'HANDMADE & CARE' && (
                   <ul className="pdp-care-list">

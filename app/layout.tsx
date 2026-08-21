@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     "daily ceramics",
     "functional pottery",
   ],
-  metadataBase: new URL("https://oura-ceramics.com"),
+  metadataBase: new URL("https://www.ashpia.com"),
   openGraph: {
     type: "website",
     locale: "en_US",

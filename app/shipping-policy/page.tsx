@@ -11,12 +11,11 @@ export default function ShippingPolicyPage() {
     <PolicyPage
       title="Shipping Policy"
       intro="This page summarizes how ASHPIA handles order processing and shipping. Final shipping options and costs are shown during Shopify Checkout before payment."
-      note="Launch item: add confirmed shipping regions, carrier names, processing time, and support email before paid traffic begins."
       sections={[
         {
           title: 'Order Processing',
           body: [
-            'Orders are prepared after payment is completed. Because ceramics require careful packing, processing details should be confirmed by the store owner before launch.',
+            'Orders are prepared after payment is completed. Because ceramics require careful packing, processing details and estimated timelines will be confirmed during checkout.',
           ],
         },
         {
@@ -28,7 +27,7 @@ export default function ShippingPolicyPage() {
         {
           title: 'Delivery Issues',
           body: [
-            'If an order arrives damaged or a shipment appears delayed, customers should contact ASHPIA with the order number and relevant photos. A support email still needs to be added.',
+            'If an order arrives damaged or a shipment appears delayed, please contact ASHPIA with your order number and relevant photos.',
           ],
         },
       ]}

@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 import { connection } from 'next/server';
 import { getAllProductHandles } from '@/lib/shopify/queries';
 
-const baseUrl = 'https://oura-ceramics.com';
+const baseUrl = 'https://www.ashpia.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   await connection();

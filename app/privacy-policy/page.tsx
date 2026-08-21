@@ -10,8 +10,7 @@ export default function PrivacyPolicyPage() {
   return (
     <PolicyPage
       title="Privacy Policy"
-      intro="ASHPIA uses Shopify to operate the storefront, cart, and checkout. This policy should be reviewed by the business owner or legal advisor before launch."
-      note="Launch item: add the legal business entity, contact email, jurisdiction, and any region-specific privacy disclosures."
+      intro="ASHPIA uses Shopify to operate the storefront, cart, and checkout."
       sections={[
         {
           title: 'Information Collected',
@@ -28,13 +27,13 @@ export default function PrivacyPolicyPage() {
         {
           title: 'Service Providers',
           body: [
-            'Shopify provides the commerce platform and hosted checkout. Additional providers may be added by the business for shipping, analytics, support, or email once configured.',
+            'Shopify provides the commerce platform and hosted checkout. Additional providers may be utilized for shipping, analytics, support, or email.',
           ],
         },
         {
           title: 'Customer Requests',
           body: [
-            'Customers may request access, correction, or deletion of personal information where applicable. A support email must be added before launch so customers can submit these requests.',
+            'Customers may request access, correction, or deletion of personal information where applicable by contacting ASHPIA.',
           ],
         },
       ]}

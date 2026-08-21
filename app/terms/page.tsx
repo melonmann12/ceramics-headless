@@ -10,8 +10,7 @@ export default function TermsPage() {
   return (
     <PolicyPage
       title="Terms of Service"
-      intro="These terms describe general use of the ASHPIA storefront. They should be reviewed and completed by the business owner or legal advisor before launch."
-      note="Launch item: add the legal business entity, governing law, support email, and final commercial terms."
+      intro="These terms describe general use of the ASHPIA storefront."
       sections={[
         {
           title: 'Storefront Use',
