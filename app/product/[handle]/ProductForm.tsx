@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import type { NormalizedProduct } from '@/lib/shopify/types';
 import { useCart } from '@/app/context/CartContext';
 import { trackViewContent, trackAddToCart, normalizeVariantId } from '@/lib/meta-pixel';
@@ -98,7 +97,7 @@ export default function ProductForm({ product }: ProductFormProps) {
 
   // Temporarily hide DESCRIPTION by changing default active tab
   // const [activeTab, setActiveTab] = useState('DESCRIPTION');
-  const [activeTab, setActiveTab] = useState('');
+  const [activeTabs, setActiveTabs] = useState<Record<string, boolean>>({});
   const [qty, setQty] = useState(1);
   const [errorMsg, setErrorMsg] = useState('');
   const [isAdding, setIsAdding] = useState(false);
@@ -142,12 +141,15 @@ export default function ProductForm({ product }: ProductFormProps) {
   };
 
   const toggleAccordion = (tab: string) => {
-    setActiveTab(activeTab === tab ? '' : tab);
+    setActiveTabs((prev) => ({
+      ...prev,
+      [tab]: !prev[tab]
+    }));
   };
 
   // Temporarily hide DESCRIPTION tab
   // const accordionTabs = ['DESCRIPTION', 'SHIPPING & RETURNS'];
-  const accordionTabs = ['SHIPPING & RETURNS'];
+  const accordionTabs = ['SHIPPING & DELIVERY', 'HANDMADE & CARE'];
 
   // Format currency
   const price = selectedVariant 
@@ -369,18 +371,21 @@ export default function ProductForm({ product }: ProductFormProps) {
 
         {/* Accordions */}
         <div className="pdp-accordions">
-          {accordionTabs.map((tab) => (
-            <div key={tab} className={`pdp-accordion-item ${activeTab === tab ? 'open' : ''}`}>
+          {accordionTabs.map((tab) => {
+            const isOpen = activeTabs[tab] || false;
+            return (
+            <div key={tab} className={`pdp-accordion-item ${isOpen ? 'open' : ''}`}>
               <div
-                className={`pdp-accordion-header ${activeTab === tab ? 'active' : ''}`}
+                className={`pdp-accordion-header ${isOpen ? 'active' : ''}`}
                 onClick={() => toggleAccordion(tab)}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && toggleAccordion(tab)}
+                aria-expanded={isOpen}
               >
                 {tab}
                 <span className="material-symbols-outlined">
-                  {activeTab === tab ? 'remove' : 'add'}
+                  {isOpen ? 'remove' : 'add'}
                 </span>
               </div>
               <div className="pdp-accordion-content">
@@ -393,18 +398,30 @@ export default function ProductForm({ product }: ProductFormProps) {
                   )
                 )}
                 */}
-                {tab === 'SHIPPING & RETURNS' && (
-                  <p>
-                    Shipping and return details are available on the{' '}
-                    <Link href="/shipping-policy">Shipping Policy</Link>
-                    {' '}and{' '}
-                    <Link href="/returns">Returns</Link>
-                    {' '}pages. Final shipping rates are shown at checkout.
-                  </p>
+                {tab === 'SHIPPING & DELIVERY' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <p>Each piece is made to order with care.</p>
+                    <p>
+                      <strong>Standard:</strong> 15–20 days making + 8–10 days shipping.<br />
+                      <strong>Priority:</strong> 8–15 days making + 8–10 days shipping.
+                    </p>
+                    <p>Timelines may vary slightly during busy periods because every piece is handmade.</p>
+                  </div>
+                )}
+                {tab === 'HANDMADE & CARE' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <p>Each piece is handmade, so slight variations in size, shape, and color may occur compared to the photos.</p>
+                    <p>Made from food-safe glazed ceramic, suitable for everyday eating and drinking.</p>
+                    <p>
+                      Not microwave safe.<br />
+                      Wash with soap and water. Colors are designed to remain vibrant with normal use.
+                    </p>
+                  </div>
                 )}
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Why Choose Us */}
