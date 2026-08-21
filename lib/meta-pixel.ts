@@ -84,21 +84,7 @@ export function trackAddToCart(params: AddToCartParams): void {
   fbq('track', 'AddToCart', params);
 }
 
-export interface InitiateCheckoutParams {
-  content_ids: string[];
-  content_type: 'product';
-  num_items: number;
-  value: number;
-  currency: string;
-  contents: MetaCartContent[];
-}
 
-/**
- * Fire a standard Meta "InitiateCheckout" event.
- */
-export function trackInitiateCheckout(params: InitiateCheckoutParams): void {
-  fbq('track', 'InitiateCheckout', params);
-}
 
 /**
  * Normalizes a Shopify GID to its numeric ID.

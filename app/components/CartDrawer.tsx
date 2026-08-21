@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '@/app/context/CartContext';
-import { trackInitiateCheckout, normalizeVariantId, type MetaCartContent } from '@/lib/meta-pixel';
 import './CartDrawer.css';
 
 export default function CartDrawer() {
@@ -43,27 +42,6 @@ export default function CartDrawer() {
 
     setCheckoutError('');
     setIsRedirecting(true);
-    
-    try {
-      const contents: MetaCartContent[] = lines.map(({ node }) => ({
-        id: normalizeVariantId(node.merchandise.id),
-        quantity: node.quantity,
-        item_price: parseFloat(node.merchandise.price.amount),
-      }));
-
-      const content_ids = contents.map(c => c.id);
-
-      trackInitiateCheckout({
-        content_ids,
-        content_type: 'product',
-        num_items: cart.totalQuantity,
-        value: parseFloat(cart.cost.subtotalAmount.amount),
-        currency: cart.cost.subtotalAmount.currencyCode,
-        contents,
-      });
-    } catch (e) {
-      console.error('[Diagnostic] Error firing InitiateCheckout:', e);
-    }
 
     try {
       const parsedUrl = new URL(cart.checkoutUrl);
