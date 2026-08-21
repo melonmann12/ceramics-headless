@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
+import ShopifyImage from '@/app/components/ShopifyImage';
 import Link from 'next/link';
 import { useCart } from '@/app/context/CartContext';
 import './CartDrawer.css';
@@ -99,7 +99,7 @@ export default function CartDrawer() {
               return (
                 <div key={node.id} className="cart-item">
                   <Link href={`/product/${product.handle}`} onClick={closeCart}>
-                    <Image
+                    <ShopifyImage
                       src={product.featuredImage?.url || ''}
                       alt={product.title}
                       width={80}

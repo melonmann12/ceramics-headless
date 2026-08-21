@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef } from 'react';
-import Image from 'next/image';
+import ShopifyImage from '@/app/components/ShopifyImage';
 import type { NormalizedProduct } from '@/lib/shopify/types';
 import { useCart } from '@/app/context/CartContext';
 import { trackViewContent, trackAddToCart, normalizeVariantId } from '@/lib/meta-pixel';
@@ -174,7 +174,7 @@ export default function ProductForm({ product }: ProductFormProps) {
       {/* LEFT COLUMN — Gallery */}
       <div className="pdp-left-col">
         <div className="pdp-main-image-wrapper">
-          <Image
+          <ShopifyImage
             src={activeImage || 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&q=80&w=1200'}
             alt={`${product.title} — Main product image`}
             className="pdp-main-image"
@@ -227,7 +227,7 @@ export default function ProductForm({ product }: ProductFormProps) {
                 aria-label={`Show product image ${i + 1}`}
                 aria-pressed={activeImage === src}
               >
-                <Image
+                <ShopifyImage
                   src={src}
                   alt={`${product.title} image ${i + 1}`}
                   width={300}
@@ -251,7 +251,7 @@ export default function ProductForm({ product }: ProductFormProps) {
             {product.images.map((src, i) => {
               if (i === 0) return null; // Main image is already loaded with priority
               return (
-                <Image
+                <ShopifyImage
                   key={src}
                   src={src}
                   width={1200}

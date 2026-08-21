@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import ShopifyImage from '@/app/components/ShopifyImage';
 import type { NormalizedProduct } from '@/lib/shopify/types';
 import './ProductGrid.css';
 
@@ -50,13 +50,13 @@ export default function ProductGrid({
                     <div className="product-image-wrapper">
                       {product.badge && <span className="product-badge">{product.badge}</span>}
                       {product.image ? (
-                        <Image
+                        <ShopifyImage
                           src={product.image}
                           alt={product.title}
                           className="product-image"
                           width={600}
                           height={600}
-                          sizes="(max-width: 768px) 100vw, 33vw"
+                          sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                           loading={shouldEagerLoadImages ? 'eager' : 'lazy'}
                         />
                       ) : (

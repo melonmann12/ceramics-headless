@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useRef, useState, useTransition } from 'react';
-import Image from 'next/image';
+import ShopifyImage from '@/app/components/ShopifyImage';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { searchProductsAction } from '@/app/actions/search';
@@ -151,7 +151,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
             >
               <div className="search-result-image-wrap">
                 {product.image ? (
-                  <Image
+                  <ShopifyImage
                     src={product.image}
                     alt={product.title}
                     width={96}
