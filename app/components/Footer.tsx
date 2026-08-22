@@ -53,7 +53,7 @@ export default function Footer() {
               <h3 className="footer-care-heading">CUSTOMER CARE</h3>
               <p className="footer-care-text">Questions about an order, shipping, returns, or product care?</p>
               <Link href="/contact" className="footer-care-link">
-                CONTACT US
+                MESSAGE US
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_forward</span>
               </Link>
             </div>

@@ -12,9 +12,10 @@ export default function ContactPage() {
       title="Contact"
       sections={[
         {
-          title: 'Order Support',
+          title: 'Questions about your order, shipping, returns, or product care?',
           body: [
-            'Please include your order number and the email address used at checkout when requesting help.',
+            'Send us a message using the chat button in the bottom-right corner of the page.',
+            'For order-related questions, please include your order number so we can help you faster.'
           ],
         },
         {
