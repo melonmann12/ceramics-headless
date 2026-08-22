@@ -55,13 +55,16 @@ function AnalyticsTracker() {
     }
 
     console.log('[ShopifyAnalytics] PAGE_VIEW attempt');
+    console.log('[ShopifyAnalytics] transport: fetch');
+    console.log('[ShopifyAnalytics] endpoint: monorail-edge.shopifysvc.com/unstable/produce_batch');
+
     // Optimistically mark tracked to prevent strict-mode/hydration double fire
     lastPath.current = currentPath;
 
     const fireAnalytics = async () => {
       try {
         await sendShopifyAnalytics({
-          eventName: 'page_viewed',
+          eventName: 'PAGE_VIEW',
           payload: {
             ...browserParams,
             uniqueToken,
@@ -72,7 +75,7 @@ function AnalyticsTracker() {
             currency: 'USD',
           }
         });
-        console.log('[ShopifyAnalytics] PAGE_VIEW success');
+        console.log('[ShopifyAnalytics] sendShopifyAnalytics resolved');
       } catch (err: any) {
         console.log('[ShopifyAnalytics] PAGE_VIEW failure:', err?.message || String(err));
         // Reset so a valid retry can happen if needed
