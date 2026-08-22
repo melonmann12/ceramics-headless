@@ -23,6 +23,10 @@ function AnalyticsTracker() {
   });
 
   useEffect(() => {
+    console.log('[ShopifyAnalytics] component mounted');
+  }, []);
+
+  useEffect(() => {
     if (isReady) {
       setCookiesReady(true);
     }
@@ -34,23 +38,49 @@ function AnalyticsTracker() {
 
     const currentPath = `${pathname}${searchParams ? `?${searchParams.toString()}` : ''}`;
     if (lastPath.current === currentPath) return;
-    lastPath.current = currentPath;
 
     const browserParams = getClientBrowserParameters();
     // Use the authoritative source for modern tokens
     const { uniqueToken, visitToken } = getTrackingValues();
     
-    sendShopifyAnalytics({
-      eventName: 'page_viewed',
-      payload: {
-        ...browserParams,
-        uniqueToken,
-        visitToken,
-        hasUserConsent: true,
-        shopId: process.env.NEXT_PUBLIC_SHOPIFY_SHOP_ID || '', 
-        currency: 'USD',
-      }
+    console.log('[ShopifyAnalytics] tracking values:', {
+      uniqueTokenPresent: !!uniqueToken,
+      visitTokenPresent: !!visitToken
     });
+    console.log('[ShopifyAnalytics] route:', currentPath);
+
+    if (!uniqueToken || !visitToken) {
+      console.log('[ShopifyAnalytics] PAGE_VIEW failure: missing tokens');
+      return;
+    }
+
+    console.log('[ShopifyAnalytics] PAGE_VIEW attempt');
+    // Optimistically mark tracked to prevent strict-mode/hydration double fire
+    lastPath.current = currentPath;
+
+    const fireAnalytics = async () => {
+      try {
+        await sendShopifyAnalytics({
+          eventName: 'page_viewed',
+          payload: {
+            ...browserParams,
+            uniqueToken,
+            visitToken,
+            hasUserConsent: true,
+            shopId: process.env.NEXT_PUBLIC_SHOPIFY_SHOP_ID || '', 
+            shopifySalesChannel: 'headless',
+            currency: 'USD',
+          }
+        });
+        console.log('[ShopifyAnalytics] PAGE_VIEW success');
+      } catch (err: any) {
+        console.log('[ShopifyAnalytics] PAGE_VIEW failure:', err?.message || String(err));
+        // Reset so a valid retry can happen if needed
+        lastPath.current = null;
+      }
+    };
+
+    fireAnalytics();
 
   }, [pathname, searchParams, cookiesReady]);
 
