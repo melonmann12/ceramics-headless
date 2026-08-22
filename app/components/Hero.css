@@ -80,6 +80,10 @@
     align-items: flex-start;
   }
 
+  .hero-background img {
+    object-position: 58% center;
+  }
+
   .hero-content {
     padding: 0 1rem;
     gap: 1rem;
