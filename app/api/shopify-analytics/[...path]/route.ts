@@ -41,10 +41,38 @@ export async function POST(
     }
 
     // 3. Proxy request to Shopify
-    return fetch(shopifyUrl, {
+    const response = await fetch(shopifyUrl, {
       method: 'POST',
       headers,
       body,
+    });
+
+    // 4. Read the decoded body (Undici already decompressed it)
+    const responseBody = await response.text();
+
+    // 5. Construct safe headers (drop compression transport headers)
+    const newHeaders = new Headers();
+    const unsafeHeaders = ['content-encoding', 'content-length', 'transfer-encoding'];
+
+    response.headers.forEach((value, key) => {
+      const lowerKey = key.toLowerCase();
+      // Skip unsafe headers and set-cookie (which requires special handling to avoid collapsing)
+      if (!unsafeHeaders.includes(lowerKey) && lowerKey !== 'set-cookie') {
+        newHeaders.set(key, value);
+      }
+    });
+
+    // 6. Safely forward multiple Set-Cookie headers without collapsing them
+    if (typeof response.headers.getSetCookie === 'function') {
+      const cookies = response.headers.getSetCookie();
+      cookies.forEach((cookie) => newHeaders.append('Set-Cookie', cookie));
+    }
+
+    // 7. Return the new sanitized response
+    return new NextResponse(responseBody, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: newHeaders,
     });
   } catch (error) {
     console.error('Shopify Analytics Proxy Error:', error);
