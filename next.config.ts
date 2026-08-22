@@ -28,6 +28,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/api/:version/graphql.json",
+        destination: "/api/shopify-analytics/:version/graphql.json",
+      },
+    ];
+  },
 };
 
 export default nextConfig;

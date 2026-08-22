@@ -3,6 +3,7 @@ import "./globals.css";
 import { CartProvider } from "./context/CartContext";
 import MetaPixel from "./components/MetaPixel";
 import GorgiasChat from "./components/GorgiasChat";
+import ShopifyAnalytics from "./components/ShopifyAnalytics";
 
 export const metadata: Metadata = {
   title: {
@@ -59,6 +60,7 @@ export default function RootLayout({
         <CartProvider>
           {children}
         </CartProvider>
+        <ShopifyAnalytics />
         <MetaPixel />
         <GorgiasChat />
       </body>
