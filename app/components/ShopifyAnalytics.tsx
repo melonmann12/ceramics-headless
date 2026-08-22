@@ -23,10 +23,6 @@ function AnalyticsTracker() {
   });
 
   useEffect(() => {
-    console.log('[ShopifyAnalytics] component mounted');
-  }, []);
-
-  useEffect(() => {
     if (isReady) {
       setCookiesReady(true);
     }
@@ -43,20 +39,9 @@ function AnalyticsTracker() {
     // Use the authoritative source for modern tokens
     const { uniqueToken, visitToken } = getTrackingValues();
     
-    console.log('[ShopifyAnalytics] tracking values:', {
-      uniqueTokenPresent: !!uniqueToken,
-      visitTokenPresent: !!visitToken
-    });
-    console.log('[ShopifyAnalytics] route:', currentPath);
-
     if (!uniqueToken || !visitToken) {
-      console.log('[ShopifyAnalytics] PAGE_VIEW failure: missing tokens');
       return;
     }
-
-    console.log('[ShopifyAnalytics] PAGE_VIEW attempt');
-    console.log('[ShopifyAnalytics] transport: fetch');
-    console.log('[ShopifyAnalytics] endpoint: monorail-edge.shopifysvc.com/unstable/produce_batch');
 
     // Optimistically mark tracked to prevent strict-mode/hydration double fire
     lastPath.current = currentPath;
@@ -75,9 +60,8 @@ function AnalyticsTracker() {
             currency: 'USD',
           }
         });
-        console.log('[ShopifyAnalytics] sendShopifyAnalytics resolved');
       } catch (err: any) {
-        console.log('[ShopifyAnalytics] PAGE_VIEW failure:', err?.message || String(err));
+        console.error('[ShopifyAnalytics] PAGE_VIEW failed:', err?.message || String(err));
         // Reset so a valid retry can happen if needed
         lastPath.current = null;
       }
