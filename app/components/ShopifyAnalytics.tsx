@@ -65,7 +65,7 @@ export default function ShopifyAnalytics() {
     <ShopifyProvider
       storeDomain={process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || 'matcha-9500.myshopify.com'}
       storefrontToken={'proxy-token'} 
-      storefrontApiVersion="2026-07"
+      storefrontApiVersion="2026-04"
       countryIsoCode="US"
       languageIsoCode="EN"
       sameDomainForStorefrontApi={true}
