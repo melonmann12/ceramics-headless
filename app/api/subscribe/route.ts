@@ -200,7 +200,13 @@ export async function POST(request: Request) {
   } catch (error: any) {
     // Log the actual error securely server-side, do not leak to client
     console.error('[Subscribe] Newsletter subscription error:', error);
-    console.log('[Subscribe] failure stage: other');
-    return NextResponse.json({ error: 'Something went wrong. Please try again later.', code: 'SHOPIFY_AUTH_FAILED' }, { status: 500 });
+    
+    let errorCode = 'SHOPIFY_AUTH_FAILED';
+    if (error.name === 'ShopifyAuthError') {
+      errorCode = error.code;
+    }
+    
+    console.log(`[Subscribe] failure stage: ${errorCode}`);
+    return NextResponse.json({ error: 'Something went wrong. Please try again later.', code: errorCode }, { status: 500 });
   }
 }

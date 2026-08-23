@@ -1,5 +1,12 @@
 import 'server-only';
 
+export class ShopifyAuthError extends Error {
+  constructor(public code: string, message: string) {
+    super(message);
+    this.name = 'ShopifyAuthError';
+  }
+}
+
 let cachedAccessToken: string | null = null;
 let tokenExpiresAt: number = 0; // Epoch ms
 
@@ -7,9 +14,18 @@ async function getShopifyAdminAccessToken(forceRefresh = false): Promise<string>
   const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || process.env.SHOPIFY_STORE_DOMAIN;
   const clientId = process.env.SHOPIFY_ADMIN_CLIENT_ID;
   const clientSecret = process.env.SHOPIFY_ADMIN_CLIENT_SECRET;
+  const apiVersion = process.env.SHOPIFY_ADMIN_API_VERSION;
+
+  console.log(`[ShopifyAdmin] env:
+${JSON.stringify({
+  clientIdPresent: !!clientId,
+  clientSecretPresent: !!clientSecret,
+  apiVersion: apiVersion || 'missing',
+  shopDomain: domain || 'missing'
+}, null, 2)}`);
 
   if (!domain || !clientId || !clientSecret) {
-    throw new Error('Missing required Shopify Admin API credentials (domain, clientId, clientSecret).');
+    throw new ShopifyAuthError('CONFIG_MISSING', 'Missing required Shopify Admin API credentials (domain, clientId, clientSecret).');
   }
 
   // Safety buffer of 5 minutes (300,000 ms)
@@ -21,10 +37,12 @@ async function getShopifyAdminAccessToken(forceRefresh = false): Promise<string>
   const endpoint = `https://${domain}/admin/oauth/access_token`;
 
   try {
+    console.log('[ShopifyAdmin] OAuth request started');
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json'
       },
       body: new URLSearchParams({
         grant_type: 'client_credentials',
@@ -34,25 +52,59 @@ async function getShopifyAdminAccessToken(forceRefresh = false): Promise<string>
       cache: 'no-store',
     });
 
+    console.log(`[ShopifyAdmin] OAuth status: ${response.status}`);
+
     if (!response.ok) {
-      console.error('Failed to obtain Shopify Admin access token. Status:', response.status);
-      throw new Error('Authentication failed');
+      const contentType = response.headers.get('content-type') || 'unknown';
+      let errorName = 'UNKNOWN';
+      let errorDescription = 'No specific message';
+      try {
+        if (contentType.includes('application/json')) {
+          const errData = await response.json();
+          errorName = errData.error || errData.error_description || 'UNKNOWN';
+          errorDescription = errData.error_description || JSON.stringify(errData);
+        } else {
+          const text = await response.text();
+          errorDescription = text.substring(0, 100);
+        }
+      } catch (e) {
+        // ignore parse errors safely
+      }
+
+      console.error(`[ShopifyAdmin] OAuth failed. Type: ${contentType}, Error: ${errorName}, Msg: ${errorDescription}`);
+      
+      let errorCode = 'OAUTH_UNKNOWN';
+      if (response.status === 400) errorCode = 'OAUTH_400';
+      if (response.status === 401) errorCode = 'OAUTH_401';
+      if (response.status === 403) errorCode = 'OAUTH_403';
+      
+      if (errorName.includes('invalid_client')) errorCode = 'OAUTH_INVALID_CLIENT';
+      if (errorDescription.includes('not permitted')) errorCode = 'OAUTH_SHOP_NOT_PERMITTED';
+
+      throw new ShopifyAuthError(errorCode, 'Authentication failed');
     }
 
     const data = await response.json();
     
     if (!data.access_token) {
-      throw new Error('No access token returned from Shopify');
+      throw new ShopifyAuthError('OAUTH_UNKNOWN', 'No access token returned from Shopify');
     }
 
     // Check scopes (read_customers, write_customers)
     const scopes = data.scope ? data.scope.split(',') : [];
+    
+    console.log(`[ShopifyAdmin] scopes:
+${JSON.stringify({
+  readCustomers: scopes.includes('read_customers'),
+  writeCustomers: scopes.includes('write_customers')
+}, null, 2)}`);
+
     const requiredScopes = ['read_customers', 'write_customers'];
     const missingScopes = requiredScopes.filter(scope => !scopes.includes(scope));
     
     if (missingScopes.length > 0) {
-      console.error(`Missing required Admin API scopes: ${missingScopes.join(', ')}`);
-      throw new Error('Missing required scopes');
+      console.error(`[ShopifyAdmin] Missing required Admin API scopes: ${missingScopes.join(', ')}`);
+      throw new ShopifyAuthError('CONFIG_MISSING', 'Missing required scopes');
     }
 
     cachedAccessToken = data.access_token;
@@ -60,9 +112,12 @@ async function getShopifyAdminAccessToken(forceRefresh = false): Promise<string>
     tokenExpiresAt = Date.now() + (data.expires_in * 1000);
 
     return cachedAccessToken as string;
-  } catch (error) {
-    console.error('Error in getShopifyAdminAccessToken:', error);
-    throw new Error('Could not authenticate with Shopify Admin API');
+  } catch (error: any) {
+    if (error instanceof ShopifyAuthError) {
+      throw error;
+    }
+    console.error('[ShopifyAdmin] Error in getShopifyAdminAccessToken:', error);
+    throw new ShopifyAuthError('OAUTH_UNKNOWN', 'Could not authenticate with Shopify Admin API');
   }
 }
 
