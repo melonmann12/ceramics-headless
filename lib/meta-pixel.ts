@@ -43,8 +43,8 @@ function fbq(...args: Parameters<FbqFunction>): void {
 // ── Public tracking API ───────────────────────────────────────────────
 
 /** Fire a standard Meta "PageView" event. */
-export function trackPageView(): void {
-  fbq('track', 'PageView');
+export function trackPageView(eventId: string): void {
+  fbq('track', 'PageView', undefined, { eventID: eventId });
 }
 
 export interface ViewContentParams {
@@ -58,8 +58,8 @@ export interface ViewContentParams {
 /**
  * Fire a standard Meta "ViewContent" event.
  */
-export function trackViewContent(params: ViewContentParams): void {
-  fbq('track', 'ViewContent', params);
+export function trackViewContent(params: ViewContentParams, eventId: string): void {
+  fbq('track', 'ViewContent', params, { eventID: eventId });
 }
 
 export interface MetaCartContent {
@@ -80,8 +80,8 @@ export interface AddToCartParams {
 /**
  * Fire a standard Meta "AddToCart" event.
  */
-export function trackAddToCart(params: AddToCartParams): void {
-  fbq('track', 'AddToCart', params);
+export function trackAddToCart(params: AddToCartParams, eventId: string): void {
+  fbq('track', 'AddToCart', params, { eventID: eventId });
 }
 
 

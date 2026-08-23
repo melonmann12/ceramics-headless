@@ -65,13 +65,26 @@ export default function ProductForm({ product }: ProductFormProps) {
       const numericVariantId = normalizeVariantId(selectedVariant.id);
 
       if (numericVariantId) {
-        trackViewContent({
+        const eventId = crypto.randomUUID();
+        const payload = {
           content_ids: [numericVariantId],
-          content_type: 'product',
+          content_type: 'product' as const,
           content_name: product.title,
           value: parseFloat(selectedVariant.price.amount),
           currency: selectedVariant.price.currencyCode,
-        });
+        };
+        trackViewContent(payload, eventId);
+        
+        fetch('/api/meta/events', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            event_name: 'ViewContent',
+            event_id: eventId,
+            event_source_url: window.location.href,
+            custom_data: payload,
+          }),
+        }).catch(console.error);
       }
     }
   }, [product, selectedVariant]);
@@ -114,9 +127,10 @@ export default function ProductForm({ product }: ProductFormProps) {
       const itemPrice = parseFloat(selectedVariant.price.amount);
       const numericVariantId = normalizeVariantId(selectedVariant.id);
       
-      trackAddToCart({
+      const eventId = crypto.randomUUID();
+      const payload = {
         content_ids: [numericVariantId],
-        content_type: 'product',
+        content_type: 'product' as const,
         content_name: product.title,
         value: itemPrice * qty,
         currency: selectedVariant.price.currencyCode,
@@ -127,7 +141,20 @@ export default function ProductForm({ product }: ProductFormProps) {
             item_price: itemPrice,
           }
         ]
-      });
+      };
+      
+      trackAddToCart(payload, eventId);
+      
+      fetch('/api/meta/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event_name: 'AddToCart',
+          event_id: eventId,
+          event_source_url: window.location.href,
+          custom_data: payload,
+        }),
+      }).catch(console.error);
       
     } catch (err: any) {
       setErrorMsg(err.message || 'Failed to add item to cart.');

@@ -56,7 +56,18 @@ export default function MetaPixel() {
 
     // Init + first PageView (queued; fbevents.js will flush when it loads)
     window.fbq('init', META_PIXEL_ID);
-    trackPageView();
+    
+    const eventId = crypto.randomUUID();
+    trackPageView(eventId);
+    fetch('/api/meta/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event_name: 'PageView',
+        event_id: eventId,
+        event_source_url: window.location.href,
+      }),
+    }).catch(console.error);
   }, []);
 
   // Track PageView on client-side navigations (pathname changes).
@@ -68,7 +79,17 @@ export default function MetaPixel() {
       isFirstPathChange.current = false;
       return;
     }
-    trackPageView();
+    const eventId = crypto.randomUUID();
+    trackPageView(eventId);
+    fetch('/api/meta/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event_name: 'PageView',
+        event_id: eventId,
+        event_source_url: window.location.href,
+      }),
+    }).catch(console.error);
   }, [pathname]);
 
   // noscript fallback image for browsers with JS disabled
