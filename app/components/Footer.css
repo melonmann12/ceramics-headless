@@ -84,13 +84,18 @@
 
 .footer-newsletter-wrapper {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
 @media (min-width: 1024px) {
   .footer-newsletter-wrapper {
     grid-column: span 6;
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-5);
   }
 }
 

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import NewsletterForm from './NewsletterForm';
 import './Footer.css';
 
 export default function Footer() {
@@ -49,6 +50,7 @@ export default function Footer() {
           </div>
 
           <div className="footer-newsletter-wrapper">
+            <NewsletterForm />
             <div className="footer-care-card">
               <h3 className="footer-care-heading">CUSTOMER CARE</h3>
               <p className="footer-care-text">Questions about an order, shipping, returns, or product care?</p>

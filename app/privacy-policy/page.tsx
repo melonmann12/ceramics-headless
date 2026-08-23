@@ -22,6 +22,7 @@ export default function PrivacyPolicyPage() {
           title: 'How Information Is Used',
           body: [
             'Customer information is used to process orders, provide checkout, calculate shipping and taxes, communicate about orders, prevent fraud, and operate the storefront.',
+            'If you explicitly join our community, your email address will be used to send marketing communications. You may unsubscribe at any time.',
           ],
         },
         {
