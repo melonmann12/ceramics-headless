@@ -51,6 +51,7 @@ export default function Footer() {
 
           <div className="footer-newsletter-wrapper">
             <NewsletterForm />
+            {/* Customer Care temporarily hidden
             <div className="footer-care-card">
               <h3 className="footer-care-heading">CUSTOMER CARE</h3>
               <p className="footer-care-text">Questions about an order, shipping, returns, or product care?</p>
@@ -59,6 +60,7 @@ export default function Footer() {
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_forward</span>
               </Link>
             </div>
+            */}
           </div>
         </div>
 
