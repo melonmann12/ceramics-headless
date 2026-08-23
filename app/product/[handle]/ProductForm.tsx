@@ -23,7 +23,10 @@ const knownColors: Record<string, string> = {
 export default function ProductForm({ product }: ProductFormProps) {
   const defaultOptions = useMemo(() => {
     const opts: Record<string, string> = {};
-    const initialVariant = product.variants.find((variant) => variant.availableForSale) || product.variants[0];
+    let initialVariant = product.variants.find((variant) => variant.availableForSale && variant.title.toLowerCase().includes('combo'));
+    if (!initialVariant) {
+      initialVariant = product.variants.find((variant) => variant.availableForSale) || product.variants[0];
+    }
 
     product.options.forEach((opt) => {
       const selectedValue = initialVariant?.selectedOptions.find((selected) => selected.name === opt.name)?.value;
@@ -354,23 +357,55 @@ export default function ProductForm({ product }: ProductFormProps) {
               </div>
             );
           } else {
+            const isSetOption = option.values.some(v => v.toLowerCase().includes('bowl') || v.toLowerCase().includes('combo') || v.toLowerCase().includes('holder'));
+            const isComboSelected = selectedOptions[option.name]?.toLowerCase().includes('combo');
+
             return (
               <div key={option.id} className="pdp-selector-section">
                 <div className="pdp-selector-header">
-                  <h4 className="pdp-selector-title">{option.name.toUpperCase()}:</h4>
+                  <h4 className="pdp-selector-title">{isSetOption ? 'Choose your set' : option.name.toUpperCase()}:</h4>
                 </div>
                 <div className="pdp-pill-swatches">
-                  {option.values.map((val) => (
-                    <button
-                      key={val}
-                      className={`pdp-pill-swatch ${selectedOptions[option.name] === val ? 'active' : ''}`}
-                      onClick={() => setSelectedOptions({ ...selectedOptions, [option.name]: val })}
-                      aria-pressed={selectedOptions[option.name] === val}
-                    >
-                      {val}
-                    </button>
-                  ))}
+                  {option.values.map((val) => {
+                    const isCombo = val.toLowerCase().includes('combo');
+                    const isHolder = val.toLowerCase().includes('holder');
+                    const isBowl = val.toLowerCase().includes('bowl');
+
+                    let displayLabel = val;
+                    if (isCombo) displayLabel = 'Bowl + Holder Set';
+                    else if (isHolder) displayLabel = 'Matching Holder';
+                    else if (isBowl) displayLabel = 'Matcha Bowl';
+
+                    return (
+                      <button
+                        key={val}
+                        className={`pdp-pill-swatch ${selectedOptions[option.name] === val ? 'active' : ''}`}
+                        onClick={() => setSelectedOptions({ ...selectedOptions, [option.name]: val })}
+                        aria-pressed={selectedOptions[option.name] === val}
+                        style={isCombo ? { position: 'relative', overflow: 'visible' } : undefined}
+                      >
+                        {isCombo && (
+                          <span style={{ 
+                            position: 'absolute', top: 0, right: 0, transform: 'translate(10%, -50%)',
+                            backgroundColor: 'var(--burgundy, #6b2d2a)', color: 'var(--cream, #FDFBF7)', 
+                            fontSize: '0.55rem', padding: '2px 5px', borderRadius: '10px', fontWeight: 'bold', whiteSpace: 'nowrap'
+                          }}>
+                            BEST VALUE
+                          </span>
+                        )}
+                        {displayLabel}
+                      </button>
+                    );
+                  })}
                 </div>
+                {isSetOption && isComboSelected && (
+                  <div style={{ marginTop: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--cream, #FDFBF7)', borderRadius: '8px', fontSize: '0.85rem', color: 'var(--sage, #1E2E24)', border: '1px solid rgba(0,0,0,0.05)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>inventory_2</span>
+                      <span>Includes 1 handmade Matcha Bowl + 1 matching ceramic Holder.</span>
+                    </div>
+                  </div>
+                )}
               </div>
             );
           }
