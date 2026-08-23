@@ -47,9 +47,15 @@ export async function POST(request: Request) {
     const clientSecret = process.env.SHOPIFY_ADMIN_CLIENT_SECRET;
     const apiVersion = process.env.SHOPIFY_ADMIN_API_VERSION;
 
-    if (!domain || !clientId || !clientSecret || !apiVersion) {
+    const missingVars: string[] = [];
+    if (!domain) missingVars.push('NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN');
+    if (!clientId) missingVars.push('SHOPIFY_ADMIN_CLIENT_ID');
+    if (!clientSecret) missingVars.push('SHOPIFY_ADMIN_CLIENT_SECRET');
+    if (!apiVersion) missingVars.push('SHOPIFY_ADMIN_API_VERSION');
+
+    if (missingVars.length > 0) {
       console.error('[Subscribe] Server configuration error: Missing Shopify Admin API credentials.');
-      return NextResponse.json({ error: 'Internal Server Error', code: 'CONFIGURATION_ERROR' }, { status: 500 });
+      return NextResponse.json({ error: 'Something went wrong. Please try again later.', code: 'CONFIG_MISSING', missing: missingVars }, { status: 500 });
     }
     console.log('[Subscribe] env validation passed');
 
@@ -202,11 +208,17 @@ export async function POST(request: Request) {
     console.error('[Subscribe] Newsletter subscription error:', error);
     
     let errorCode = 'SHOPIFY_AUTH_FAILED';
+    let missing: string[] | undefined = undefined;
     if (error.isShopifyAuthError || error.name === 'ShopifyAuthError') {
       errorCode = error.code;
+      if (error.missing) missing = error.missing;
     }
     
     console.log(`[Subscribe] failure stage: ${errorCode}`);
-    return NextResponse.json({ error: 'Something went wrong. Please try again later.', code: errorCode }, { status: 500 });
+    return NextResponse.json({ 
+      error: 'Something went wrong. Please try again later.', 
+      code: errorCode,
+      ...(missing ? { missing } : {})
+    }, { status: 500 });
   }
 }

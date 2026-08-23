@@ -2,7 +2,7 @@ import 'server-only';
 
 export class ShopifyAuthError extends Error {
   public isShopifyAuthError = true;
-  constructor(public code: string, message: string) {
+  constructor(public code: string, message: string, public missing?: string[]) {
     super(message);
     this.name = 'ShopifyAuthError';
     Object.setPrototypeOf(this, ShopifyAuthError.prototype);
@@ -25,9 +25,30 @@ ${JSON.stringify({
   apiVersion: apiVersion || 'missing',
   shopDomain: domain || 'missing'
 }, null, 2)}`);
+  const missingVars: string[] = [];
+  if (!domain) missingVars.push('NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN');
+  if (!clientId) missingVars.push('SHOPIFY_ADMIN_CLIENT_ID');
+  if (!clientSecret) missingVars.push('SHOPIFY_ADMIN_CLIENT_SECRET');
+  if (!apiVersion) missingVars.push('SHOPIFY_ADMIN_API_VERSION');
 
-  if (!domain || !clientId || !clientSecret) {
-    throw new ShopifyAuthError('CONFIG_MISSING', 'Missing required Shopify Admin API credentials (domain, clientId, clientSecret).');
+  if (missingVars.length > 0) {
+    throw new ShopifyAuthError('CONFIG_MISSING', 'Missing required Shopify Admin API credentials.', missingVars);
+  }
+
+  // Type assertion since we've already thrown if they were undefined
+  const safeDomain = domain as string;
+  const safeClientId = clientId as string;
+  const safeClientSecret = clientSecret as string;
+
+  const placeholders: string[] = [];
+  if (clientId && clientId.includes('your_client_id_here')) placeholders.push('SHOPIFY_ADMIN_CLIENT_ID');
+  if (clientSecret && clientSecret.includes('your_client_secret_here')) placeholders.push('SHOPIFY_ADMIN_CLIENT_SECRET');
+  if (placeholders.length > 0) {
+    throw new ShopifyAuthError('CONFIG_PLACEHOLDER_VALUE', 'Placeholder values detected.', placeholders);
+  }
+
+  if (domain !== 'matcha-9500.myshopify.com') {
+    throw new ShopifyAuthError('CONFIG_INVALID_DOMAIN', 'Store domain does not match expected production domain.', ['NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN']);
   }
 
   // Safety buffer of 5 minutes (300,000 ms)
@@ -36,7 +57,7 @@ ${JSON.stringify({
     return cachedAccessToken;
   }
 
-  const endpoint = `https://${domain}/admin/oauth/access_token`;
+  const endpoint = `https://${safeDomain}/admin/oauth/access_token`;
 
   try {
     console.log('[ShopifyAdmin] OAuth request started');
@@ -48,8 +69,8 @@ ${JSON.stringify({
       },
       body: new URLSearchParams({
         grant_type: 'client_credentials',
-        client_id: clientId,
-        client_secret: clientSecret,
+        client_id: safeClientId,
+        client_secret: safeClientSecret,
       }),
       cache: 'no-store',
     });
@@ -97,7 +118,7 @@ ${JSON.stringify({
     }
 
     // Check scopes (read_customers, write_customers)
-    const scopes = data.scope ? data.scope.split(',') : [];
+    const scopes = data.scope ? data.scope.split(',').map((s: string) => s.trim()) : [];
     
     console.log(`[ShopifyAdmin] scopes:
 ${JSON.stringify({
@@ -110,7 +131,7 @@ ${JSON.stringify({
     
     if (missingScopes.length > 0) {
       console.error(`[ShopifyAdmin] Missing required Admin API scopes: ${missingScopes.join(', ')}`);
-      throw new ShopifyAuthError('CONFIG_MISSING', 'Missing required scopes');
+      throw new ShopifyAuthError('OAUTH_SCOPE_MISSING', 'Missing required scopes', missingScopes);
     }
 
     cachedAccessToken = data.access_token;
@@ -137,7 +158,14 @@ export async function shopifyAdminRequest({ query, variables }: ShopifyAdminRequ
   const apiVersion = process.env.SHOPIFY_ADMIN_API_VERSION;
 
   if (!domain || !apiVersion) {
-    throw new Error('Missing required Shopify Admin API environment variables (domain or apiVersion).');
+    const missing = [];
+    if (!domain) missing.push('NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN');
+    if (!apiVersion) missing.push('SHOPIFY_ADMIN_API_VERSION');
+    throw new ShopifyAuthError('CONFIG_MISSING', 'Missing required Shopify Admin API environment variables.', missing);
+  }
+
+  if (apiVersion !== '2026-07') {
+    throw new ShopifyAuthError('CONFIG_INVALID_API_VERSION', 'API version does not match expected 2026-07.', ['SHOPIFY_ADMIN_API_VERSION']);
   }
 
   const endpoint = `https://${domain}/admin/api/${apiVersion}/graphql.json`;
