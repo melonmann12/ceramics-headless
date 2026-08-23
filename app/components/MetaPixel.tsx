@@ -24,8 +24,10 @@ export default function MetaPixel() {
   useEffect(() => {
     if (hasInitialised.current) return;
     if (typeof window === 'undefined') return;
-    // Guard: if fbq is already a real function, we've been here before.
-    if (typeof window.fbq === 'function' && window.fbq.loaded) return;
+    // Global guard to ensure exactly one initialization per page lifecycle,
+    // protecting against component remounts that wipe out useRef state.
+    if ((window as any).__ashpiaMetaPixelInitialized) return;
+    (window as any).__ashpiaMetaPixelInitialized = true;
 
     hasInitialised.current = true;
 
