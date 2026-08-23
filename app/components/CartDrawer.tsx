@@ -57,6 +57,15 @@ export default function CartDrawer() {
 
   return (
     <>
+      {isOpen && (
+        <style dangerouslySetInnerHTML={{ __html: `
+          .back-to-top { display: none !important; }
+          iframe[id*="gorgias"], 
+          [id*="gorgias-chat"], 
+          [id*="gorgias-web-messenger"],
+          #gorgias-chat-container { display: none !important; }
+        `}} />
+      )}
       {/* Overlay */}
       <div 
         className={`cart-drawer-overlay ${isOpen ? 'open' : ''}`} 
@@ -168,7 +177,7 @@ export default function CartDrawer() {
               </span>
             </div>
             <p style={{ fontSize: '0.8rem', color: 'var(--sage)', marginBottom: '1rem', textAlign: 'center' }}>
-              Shipping and taxes calculated at checkout.
+              Free standard US shipping. Taxes calculated at checkout.
             </p>
             {checkoutError && (
               <p style={{ color: 'red', fontSize: '0.875rem', marginBottom: '1rem', textAlign: 'center' }}>

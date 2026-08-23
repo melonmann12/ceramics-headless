@@ -5,6 +5,7 @@ import ShopifyImage from '@/app/components/ShopifyImage';
 import type { NormalizedProduct } from '@/lib/shopify/types';
 import { useCart } from '@/app/context/CartContext';
 import { trackViewContent, trackAddToCart, normalizeVariantId } from '@/lib/meta-pixel';
+import { SHIPPING_CONFIG } from '@/lib/config';
 
 interface ProductFormProps {
   product: NormalizedProduct;
@@ -307,9 +308,19 @@ export default function ProductForm({ product }: ProductFormProps) {
             )}
           </div>
           
-          <div className="pdp-installments">
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>shopping_bag</span>
-            <span>Final shipping, taxes, and payment options are confirmed in Shopify Checkout.</span>
+          <div className="pdp-usps" style={{ display: 'flex', gap: '1rem', marginTop: '0.75rem', fontSize: '0.85rem', color: 'var(--sage)', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>front_hand</span>
+              <span>100% Handmade</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>liquor</span>
+              <span>Food-safe Ceramic</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>local_shipping</span>
+              <span>Free US Shipping</span>
+            </div>
           </div>
         </div>
 
@@ -428,8 +439,8 @@ export default function ProductForm({ product }: ProductFormProps) {
                 {tab === 'SHIPPING & DELIVERY' && (
                   <ul className="pdp-care-list">
                     <li>Each piece is made to order with care.</li>
-                    <li><strong>Standard:</strong> 15–20 days making + 8–10 days shipping.</li>
-                    <li><strong>Priority:</strong> 8–15 days making + 8–10 days shipping.</li>
+                    <li><strong>Standard:</strong> {SHIPPING_CONFIG.timelines.standard}.</li>
+                    <li><strong>Priority:</strong> {SHIPPING_CONFIG.timelines.priority}.</li>
                     <li>Timelines may vary slightly during busy periods because every piece is handmade.</li>
                   </ul>
                 )}
@@ -452,9 +463,9 @@ export default function ProductForm({ product }: ProductFormProps) {
           <h3 className="pdp-wcu-title">Why Choose Us?</h3>
           <div className="pdp-wcu-grid">
             {[
-              { icon: 'local_shipping', title: 'FREE SHIPPING', desc: 'Free standard shipping on all orders.' },
+              { icon: 'local_shipping', title: 'FREE SHIPPING', desc: SHIPPING_CONFIG.freeShippingRule },
               { icon: 'assignment_return', title: '14-DAY RETURNS', desc: 'Returns accepted within 14 days of delivery.' },
-              { icon: 'verified_user', title: 'SHOPIFY CHECKOUT', desc: 'Secure checkout powered by Shopify.' },
+              { icon: 'liquor', title: 'FOOD-SAFE GLAZE', desc: 'Food-safe glazed ceramic made for everyday drinking and matcha use.' },
               { icon: 'local_florist', title: 'HANDMADE CERAMICS', desc: 'Each piece is individually handmade with care.' },
             ].map(({ icon, title, desc }) => (
               <div key={title} className="pdp-wcu-item">
