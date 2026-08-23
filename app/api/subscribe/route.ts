@@ -202,7 +202,7 @@ export async function POST(request: Request) {
     console.error('[Subscribe] Newsletter subscription error:', error);
     
     let errorCode = 'SHOPIFY_AUTH_FAILED';
-    if (error.name === 'ShopifyAuthError') {
+    if (error.isShopifyAuthError || error.name === 'ShopifyAuthError') {
       errorCode = error.code;
     }
     

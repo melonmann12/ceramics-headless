@@ -1,9 +1,11 @@
 import 'server-only';
 
 export class ShopifyAuthError extends Error {
+  public isShopifyAuthError = true;
   constructor(public code: string, message: string) {
     super(message);
     this.name = 'ShopifyAuthError';
+    Object.setPrototypeOf(this, ShopifyAuthError.prototype);
   }
 }
 
@@ -58,28 +60,32 @@ ${JSON.stringify({
       const contentType = response.headers.get('content-type') || 'unknown';
       let errorName = 'UNKNOWN';
       let errorDescription = 'No specific message';
+      
       try {
         if (contentType.includes('application/json')) {
           const errData = await response.json();
-          errorName = errData.error || errData.error_description || 'UNKNOWN';
-          errorDescription = errData.error_description || JSON.stringify(errData);
+          // Extract specific safe JSON fields
+          errorName = errData.error || errData.message || 'UNKNOWN';
+          errorDescription = errData.error_description || '';
         } else {
+          // HTML or plain text - DO NOT return body. Just log it safely internally.
           const text = await response.text();
-          errorDescription = text.substring(0, 100);
+          if (text.includes('invalid_client')) errorName = 'invalid_client';
+          if (text.includes('not permitted')) errorDescription = 'not permitted';
         }
       } catch (e) {
         // ignore parse errors safely
       }
 
-      console.error(`[ShopifyAdmin] OAuth failed. Type: ${contentType}, Error: ${errorName}, Msg: ${errorDescription}`);
+      console.error(`[ShopifyAdmin] OAuth failed. HTTP ${response.status}. Type: ${contentType}, Error: ${errorName}, Desc: ${errorDescription}`);
       
       let errorCode = 'OAUTH_UNKNOWN';
       if (response.status === 400) errorCode = 'OAUTH_400';
       if (response.status === 401) errorCode = 'OAUTH_401';
       if (response.status === 403) errorCode = 'OAUTH_403';
       
-      if (errorName.includes('invalid_client')) errorCode = 'OAUTH_INVALID_CLIENT';
-      if (errorDescription.includes('not permitted')) errorCode = 'OAUTH_SHOP_NOT_PERMITTED';
+      if (errorName && errorName.toLowerCase().includes('invalid_client')) errorCode = 'OAUTH_INVALID_CLIENT';
+      if (errorDescription && errorDescription.toLowerCase().includes('not permitted')) errorCode = 'OAUTH_SHOP_NOT_PERMITTED';
 
       throw new ShopifyAuthError(errorCode, 'Authentication failed');
     }
