@@ -40,6 +40,7 @@ function validateEmail(email: any): string | null {
 
 export async function POST(request: Request) {
   try {
+    console.log('[Subscribe] request received');
     // 1. Environment Validation (fail safely if misconfigured)
     const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || process.env.SHOPIFY_STORE_DOMAIN;
     const clientId = process.env.SHOPIFY_ADMIN_CLIENT_ID;
@@ -47,14 +48,16 @@ export async function POST(request: Request) {
     const apiVersion = process.env.SHOPIFY_ADMIN_API_VERSION;
 
     if (!domain || !clientId || !clientSecret || !apiVersion) {
-      console.error('Server configuration error: Missing Shopify Admin API credentials.');
-      return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+      console.error('[Subscribe] Server configuration error: Missing Shopify Admin API credentials.');
+      return NextResponse.json({ error: 'Internal Server Error', code: 'CONFIGURATION_ERROR' }, { status: 500 });
     }
+    console.log('[Subscribe] env validation passed');
 
     // 2. Rate Limiting
     const ip = request.headers.get('x-forwarded-for') || 'unknown-ip';
     if (!checkRateLimit(ip)) {
-      return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
+      console.log('[Subscribe] failure stage: rate limiter');
+      return NextResponse.json({ error: 'Too many requests. Please try again later.', code: 'RATE_LIMITED' }, { status: 429 });
     }
 
     // 3. Request Validation
@@ -63,13 +66,15 @@ export async function POST(request: Request) {
     // Honeypot check (anti-spam)
     // We expect the frontend to pass a visually hidden 'website' or 'hp' field.
     if (body.website) {
+      console.log('[Subscribe] failure stage: honeypot');
       // Silently reject bots that fill the honeypot
-      return NextResponse.json({ message: 'Success' }, { status: 200 });
+      return NextResponse.json({ message: 'Success', code: 'HONEYPOT_REJECT' }, { status: 200 });
     }
 
     const email = validateEmail(body.email);
     if (!email) {
-      return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
+      console.log('[Subscribe] failure stage: frontend payload');
+      return NextResponse.json({ error: 'Invalid email address', code: 'VALIDATION_ERROR' }, { status: 400 });
     }
 
     // 4. Safest duplicate-handling fallback: Query the customer first.
@@ -90,7 +95,15 @@ export async function POST(request: Request) {
     `;
 
     const queryVars = { query: `email:${email}` };
-    const queryRes = await shopifyAdminRequest({ query, variables: queryVars });
+    console.log('[Subscribe] customer lookup started');
+    let queryRes;
+    try {
+      queryRes = await shopifyAdminRequest({ query, variables: queryVars });
+      console.log('[Subscribe] customer lookup status: success');
+    } catch (e: any) {
+      console.log('[Subscribe] failure stage: Admin API authentication or query');
+      throw e;
+    }
     const existingCustomer = queryRes.customers?.edges[0]?.node;
 
     const consentUpdatedAt = new Date().toISOString();
@@ -129,17 +142,20 @@ export async function POST(request: Request) {
         }
       };
 
+      console.log('[Subscribe] consent update started');
       const updateRes = await shopifyAdminRequest({ query: updateMutation, variables: updateVars });
       const userErrors = updateRes.customerEmailMarketingConsentUpdate?.userErrors || [];
       if (userErrors.length > 0) {
-        console.error('Consent update userErrors:', userErrors);
-        return NextResponse.json({ error: 'Failed to subscribe' }, { status: 400 });
+        console.error('[Subscribe] Shopify GraphQL userErrors:', userErrors.map((e: any) => `${e.field}: ${e.message}`));
+        console.log('[Subscribe] failure stage: marketing consent update');
+        return NextResponse.json({ error: 'Failed to subscribe', code: 'SHOPIFY_GRAPHQL_FAILED' }, { status: 400 });
       }
 
-      return NextResponse.json({ message: 'Success' }, { status: 200 });
+      return NextResponse.json({ message: 'Success', code: 'SUCCESS' }, { status: 200 });
     }
 
     // 5. Customer does not exist -> Create new customer with consent
+    console.log('[Subscribe] customerCreate started');
     const createMutation = `
       mutation customerCreate($input: CustomerInput!) {
         customerCreate(input: $input) {
@@ -168,21 +184,23 @@ export async function POST(request: Request) {
     const userErrors = createRes.customerCreate?.userErrors || [];
     
     if (userErrors.length > 0) {
-      console.error('Customer create userErrors:', userErrors);
+      console.error('[Subscribe] Shopify GraphQL userErrors:', userErrors.map((e: any) => `${e.field}: ${e.message}`));
       // Just in case a race condition happened between the query and creation
       const emailTakenError = userErrors.find((e: any) => e.field?.includes('email') || e.message.toLowerCase().includes('taken'));
       if (emailTakenError) {
          // Gracefully handle race condition
-         return NextResponse.json({ message: 'Success' }, { status: 200 });
+         return NextResponse.json({ message: 'Success', code: 'SUCCESS_RACE' }, { status: 200 });
       }
-      return NextResponse.json({ error: 'Failed to subscribe' }, { status: 400 });
+      console.log('[Subscribe] failure stage: customerCreate');
+      return NextResponse.json({ error: 'Failed to subscribe', code: 'SHOPIFY_GRAPHQL_FAILED' }, { status: 400 });
     }
 
-    return NextResponse.json({ message: 'Success' }, { status: 200 });
+    return NextResponse.json({ message: 'Success', code: 'SUCCESS' }, { status: 200 });
 
-  } catch (error) {
+  } catch (error: any) {
     // Log the actual error securely server-side, do not leak to client
-    console.error('Newsletter subscription error:', error);
-    return NextResponse.json({ error: 'Something went wrong. Please try again later.' }, { status: 500 });
+    console.error('[Subscribe] Newsletter subscription error:', error);
+    console.log('[Subscribe] failure stage: other');
+    return NextResponse.json({ error: 'Something went wrong. Please try again later.', code: 'SHOPIFY_AUTH_FAILED' }, { status: 500 });
   }
 }
