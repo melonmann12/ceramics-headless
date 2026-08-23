@@ -33,7 +33,7 @@ export default function ProductForm({ product }: ProductFormProps) {
   }, [product.options, product.variants]);
 
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(defaultOptions);
-  
+
   const selectedVariant = useMemo(() => {
     return product.variants.find(variant => {
       return variant.selectedOptions.every(
@@ -75,7 +75,7 @@ export default function ProductForm({ product }: ProductFormProps) {
           currency: selectedVariant.price.currencyCode,
         };
         trackViewContent(payload, eventId);
-        
+
         fetch('/api/meta/events', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -89,7 +89,7 @@ export default function ProductForm({ product }: ProductFormProps) {
       }
     }
   }, [product, selectedVariant]);
-  
+
   const currentIndex = product.images.indexOf(activeImage);
   const hasMultipleImages = product.images.length > 1;
   const isFirstImage = currentIndex === 0;
@@ -124,10 +124,10 @@ export default function ProductForm({ product }: ProductFormProps) {
     setIsAdding(true);
     try {
       await addCartItem(selectedVariant.id, qty);
-      
+
       const itemPrice = parseFloat(selectedVariant.price.amount);
       const numericVariantId = normalizeVariantId(selectedVariant.id);
-      
+
       const eventId = crypto.randomUUID();
       const payload = {
         content_ids: [numericVariantId],
@@ -143,9 +143,9 @@ export default function ProductForm({ product }: ProductFormProps) {
           }
         ]
       };
-      
+
       trackAddToCart(payload, eventId);
-      
+
       fetch('/api/meta/events', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -156,7 +156,7 @@ export default function ProductForm({ product }: ProductFormProps) {
           custom_data: payload,
         }),
       }).catch(console.error);
-      
+
     } catch (err: any) {
       setErrorMsg(err.message || 'Failed to add item to cart.');
     } finally {
@@ -180,7 +180,7 @@ export default function ProductForm({ product }: ProductFormProps) {
   const accordionTabs = ['SHIPPING & DELIVERY', 'HANDMADE & CARE'];
 
   // Format currency
-  const price = selectedVariant 
+  const price = selectedVariant
     ? new Intl.NumberFormat('en-EU', { style: 'currency', currency: selectedVariant.price.currencyCode }).format(parseFloat(selectedVariant.price.amount))
     : product.price;
 
@@ -219,7 +219,7 @@ export default function ProductForm({ product }: ProductFormProps) {
           {hasMultipleImages && (
             <>
               {!isFirstImage && (
-                <button 
+                <button
                   className="pdp-image-nav-btn prev"
                   onClick={handlePrevImage}
                   aria-label="Previous product image"
@@ -228,7 +228,7 @@ export default function ProductForm({ product }: ProductFormProps) {
                 </button>
               )}
               {!isLastImage && (
-                <button 
+                <button
                   className="pdp-image-nav-btn next"
                   onClick={handleNextImage}
                   aria-label="Next product image"
@@ -269,7 +269,7 @@ export default function ProductForm({ product }: ProductFormProps) {
 
         <div className="pdp-handmade-note">
           <span className="material-symbols-outlined pdp-handmade-icon">local_florist</span>
-          <span>100% handmade • Each piece is unique.</span>
+          <span>Each piece is unique.</span>
           <span className="material-symbols-outlined pdp-handmade-icon">local_florist</span>
         </div>
 
@@ -307,7 +307,7 @@ export default function ProductForm({ product }: ProductFormProps) {
               <span className="pdp-discount-badge">-{discountPercent}%</span>
             )}
           </div>
-          
+
           <div className="pdp-usps" style={{ display: 'flex', gap: '1rem', marginTop: '0.75rem', fontSize: '0.85rem', color: 'var(--sage)', flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
               <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>front_hand</span>
@@ -327,7 +327,7 @@ export default function ProductForm({ product }: ProductFormProps) {
         {/* Dynamic Selectors */}
         {product.options.map(option => {
           const isColorType = option.name.toLowerCase().includes('color') || option.name.toLowerCase().includes('glaze');
-          
+
           if (isColorType) {
             return (
               <div key={option.id} className="pdp-selector-section">
@@ -343,8 +343,8 @@ export default function ProductForm({ product }: ProductFormProps) {
                       aria-label={`Select ${val} ${option.name}`}
                       aria-pressed={selectedOptions[option.name] === val}
                     >
-                      <div 
-                        className="pdp-swatch-color" 
+                      <div
+                        className="pdp-swatch-color"
                         style={{ backgroundColor: knownColors[val.toUpperCase()] || '#ccc' }}
                       ></div>
                       <span className="pdp-swatch-label">{val}</span>
@@ -389,8 +389,8 @@ export default function ProductForm({ product }: ProductFormProps) {
 
           {/* Add to Cart */}
           {errorMsg && <div style={{ color: 'red', fontSize: '0.875rem', marginBottom: '0.5rem', textAlign: 'center' }}>{errorMsg}</div>}
-          <button 
-            className="pdp-add-to-cart" 
+          <button
+            className="pdp-add-to-cart"
             disabled={!isAvailable || isAdding}
             style={{ opacity: isAvailable && !isAdding ? 1 : 0.5, cursor: isAvailable && !isAdding ? 'pointer' : 'not-allowed' }}
             onClick={handleAddToCart}
@@ -412,22 +412,22 @@ export default function ProductForm({ product }: ProductFormProps) {
           {accordionTabs.map((tab) => {
             const isOpen = activeTabs[tab] || false;
             return (
-            <div key={tab} className={`pdp-accordion-item ${isOpen ? 'open' : ''}`}>
-              <div
-                className={`pdp-accordion-header ${isOpen ? 'active' : ''}`}
-                onClick={() => toggleAccordion(tab)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && toggleAccordion(tab)}
-                aria-expanded={isOpen}
-              >
-                {tab}
-                <span className="material-symbols-outlined">
-                  {isOpen ? 'remove' : 'add'}
-                </span>
-              </div>
-              <div className="pdp-accordion-content">
-                {/* Temporarily hidden DESCRIPTION block
+              <div key={tab} className={`pdp-accordion-item ${isOpen ? 'open' : ''}`}>
+                <div
+                  className={`pdp-accordion-header ${isOpen ? 'active' : ''}`}
+                  onClick={() => toggleAccordion(tab)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === 'Enter' && toggleAccordion(tab)}
+                  aria-expanded={isOpen}
+                >
+                  {tab}
+                  <span className="material-symbols-outlined">
+                    {isOpen ? 'remove' : 'add'}
+                  </span>
+                </div>
+                <div className="pdp-accordion-content">
+                  {/* Temporarily hidden DESCRIPTION block
                 {tab === 'DESCRIPTION' && (
                   product.descriptionHtml || product.description ? (
                     <div dangerouslySetInnerHTML={{ __html: product.descriptionHtml || product.description }} />
@@ -436,24 +436,24 @@ export default function ProductForm({ product }: ProductFormProps) {
                   )
                 )}
                 */}
-                {tab === 'SHIPPING & DELIVERY' && (
-                  <ul className="pdp-care-list">
-                    <li>Each piece is made to order with care.</li>
-                    <li><strong>Standard:</strong> {SHIPPING_CONFIG.timelines.standard}.</li>
-                    <li><strong>Priority:</strong> {SHIPPING_CONFIG.timelines.priority}.</li>
-                    <li>Timelines may vary slightly during busy periods because every piece is handmade.</li>
-                  </ul>
-                )}
-                {tab === 'HANDMADE & CARE' && (
-                  <ul className="pdp-care-list">
-                    <li>Each piece is handmade, so slight variations in size, shape, and color may occur compared to the photos.</li>
-                    <li>Made from food-safe glazed ceramic, suitable for everyday eating and drinking.</li>
-                    <li>Not microwave safe.</li>
-                    <li>Wash with soap and water. Colors are designed to remain vibrant with normal use.</li>
-                  </ul>
-                )}
+                  {tab === 'SHIPPING & DELIVERY' && (
+                    <ul className="pdp-care-list">
+                      <li>Each piece is made to order with care.</li>
+                      <li><strong>Standard:</strong> {SHIPPING_CONFIG.timelines.standard}.</li>
+                      <li><strong>Priority:</strong> {SHIPPING_CONFIG.timelines.priority}.</li>
+                      <li>Timelines may vary slightly during busy periods because every piece is handmade.</li>
+                    </ul>
+                  )}
+                  {tab === 'HANDMADE & CARE' && (
+                    <ul className="pdp-care-list">
+                      <li>Each piece is handmade, so slight variations in size, shape, and color may occur compared to the photos.</li>
+                      <li>Made from food-safe glazed ceramic, suitable for everyday eating and drinking.</li>
+                      <li>Not microwave safe.</li>
+                      <li>Wash with soap and water. Colors are designed to remain vibrant with normal use.</li>
+                    </ul>
+                  )}
+                </div>
               </div>
-            </div>
             );
           })}
         </div>
