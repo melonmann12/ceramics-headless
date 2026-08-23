@@ -55,7 +55,7 @@ export async function POST(request: Request) {
 
     if (missingVars.length > 0) {
       console.error('[Subscribe] Server configuration error: Missing Shopify Admin API credentials.');
-      return NextResponse.json({ error: 'Something went wrong. Please try again later.', code: 'CONFIG_MISSING', missing: missingVars }, { status: 500 });
+      return NextResponse.json({ error: 'Something went wrong. Please try again later.', code: 'CONFIG_MISSING' }, { status: 500 });
     }
     console.log('[Subscribe] env validation passed');
 
@@ -83,84 +83,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid email address', code: 'VALIDATION_ERROR' }, { status: 400 });
     }
 
-    // 4. Safest duplicate-handling fallback: Query the customer first.
-    // This avoids fragile string-matching on "Email has already been taken" userErrors.
-    const query = `
-      query customerByEmail($query: String!) {
-        customers(first: 1, query: $query) {
-          edges {
-            node {
-              id
-              emailMarketingConsent {
-                marketingState
-              }
-            }
-          }
-        }
-      }
-    `;
-
-    const queryVars = { query: `email:${email}` };
-    console.log('[Subscribe] customer lookup started');
-    let queryRes;
-    try {
-      queryRes = await shopifyAdminRequest({ query, variables: queryVars });
-      console.log('[Subscribe] customer lookup status: success');
-    } catch (e: any) {
-      console.log('[Subscribe] failure stage: Admin API authentication or query');
-      throw e;
-    }
-    const existingCustomer = queryRes.customers?.edges[0]?.node;
-
+    // 4. Safest duplicate-handling fallback: Attempt customerCreate.
+    // If it fails with TAKEN, return a strict duplicate error without querying the customer ID.
     const consentUpdatedAt = new Date().toISOString();
 
-    if (existingCustomer) {
-      // Customer already exists
-      const currentState = existingCustomer.emailMarketingConsent?.marketingState;
-      
-      if (currentState === 'SUBSCRIBED') {
-        // Idempotent success without creating duplicates or hitting update mutation
-        return NextResponse.json({ message: 'Success' }, { status: 200 });
-      }
-
-      // Customer exists but is not subscribed -> update consent
-      const updateMutation = `
-        mutation customerEmailMarketingConsentUpdate($input: CustomerEmailMarketingConsentUpdateInput!) {
-          customerEmailMarketingConsentUpdate(input: $input) {
-            customer {
-              id
-            }
-            userErrors {
-              field
-              message
-            }
-          }
-        }
-      `;
-      const updateVars = {
-        input: {
-          customerId: existingCustomer.id,
-          emailMarketingConsent: {
-            marketingState: 'SUBSCRIBED',
-            marketingOptInLevel: 'SINGLE_OPT_IN',
-            consentUpdatedAt
-          }
-        }
-      };
-
-      console.log('[Subscribe] consent update started');
-      const updateRes = await shopifyAdminRequest({ query: updateMutation, variables: updateVars });
-      const userErrors = updateRes.customerEmailMarketingConsentUpdate?.userErrors || [];
-      if (userErrors.length > 0) {
-        console.error('[Subscribe] Shopify GraphQL userErrors:', userErrors.map((e: any) => `${e.field}: ${e.message}`));
-        console.log('[Subscribe] failure stage: marketing consent update');
-        return NextResponse.json({ error: 'Failed to subscribe', code: 'SHOPIFY_GRAPHQL_FAILED' }, { status: 400 });
-      }
-
-      return NextResponse.json({ message: 'Success', code: 'SUCCESS' }, { status: 200 });
-    }
-
-    // 5. Customer does not exist -> Create new customer with consent
     console.log('[Subscribe] customerCreate started');
     const createMutation = `
       mutation customerCreate($input: CustomerInput!) {
@@ -191,12 +117,18 @@ export async function POST(request: Request) {
     
     if (userErrors.length > 0) {
       console.error('[Subscribe] Shopify GraphQL userErrors:', userErrors.map((e: any) => `${e.field}: ${e.message}`));
-      // Just in case a race condition happened between the query and creation
-      const emailTakenError = userErrors.find((e: any) => e.field?.includes('email') || e.message.toLowerCase().includes('taken'));
+      
+      const emailTakenError = userErrors.find((e: any) => e.field?.includes('email') || e.message.toLowerCase().includes('taken') || e.message.toLowerCase().includes('already exists'));
+      
       if (emailTakenError) {
-         // Gracefully handle race condition
-         return NextResponse.json({ message: 'Success', code: 'SUCCESS_RACE' }, { status: 200 });
+         console.log('[Subscribe] duplicate email detected');
+         return NextResponse.json({ 
+           success: false, 
+           code: 'EMAIL_ALREADY_EXISTS',
+           error: 'This email is already associated with an existing customer. Please update your email preferences from your account or contact us for help.'
+         }, { status: 409 });
       }
+
       console.log('[Subscribe] failure stage: customerCreate');
       return NextResponse.json({ error: 'Failed to subscribe', code: 'SHOPIFY_GRAPHQL_FAILED' }, { status: 400 });
     }
@@ -208,17 +140,15 @@ export async function POST(request: Request) {
     console.error('[Subscribe] Newsletter subscription error:', error);
     
     let errorCode = 'SHOPIFY_AUTH_FAILED';
-    let missing: string[] | undefined = undefined;
     if (error.isShopifyAuthError || error.name === 'ShopifyAuthError') {
       errorCode = error.code;
-      if (error.missing) missing = error.missing;
     }
     
     console.log(`[Subscribe] failure stage: ${errorCode}`);
+    // No longer leaking verbose 'missing' array diagnostics to the client
     return NextResponse.json({ 
       error: 'Something went wrong. Please try again later.', 
-      code: errorCode,
-      ...(missing ? { missing } : {})
+      code: errorCode
     }, { status: 500 });
   }
 }

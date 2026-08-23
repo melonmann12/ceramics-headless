@@ -8,7 +8,7 @@ export default function NewsletterForm() {
   const [email, setEmail] = useState('');
   const [honeypot, setHoneypot] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'success' | 'error' | 'duplicate'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -30,6 +30,10 @@ export default function NewsletterForm() {
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
+        if (data.code === 'EMAIL_ALREADY_EXISTS') {
+          setStatus('duplicate');
+          return;
+        }
         throw new Error(data.error || 'Failed to subscribe');
       }
 
@@ -87,6 +91,11 @@ export default function NewsletterForm() {
           
           {status === 'error' && (
             <div className="newsletter-message error">{errorMessage}</div>
+          )}
+          {status === 'duplicate' && (
+            <div className="newsletter-message error">
+              This email is already associated with an existing customer. Please update your email preferences or <Link href="/contact" style={{textDecoration: 'underline'}}>contact us</Link> for help.
+            </div>
           )}
 
           <div className="newsletter-consent">

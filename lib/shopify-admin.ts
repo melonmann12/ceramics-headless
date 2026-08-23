@@ -126,7 +126,7 @@ ${JSON.stringify({
   writeCustomers: scopes.includes('write_customers')
 }, null, 2)}`);
 
-    const requiredScopes = ['read_customers', 'write_customers'];
+    const requiredScopes = ['write_customers'];
     const missingScopes = requiredScopes.filter(scope => !scopes.includes(scope));
     
     if (missingScopes.length > 0) {
