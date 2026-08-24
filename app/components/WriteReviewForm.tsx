@@ -6,7 +6,7 @@ import './WriteReviewForm.css';
 
 export default function WriteReviewForm({ productId }: { productId: string }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'uploading' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
   const [rating, setRating] = useState(5);
   const [hoverRating, setHoverRating] = useState(0);
@@ -75,19 +75,57 @@ export default function WriteReviewForm({ productId }: { productId: string }) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setStatus('submitting');
     setErrorMsg('');
     
     const formData = new FormData(e.currentTarget);
     formData.append('productId', productId);
     formData.append('rating', rating.toString());
+    formData.delete('images'); // Clear the file input from the FormData
+
+    const pictureUrls: string[] = [];
+
+    if (selectedFiles.length > 0) {
+      setStatus('uploading');
+      try {
+        const signRes = await fetch('/api/cloudinary/sign', { method: 'POST' });
+        if (!signRes.ok) throw new Error('Failed to retrieve upload signature');
+        const signData = await signRes.json();
+        
+        for (const file of selectedFiles) {
+          const uploadFormData = new FormData();
+          uploadFormData.append('folder', signData.folder);
+          uploadFormData.append('api_key', signData.apiKey);
+          uploadFormData.append('timestamp', signData.timestamp);
+          uploadFormData.append('signature', signData.signature);
+          uploadFormData.append('file', file);
+
+          const uploadRes = await fetch(`https://api.cloudinary.com/v1_1/${signData.cloudName}/image/upload`, {
+            method: 'POST',
+            body: uploadFormData
+          });
+          
+          if (!uploadRes.ok) {
+            console.error('Cloudinary upload failed:', await uploadRes.text());
+            throw new Error('Image upload failed');
+          }
+          
+          const uploadData = await uploadRes.json();
+          if (uploadData.secure_url) {
+            pictureUrls.push(uploadData.secure_url);
+          }
+        }
+      } catch (err) {
+        setStatus('error');
+        setErrorMsg('Failed to upload images. Please try again or remove images.');
+        return;
+      }
+    }
     
-    // Override the native file input which might have been cleared
-    formData.delete('images');
-    selectedFiles.forEach(file => {
-      formData.append('images', file);
+    pictureUrls.forEach(url => {
+      formData.append('picture_urls', url);
     });
-    
+
+    setStatus('submitting');
     const res = await submitJudgeMeReview(formData);
     if (res.success) {
       setStatus('success');
@@ -214,8 +252,8 @@ export default function WriteReviewForm({ productId }: { productId: string }) {
           </div>
         </div>
 
-        <button type="submit" className="submit-review-btn" disabled={status === 'submitting'}>
-          {status === 'submitting' ? 'Submitting...' : 'Submit Review'}
+        <button type="submit" className="submit-review-btn" disabled={status === 'submitting' || status === 'uploading'}>
+          {status === 'uploading' ? 'Uploading photos...' : (status === 'submitting' ? 'Submitting...' : 'Submit Review')}
         </button>
       </form>
     </div>
