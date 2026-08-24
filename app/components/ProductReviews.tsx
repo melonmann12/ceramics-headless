@@ -1,4 +1,4 @@
-import { getJudgeMeProductReviews, getJudgeMeRatingsMap, type JudgeMeReview } from '@/lib/judgeme/client';
+import { getJudgeMeProductReviews, getJudgeMeRatingsMap } from '@/lib/judgeme/client';
 import WriteReviewForm from './WriteReviewForm';
 import ReviewCard from './ReviewCard';
 import './ProductReviews.css';

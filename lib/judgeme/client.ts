@@ -11,9 +11,8 @@ export interface JudgeMeRatingsMap {
 }
 
 /**
- * Fetches all published reviews from Judge.me and computes the aggregate
+ * Fetches published reviews from Judge.me and computes the aggregate
  * average rating and review count per product.
- * Heavily cached to avoid N+1 requests and rate limits.
  */
 export const getJudgeMeRatingsMap = cache(async (): Promise<JudgeMeRatingsMap> => {
   const privateToken = process.env.JUDGEME_PRIVATE_TOKEN;
@@ -32,9 +31,9 @@ export const getJudgeMeRatingsMap = cache(async (): Promise<JudgeMeRatingsMap> =
       `https://judge.me/api/v1/reviews?api_token=${privateToken}&shop_domain=${storeDomain}&per_page=1000&published=true`,
       {
         next: {
-          revalidate: 3600, // Cache for 1 hour
-          tags: ['judgeme-ratings']
-        }
+          revalidate: 3600,
+          tags: ['judgeme-ratings'],
+        },
       }
     );
 
@@ -97,6 +96,7 @@ export interface JudgeMeReview {
   body: string;
   rating: number;
   product_external_id: number;
+  product_id?: number;
   reviewer: JudgeMeReviewer;
   created_at: string;
   updated_at: string;
@@ -120,7 +120,6 @@ export interface JudgeMeReviewsResponse {
 
 /**
  * Resolves a Shopify external product ID to the internal Judge.me product ID.
- * Caches the mapping for 24 hours as this relationship is highly stable.
  */
 export const getJudgeMeInternalProductId = cache(async (productExternalId: string): Promise<number | null> => {
   const privateToken = process.env.JUDGEME_PRIVATE_TOKEN;
@@ -133,9 +132,9 @@ export const getJudgeMeInternalProductId = cache(async (productExternalId: strin
       `https://judge.me/api/v1/products/-1?api_token=${privateToken}&shop_domain=${storeDomain}&external_id=${productExternalId}`,
       {
         next: {
-          revalidate: 86400, // Cache for 24 hours
-          tags: [`judgeme-product-map-${productExternalId}`]
-        }
+          revalidate: 86400,
+          tags: [`judgeme-product-map-${productExternalId}`],
+        },
       }
     );
 
@@ -151,7 +150,6 @@ export const getJudgeMeInternalProductId = cache(async (productExternalId: strin
 
 /**
  * Fetches published reviews for a specific product by its external ID.
- * Caches for 15 minutes.
  */
 export const getJudgeMeProductReviews = cache(async (productExternalId: string, page = 1, perPage = 10): Promise<JudgeMeReviewsResponse | null> => {
   const privateToken = process.env.JUDGEME_PRIVATE_TOKEN;
@@ -172,9 +170,9 @@ export const getJudgeMeProductReviews = cache(async (productExternalId: string, 
       `https://judge.me/api/v1/reviews?api_token=${privateToken}&shop_domain=${storeDomain}&product_id=${internalProductId}&page=${page}&per_page=${perPage}&published=true`,
       {
         next: {
-          revalidate: 900, // Cache for 15 minutes
-          tags: [`judgeme-product-${productExternalId}`]
-        }
+          revalidate: 900,
+          tags: [`judgeme-product-${productExternalId}`],
+        },
       }
     );
 
@@ -184,7 +182,14 @@ export const getJudgeMeProductReviews = cache(async (productExternalId: string, 
     }
 
     const data: JudgeMeReviewsResponse = await res.json();
-    return data;
+
+    const requestedExternalId = Number(productExternalId);
+    return {
+      ...data,
+      reviews: (data.reviews || []).filter((review) => (
+        Number(review.product_external_id) === requestedExternalId
+      )),
+    };
   } catch (error) {
     console.error(`Error fetching Judge.me reviews for product ${productExternalId}:`, error);
     return null;
