@@ -286,3 +286,28 @@ export async function getAllProductHandles(): Promise<string[]> {
     (e) => e.node.handle,
   );
 }
+
+/** Fetch product recommendations for a specific product */
+export async function getProductRecommendations(productId: string, limit = 8): Promise<NormalizedProduct[]> {
+  const query = /* GraphQL */ `
+    ${PRODUCT_FIELDS}
+    query GetProductRecommendations($productId: ID!) {
+      productRecommendations(productId: $productId) {
+        ...ProductFields
+      }
+    }
+  `;
+
+  const { data, errors } = await shopifyClient.request(query, {
+    variables: { productId },
+  });
+
+  if (errors || !data?.productRecommendations) {
+    console.error('[Shopify] getProductRecommendations errors:', errors);
+    return [];
+  }
+
+  return (data.productRecommendations as ShopifyProduct[])
+    .slice(0, limit)
+    .map((p) => normalizeProduct(p));
+}

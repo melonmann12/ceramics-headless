@@ -7,6 +7,7 @@ import ProductForm from './ProductForm';
 import ProductRatingSummary from '@/app/components/ProductRatingSummary';
 import ProductReviews from '@/app/components/ProductReviews';
 import ProductJsonLd from '@/app/components/ProductJsonLd';
+import ProductRecommendations from '@/app/components/ProductRecommendations';
 import { getProductByHandle } from '@/lib/shopify/queries';
 import './PDP.css';
 
@@ -76,6 +77,11 @@ export default async function ProductPage({ params }: PageProps) {
       {/* Reviews Section */}
       <Suspense fallback={null}>
         <ProductReviews productId={product.id} />
+      </Suspense>
+
+      {/* Recommendations Section */}
+      <Suspense fallback={null}>
+        <ProductRecommendations productId={product.id} />
       </Suspense>
 
       <Footer />
