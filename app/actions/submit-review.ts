@@ -1,5 +1,7 @@
 'use server';
 
+import { revalidateTag } from 'next/cache';
+
 export async function submitJudgeMeReview(formData: FormData) {
   // 1. Honeypot check
   const honeypot = formData.get('bot_field')?.toString();
@@ -91,6 +93,10 @@ export async function submitJudgeMeReview(formData: FormData) {
       console.error('Judge.me API submission failed with status:', res.status);
       return { success: false, error: 'Failed to submit review. Please try again.' };
     }
+
+    // Invalidate caches so the new review immediately appears if it is auto-published
+    revalidateTag(`judgeme-product-${productId}`, 'max');
+    revalidateTag('judgeme-ratings', 'max');
 
     return { success: true };
   } catch (error) {

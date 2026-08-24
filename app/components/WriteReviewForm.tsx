@@ -77,13 +77,8 @@ export default function WriteReviewForm({ productId }: { productId: string }) {
     e.preventDefault();
     setErrorMsg('');
     
-    const formData = new FormData(e.currentTarget);
-    formData.append('productId', productId);
-    formData.append('rating', rating.toString());
-    formData.delete('images'); // Clear the file input from the FormData
-
+    // 1. Upload images directly to Cloudinary if any
     const pictureUrls: string[] = [];
-
     if (selectedFiles.length > 0) {
       setStatus('uploading');
       try {
@@ -121,12 +116,39 @@ export default function WriteReviewForm({ productId }: { productId: string }) {
       }
     }
     
-    pictureUrls.forEach(url => {
-      formData.append('picture_urls', url);
-    });
+    // 2. Construct a completely fresh, lightweight FormData for the Server Action
+    const formElement = e.currentTarget;
+    const reviewPayload = new FormData();
+    reviewPayload.set('productId', productId);
+    reviewPayload.set('rating', rating.toString());
+    
+    const nameInput = formElement.elements.namedItem('name') as HTMLInputElement;
+    const emailInput = formElement.elements.namedItem('email') as HTMLInputElement;
+    const titleInput = formElement.elements.namedItem('title') as HTMLInputElement;
+    const bodyInput = formElement.elements.namedItem('body') as HTMLTextAreaElement;
+    const botInput = formElement.elements.namedItem('bot_field') as HTMLInputElement;
+
+    if (nameInput) reviewPayload.set('name', nameInput.value);
+    if (emailInput) reviewPayload.set('email', emailInput.value);
+    if (titleInput) reviewPayload.set('title', titleInput.value);
+    if (bodyInput) reviewPayload.set('body', bodyInput.value);
+    if (botInput) reviewPayload.set('bot_field', botInput.value);
+
+    for (const url of pictureUrls) {
+      reviewPayload.append('picture_urls', url);
+    }
+    
+    // Development-only sanity check to guarantee NO binary data
+    if (process.env.NODE_ENV === 'development') {
+      for (const [key, value] of Array.from(reviewPayload.entries())) {
+        if (typeof value !== 'string') {
+          throw new Error('Binary data must not be sent to the review Server Action.');
+        }
+      }
+    }
 
     setStatus('submitting');
-    const res = await submitJudgeMeReview(formData);
+    const res = await submitJudgeMeReview(reviewPayload);
     if (res.success) {
       setStatus('success');
       setSelectedFiles([]);

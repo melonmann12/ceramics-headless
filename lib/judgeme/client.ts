@@ -32,7 +32,8 @@ export const getJudgeMeRatingsMap = cache(async (): Promise<JudgeMeRatingsMap> =
       `https://judge.me/api/v1/reviews?api_token=${privateToken}&shop_domain=${storeDomain}&per_page=1000&published=true`,
       {
         next: {
-          revalidate: 3600 // Cache for 1 hour
+          revalidate: 3600, // Cache for 1 hour
+          tags: ['judgeme-ratings']
         }
       }
     );
@@ -118,6 +119,37 @@ export interface JudgeMeReviewsResponse {
 }
 
 /**
+ * Resolves a Shopify external product ID to the internal Judge.me product ID.
+ * Caches the mapping for 24 hours as this relationship is highly stable.
+ */
+export const getJudgeMeInternalProductId = cache(async (productExternalId: string): Promise<number | null> => {
+  const privateToken = process.env.JUDGEME_PRIVATE_TOKEN;
+  const storeDomain = process.env.JUDGEME_SHOP_DOMAIN;
+
+  if (!privateToken || !storeDomain) return null;
+
+  try {
+    const res = await fetch(
+      `https://judge.me/api/v1/products/-1?api_token=${privateToken}&shop_domain=${storeDomain}&external_id=${productExternalId}`,
+      {
+        next: {
+          revalidate: 86400, // Cache for 24 hours
+          tags: [`judgeme-product-map-${productExternalId}`]
+        }
+      }
+    );
+
+    if (!res.ok) return null;
+
+    const data = await res.json();
+    return data?.product?.id || null;
+  } catch (error) {
+    console.error(`Error resolving Judge.me internal product ID for ${productExternalId}:`, error);
+    return null;
+  }
+});
+
+/**
  * Fetches published reviews for a specific product by its external ID.
  * Caches for 15 minutes.
  */
@@ -131,11 +163,17 @@ export const getJudgeMeProductReviews = cache(async (productExternalId: string, 
   }
 
   try {
+    const internalProductId = await getJudgeMeInternalProductId(productExternalId);
+    if (!internalProductId) {
+      return null; // No mapping exists, so no reviews exist
+    }
+
     const res = await fetch(
-      `https://judge.me/api/v1/reviews?api_token=${privateToken}&shop_domain=${storeDomain}&product_external_id=${productExternalId}&page=${page}&per_page=${perPage}&published=true`,
+      `https://judge.me/api/v1/reviews?api_token=${privateToken}&shop_domain=${storeDomain}&product_id=${internalProductId}&page=${page}&per_page=${perPage}&published=true`,
       {
         next: {
-          revalidate: 900 // Cache for 15 minutes
+          revalidate: 900, // Cache for 15 minutes
+          tags: [`judgeme-product-${productExternalId}`]
         }
       }
     );
