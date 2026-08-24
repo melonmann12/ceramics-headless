@@ -20,26 +20,42 @@ export default async function ProductRatingSummary({
   
   const rating = ratingsMap[numericId];
   
-  // Do not display if no reviews exist and placeholder is not requested
-  if ((!rating || rating.reviewCount === 0) && !showEmptyPlaceholder) return null;
-
   if (!rating || rating.reviewCount === 0) {
-    const emptyContent = (
-      <>
-        <span className="material-symbols-outlined rating-star rating-star-empty">star</span>
-        <span className="rating-empty-text">Be the first to review</span>
-      </>
-    );
-    
-    return linkToReviews ? (
-      <a href="#reviews" className="product-rating product-rating-empty product-rating-link">
-        {emptyContent}
-      </a>
-    ) : (
-      <div className="product-rating product-rating-empty">
-        {emptyContent}
-      </div>
-    );
+    if (showEmptyPlaceholder) {
+      // PDP Style
+      const emptyContent = (
+        <>
+          <span className="material-symbols-outlined rating-star rating-star-empty">star</span>
+          <span className="rating-empty-text">Be the first to review</span>
+        </>
+      );
+      
+      return linkToReviews ? (
+        <a href="#reviews" className="product-rating product-rating-empty product-rating-link">
+          {emptyContent}
+        </a>
+      ) : (
+        <div className="product-rating product-rating-empty">
+          {emptyContent}
+        </div>
+      );
+    } else {
+      // ProductGrid Style
+      return (
+        <div className="product-rating product-rating-grid-empty" aria-hidden="true">
+          <div className="rating-stars-wrapper">
+            <div className="rating-stars-empty grid-empty-stars">
+              <span className="material-symbols-outlined star-icon">star</span>
+              <span className="material-symbols-outlined star-icon">star</span>
+              <span className="material-symbols-outlined star-icon">star</span>
+              <span className="material-symbols-outlined star-icon">star</span>
+              <span className="material-symbols-outlined star-icon">star</span>
+            </div>
+          </div>
+          <span className="rating-grid-empty-text">No reviews</span>
+        </div>
+      );
+    }
   }
 
   const fillPercentage = (rating.averageRating / 5) * 100;

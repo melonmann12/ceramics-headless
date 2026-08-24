@@ -78,3 +78,16 @@
   text-underline-offset: 3px;
   font-size: 0.8rem;
 }
+
+.product-rating-grid-empty {
+  opacity: 0.5;
+}
+
+.grid-empty-stars .star-icon {
+  font-variation-settings: 'FILL' 0;
+}
+
+.rating-grid-empty-text {
+  font-size: 0.8rem;
+  margin-left: 0.25rem;
+}

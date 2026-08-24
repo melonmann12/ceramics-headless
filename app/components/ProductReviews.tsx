@@ -3,48 +3,7 @@ import WriteReviewForm from './WriteReviewForm';
 import ReviewCard from './ReviewCard';
 import './ProductReviews.css';
 
-const DEV_REVIEW_FIXTURE: JudgeMeReview = {
-  id: 999999999,
-  title: "Even better in person",
-  body: "I absolutely love this matcha set. The ceramic feels sturdy and beautifully handmade, and the little details are even nicer in person than they looked in the photos. The bowl is a really comfortable size for whisking matcha, the pouring spout works surprisingly well, and the matching holder looks adorable next to it on my counter. Everything was packed carefully and arrived safely. I have already used it several times and it has quickly become one of my favorite pieces in the kitchen. The handmade finish gives it so much personality, and I would definitely order another design from Ashpia.",
-  rating: 5,
-  product_external_id: 0,
-  reviewer: {
-    id: 999999,
-    name: "Test Customer"
-  },
-  created_at: new Date().toISOString(),
-  updated_at: new Date().toISOString(),
-  curated: "ok",
-  published: true,
-  hidden: false,
-  verified: "buyer",
-  pictures: [
-    {
-      urls: {
-        small: "/homepage/homepage.png",
-        compact: "/homepage/homepage.png",
-        huge: "/homepage/homepage.png",
-        original: "/homepage/homepage.png"
-      },
-      hidden: false
-    },
-    {
-      urls: {
-        small: "/homepage/homepage.png",
-        compact: "/homepage/homepage.png",
-        huge: "/homepage/homepage.png",
-        original: "/homepage/homepage.png"
-      },
-      hidden: false
-    }
-  ],
-  answers: [
-    {
-      body: "Thank you so much for your lovely review! We're so happy the set arrived safely and that you're enjoying your matcha moments with it. ♡"
-    }
-  ]
-};
+
 
 export default async function ProductReviews({ productId }: { productId: string }) {
   const numericId = productId.split('/').pop();
@@ -104,10 +63,6 @@ export default async function ProductReviews({ productId }: { productId: string 
           {reviews.map(review => (
             <ReviewCard key={review.id} review={review} />
           ))}
-          {/* UI test data only - never submitted or indexed */}
-          {process.env.NODE_ENV === 'development' && (
-            <ReviewCard key="dev-fixture" review={DEV_REVIEW_FIXTURE} />
-          )}
         </div>
       </div>
     </section>

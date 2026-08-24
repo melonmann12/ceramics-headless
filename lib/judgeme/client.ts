@@ -29,7 +29,7 @@ export const getJudgeMeRatingsMap = cache(async (): Promise<JudgeMeRatingsMap> =
     // For a large store, we would need to paginate this. For now, fetching up to 1000 reviews is safe.
     // In a production store with >10,000 reviews, we might use webhooks or store metafields instead.
     const res = await fetch(
-      `https://judge.me/api/v1/reviews?api_token=${privateToken}&shop_domain=${storeDomain}&per_page=1000`,
+      `https://judge.me/api/v1/reviews?api_token=${privateToken}&shop_domain=${storeDomain}&per_page=1000&published=true`,
       {
         next: {
           revalidate: 3600 // Cache for 1 hour
@@ -132,7 +132,7 @@ export const getJudgeMeProductReviews = cache(async (productExternalId: string, 
 
   try {
     const res = await fetch(
-      `https://judge.me/api/v1/reviews?api_token=${privateToken}&shop_domain=${storeDomain}&product_external_id=${productExternalId}&page=${page}&per_page=${perPage}`,
+      `https://judge.me/api/v1/reviews?api_token=${privateToken}&shop_domain=${storeDomain}&product_external_id=${productExternalId}&page=${page}&per_page=${perPage}&published=true`,
       {
         next: {
           revalidate: 900 // Cache for 15 minutes
