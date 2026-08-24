@@ -18,7 +18,7 @@ export default function AboutPage() {
     <div className="about-page">
       <Header />
       <main>
-        {/* SECTION 1 — HERO */}
+        {/* SECTION 1 - HERO */}
         <section className="about-hero-section">
           <div className="about-hero-background">
             <Image
@@ -39,23 +39,20 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* SECTION 2 — OUR STORY */}
+        {/* SECTION 2 - OUR STORY */}
         <section className="about-story-section">
           <div className="about-story-inner">
             <h2>OUR STORY</h2>
             <p>
-              ASHPIA was started by two siblings who are both university students. 
-              The idea came from noticing how familiar ceramic objects — bowls, cups, matcha pieces, and small objects around the home — can make ordinary routines feel warmer and more personal.
+              ASHPIA was started by two siblings who are both university students. The idea came from noticing how familiar ceramic objects, such as bowls, cups, matcha pieces, and small objects around the home, can make ordinary routines feel warmer and more personal.
             </p>
             <p>
-              We began to notice how much personality a small handmade object could bring to an ordinary moment. 
-              That became the core idea behind ASHPIA: to create ceramics that feel warm, playful, and personal. 
-              We wanted to build pieces that are meant to be held, used, and loved — not just left on a shelf to be displayed.
+              We began to notice how much personality a small handmade object could bring to an ordinary moment. That became the core idea behind ASHPIA: to create ceramics that feel warm, playful, and personal. We wanted to build pieces that are meant to be held, used, and loved, rather than simply left on a shelf for display.
             </p>
           </div>
         </section>
 
-        {/* SECTION 3 — MADE FOR EVERYDAY LIFE */}
+        {/* SECTION 3 - MADE FOR EVERYDAY LIFE */}
         <section className="about-handmade-section">
           <div className="about-handmade-inner">
             <h2>MADE FOR EVERYDAY LIFE</h2>
@@ -64,51 +61,36 @@ export default function AboutPage() {
             </p>
             <p>
               Bowls, cups, and food-contact pieces are finished with food-safe glaze so they can be part of normal everyday eating and drinking. 
-              Handmade pieces may vary slightly in shape, glaze, and finish — that is part of what makes each one individual.
+              Handmade pieces may vary slightly in shape, glaze, and finish. That is part of what makes each one individual.
             </p>
           </div>
         </section>
 
-        {/* SECTION 5 — OUR PROMISE */}
+        {/* SECTION 5 - OUR PROMISE */}
         <section className="about-promise-section">
           <h2 className="about-promise-title">OUR PROMISE</h2>
           <div className="about-promise-grid">
             <div className="promise-card">
-              <div className="promise-icon">
-                <span className="material-symbols-outlined">pan_tool</span>
-              </div>
               <h3>100% HANDMADE</h3>
               <p>Each piece is individually crafted by hand with care and intention.</p>
             </div>
             
             <div className="promise-card">
-              <div className="promise-icon">
-                <span className="material-symbols-outlined">restaurant</span>
-              </div>
               <h3>FOOD-SAFE CERAMIC</h3>
               <p>Our glazed ceramics are made to be used for food and drinks as part of everyday routines.</p>
             </div>
             
             <div className="promise-card">
-              <div className="promise-icon">
-                <span className="material-symbols-outlined">fact_check</span>
-              </div>
               <h3>CAREFULLY CHECKED</h3>
               <p>Each piece is thoroughly inspected for quality before packing and shipping.</p>
             </div>
             
             <div className="promise-card">
-              <div className="promise-icon">
-                <span className="material-symbols-outlined">package_2</span>
-              </div>
               <h3>PACKED WITH CARE</h3>
               <p>Ceramics are fragile, so every order is packed carefully to help protect them during transit.</p>
             </div>
 
             <div className="promise-card" style={{ gridColumn: '1 / -1', maxWidth: '500px', margin: '0 auto' }}>
-              <div className="promise-icon">
-                <span className="material-symbols-outlined">support_agent</span>
-              </div>
               <h3>DAMAGED IN TRANSIT?</h3>
               <p>
                 If an item arrives broken or damaged, we'll provide appropriate support, including a refund or replacement according to our <Link href="/returns">current policy</Link>.
@@ -117,7 +99,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* SECTION 6 — FINAL CTA */}
+        {/* SECTION 6 - FINAL CTA */}
         <section className="about-cta-section">
           <h2>FIND A PIECE FOR YOUR EVERYDAY.</h2>
           <p>Handmade ceramics designed to be held, used, and returned to every day.</p>

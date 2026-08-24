@@ -28,42 +28,38 @@ export default function Footer() {
         <div className="footer-content">
           {/* Left Side: Navigation Columns */}
           <div className="footer-nav-wrapper">
-            <div className="footer-nav-col">
-              <div className="footer-heading">
-                <Image src="/logo/ashpialogo.png" alt="Ashpia" width={100} height={31} className="footer-logo-img" />
-              </div>
-              <div className="footer-links">
-                <Link href="/" className="footer-link">HOME</Link>
-                <Link href="/shop" className="footer-link">SHOP ALL</Link>
-                <Link href="/about" className="footer-link">ABOUT US</Link>
-                <Link href="/contact" className="footer-link">CONTACT</Link>
-                <Link href="/track-order" className="footer-link">TRACK ORDER</Link>
-              </div>
-              <div className="footer-socials">
-                <a href="https://www.facebook.com/profile.php?id=61593385899498" target="_blank" rel="noopener noreferrer" aria-label="ASHPIA on Facebook" className="footer-social-link">
-                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                  </svg>
-                </a>
-                <a href="https://www.instagram.com/ashpia.ceramic/" target="_blank" rel="noopener noreferrer" aria-label="ASHPIA on Instagram" className="footer-social-link">
-                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                  </svg>
-                </a>
-              </div>
+            <div className="footer-logo-container">
+              <Image src="/logo/ashpialogo.png" alt="Ashpia" width={100} height={31} className="footer-logo-img" />
             </div>
-            
-            <div className="footer-nav-col">
-              {/* Spacer to align with the logo in the left column */}
-              <div className="footer-heading" aria-hidden="true" style={{ height: '31px' }}></div>
-              <div className="footer-links">
-                <Link href="/shipping-policy" className="footer-link">SHIPPING</Link>
-                <Link href="/returns" className="footer-link">RETURNS</Link>
-                <Link href="/privacy-policy" className="footer-link">PRIVACY</Link>
-                <Link href="/terms" className="footer-link">TERMS</Link>
-              </div>
+
+            <div className="footer-links footer-links-main">
+              <Link href="/" className="footer-link">HOME</Link>
+              <Link href="/shop" className="footer-link">SHOP ALL</Link>
+              <Link href="/about" className="footer-link">ABOUT US</Link>
+              <Link href="/contact" className="footer-link">CONTACT</Link>
+              <Link href="/track-order" className="footer-link">TRACK ORDER</Link>
+            </div>
+
+            <div className="footer-links footer-links-legal">
+              <Link href="/shipping-policy" className="footer-link">SHIPPING</Link>
+              <Link href="/returns" className="footer-link">RETURNS</Link>
+              <Link href="/privacy-policy" className="footer-link">PRIVACY</Link>
+              <Link href="/terms" className="footer-link">TERMS</Link>
+            </div>
+
+            <div className="footer-socials">
+              <a href="https://www.facebook.com/profile.php?id=61593385899498" target="_blank" rel="noopener noreferrer" aria-label="ASHPIA on Facebook" className="footer-social-link">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                </svg>
+              </a>
+              <a href="https://www.instagram.com/ashpia.ceramic/" target="_blank" rel="noopener noreferrer" aria-label="ASHPIA on Instagram" className="footer-social-link">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </a>
             </div>
           </div>
 
@@ -85,7 +81,6 @@ export default function Footer() {
         {/* Bottom Copyright Bar */}
         <div className="footer-bottom">
           <div className="footer-copyright">
-            <span className="material-symbols-outlined footer-copyright-logo">local_cafe</span>
             <span>© 2026 ASHPIA. ALL RIGHTS RESERVED.</span>
           </div>
         </div>
