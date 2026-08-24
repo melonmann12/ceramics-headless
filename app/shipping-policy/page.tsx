@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import PolicyPage from '@/app/components/PolicyPage';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Shipping Policy',
@@ -31,6 +32,18 @@ export default function ShippingPolicyPage() {
           ],
         },
       ]}
-    />
+    >
+      <section className="policy-section">
+        <h2>Order Tracking</h2>
+        <p>
+          Once your order has been shipped, you&apos;ll receive a tracking number by email. You can use this number to follow the latest shipping updates on our Track Order page.
+        </p>
+        <div style={{ marginTop: '1rem' }}>
+          <Link href="/track-order" style={{ textDecoration: 'underline', color: 'var(--sage)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+            TRACK YOUR ORDER <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>arrow_forward</span>
+          </Link>
+        </div>
+      </section>
+    </PolicyPage>
   );
 }

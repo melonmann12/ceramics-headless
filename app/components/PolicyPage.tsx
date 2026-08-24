@@ -13,6 +13,7 @@ interface PolicyPageProps {
   intro?: string;
   sections: PolicySection[];
   note?: string;
+  children?: React.ReactNode;
 }
 
 export default function PolicyPage({
@@ -21,6 +22,7 @@ export default function PolicyPage({
   intro,
   sections,
   note,
+  children,
 }: PolicyPageProps) {
   return (
     <div className="policy-page">
@@ -44,6 +46,7 @@ export default function PolicyPage({
                 ))}
               </section>
             ))}
+            {children}
           </div>
         </div>
       </main>

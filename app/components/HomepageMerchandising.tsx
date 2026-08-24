@@ -69,11 +69,11 @@ export default function HomepageMerchandising() {
             Review current return guidance before ordering.
           </span>
         </Link>
-        <Link href="/contact" className="trust-item">
-          <span className="material-symbols-outlined">mail</span>
+        <Link href="/track-order" className="trust-item">
+          <span className="material-symbols-outlined">package_2</span>
           <span>
-            <strong>Contact</strong>
-            Find what to include for order or product questions.
+            <strong>Trackable Shipping</strong>
+            Once your order is on the way, follow its journey anytime from our Track Order page.
           </span>
         </Link>
       </section>

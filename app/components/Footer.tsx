@@ -37,10 +37,13 @@ export default function Footer() {
                 <Link href="/shop" className="footer-link">SHOP ALL</Link>
                 <Link href="/about" className="footer-link">ABOUT US</Link>
                 <Link href="/contact" className="footer-link">CONTACT</Link>
+                <Link href="/track-order" className="footer-link">TRACK ORDER</Link>
               </div>
             </div>
             
             <div className="footer-nav-col">
+              {/* Spacer to align with the logo in the left column */}
+              <div className="footer-heading" aria-hidden="true" style={{ height: '31px' }}></div>
               <div className="footer-links">
                 <Link href="/shipping-policy" className="footer-link">SHIPPING</Link>
                 <Link href="/returns" className="footer-link">RETURNS</Link>

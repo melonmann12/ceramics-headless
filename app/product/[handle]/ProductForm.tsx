@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import ShopifyImage from '@/app/components/ShopifyImage';
 import type { NormalizedProduct } from '@/lib/shopify/types';
 import { useCart } from '@/app/context/CartContext';
+import Link from 'next/link';
 import { trackViewContent, trackAddToCart, normalizeVariantId } from '@/lib/meta-pixel';
 import { SHIPPING_CONFIG } from '@/lib/config';
 
@@ -328,6 +329,10 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
               <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>local_shipping</span>
               <span>Free US Shipping</span>
             </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>package_2</span>
+              <span>Trackable after dispatch</span>
+            </div>
           </div>
         </div>
 
@@ -481,6 +486,9 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
                       <li><strong>Standard:</strong> {SHIPPING_CONFIG.timelines.standard}.</li>
                       <li><strong>Priority:</strong> {SHIPPING_CONFIG.timelines.priority}.</li>
                       <li>Timelines may vary slightly during busy periods because every piece is handmade.</li>
+                      <li style={{ marginTop: '0.5rem' }}>
+                        <strong>TRACKING INCLUDED:</strong> Once your order ships, you&apos;ll receive a tracking number by email. You can follow your package anytime on our <Link href="/track-order" style={{ textDecoration: 'underline', color: 'var(--plum)', fontWeight: 600 }}>Track Order</Link> page.
+                      </li>
                     </ul>
                   )}
                   {tab === 'HANDMADE & CARE' && (
@@ -514,6 +522,19 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Track Order Compact CTA */}
+        <div className="pdp-track-cta">
+          <div className="pdp-track-cta-content">
+            <div className="pdp-track-cta-text">
+              <h4 className="pdp-track-cta-title">TRACK YOUR ORDER</h4>
+              <p className="pdp-track-cta-desc">Once your order ships, follow its journey anytime.</p>
+            </div>
+          </div>
+          <Link href="/track-order" className="pdp-track-cta-btn">
+            TRACK ORDER <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>arrow_forward</span>
+          </Link>
         </div>
       </div>
     </>

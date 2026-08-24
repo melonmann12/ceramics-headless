@@ -1,0 +1,144 @@
+.track-order-page {
+  background-color: var(--page-background);
+  color: var(--plum);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.track-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.track-hero {
+  padding: 8rem 1.5rem 4rem;
+  background-color: var(--cream);
+  text-align: center;
+  border-bottom: 1px solid rgba(66, 26, 33, 0.08);
+}
+
+.track-container {
+  max-width: 32rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.track-eyebrow {
+  color: rgba(66, 26, 33, 0.62);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.track-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin: 0;
+  color: var(--plum);
+}
+
+.track-desc {
+  color: rgba(66, 26, 33, 0.78);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.track-form {
+  width: 100%;
+  margin-top: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.track-input-group {
+  display: flex;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.track-input {
+  flex: 1;
+  padding: 0 1.25rem;
+  border: 1px solid rgba(66, 26, 33, 0.2);
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--plum);
+  background: white;
+  min-height: 3rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.track-input:focus {
+  outline: none;
+  border-color: var(--sage);
+  box-shadow: 0 0 0 2px rgba(110, 133, 116, 0.2);
+}
+
+.track-input::placeholder {
+  color: rgba(66, 26, 33, 0.4);
+}
+
+.track-btn {
+  white-space: nowrap;
+  min-height: 3rem;
+  padding: 0 2rem;
+}
+
+.track-help, .track-error {
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.track-help {
+  color: rgba(66, 26, 33, 0.6);
+}
+
+.track-error {
+  color: #d32f2f; /* Error red */
+  font-weight: 500;
+}
+
+.track-results-section {
+  display: none; /* Hidden by default */
+  padding: var(--space-5) 1.5rem;
+  background-color: var(--page-background);
+  min-height: 20rem;
+}
+
+.track-results-section.active {
+  display: block;
+}
+
+.track-widget-container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  border-radius: var(--radius-heavy);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  /* 17TRACK widget dynamically injects iframe here */
+}
+
+@media (max-width: 600px) {
+  .track-input-group {
+    flex-direction: column;
+  }
+  
+  .track-btn {
+    width: 100%;
+  }
+  
+  .track-hero {
+    padding-top: 7rem;
+    padding-bottom: 3rem;
+  }
+}
