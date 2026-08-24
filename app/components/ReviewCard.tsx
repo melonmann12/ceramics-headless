@@ -8,6 +8,7 @@ export default function ReviewCard({ review }: { review: JudgeMeReview }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTruncated, setIsTruncated] = useState(false);
   const textRef = useRef<HTMLParagraphElement>(null);
+  const displayName = review.reviewer_display_name ?? review.reviewer?.name ?? 'Anonymous';
 
   useEffect(() => {
     const checkTruncation = () => {
@@ -61,7 +62,7 @@ export default function ReviewCard({ review }: { review: JudgeMeReview }) {
 
   const renderHeader = () => (
     <div className="review-header">
-      <span className="review-author-name">{review.reviewer.name}</span>
+      <span className="review-author-name">{displayName}</span>
       {review.verified === 'buyer' && (
         <span className="review-verified">
           <span className="material-symbols-outlined verified-icon">check_circle</span>

@@ -97,6 +97,7 @@ export interface JudgeMeReview {
   rating: number;
   product_external_id: number;
   product_id?: number;
+  reviewer_display_name?: string;
   reviewer: JudgeMeReviewer;
   created_at: string;
   updated_at: string;
@@ -116,6 +117,69 @@ export interface JudgeMeReviewsResponse {
   current_page: number;
   per_page: number;
   reviews: JudgeMeReview[];
+}
+
+interface JudgeMeWidgetReview {
+  body: string;
+  rating: number;
+  created_at: string;
+  reviewer_name?: string;
+}
+
+interface JudgeMeWidgetReviewsResponse {
+  reviews?: JudgeMeWidgetReview[];
+}
+
+function reviewMatchKey(review: Pick<JudgeMeReview | JudgeMeWidgetReview, 'body' | 'rating' | 'created_at'>): string {
+  const createdAtSecond = Number.isNaN(Date.parse(review.created_at))
+    ? review.created_at
+    : new Date(review.created_at).toISOString().slice(0, 19);
+
+  return JSON.stringify([
+    review.body?.trim(),
+    review.rating,
+    createdAtSecond,
+  ]);
+}
+
+function groupWidgetReviewsByMatchKey(widgetReviews: JudgeMeWidgetReview[]): Map<string, JudgeMeWidgetReview[]> {
+  const groupedReviews = new Map<string, JudgeMeWidgetReview[]>();
+
+  for (const review of widgetReviews) {
+    if (!review.reviewer_name) continue;
+
+    const key = reviewMatchKey(review);
+    groupedReviews.set(key, [...(groupedReviews.get(key) || []), review]);
+  }
+
+  return groupedReviews;
+}
+
+async function getJudgeMeWidgetProductReviews(productExternalId: string): Promise<JudgeMeWidgetReview[]> {
+  const privateToken = process.env.JUDGEME_PRIVATE_TOKEN;
+  const storeDomain = process.env.JUDGEME_SHOP_DOMAIN;
+
+  if (!privateToken || !storeDomain) return [];
+
+  try {
+    const res = await fetch(
+      `https://judge.me/api/v1/widgets/product_review?api_token=${privateToken}&shop_domain=${storeDomain}&external_id=${productExternalId}&json_request=true`,
+      {
+        next: {
+          revalidate: 900,
+          tags: [`judgeme-product-${productExternalId}`],
+        },
+      }
+    );
+
+    if (!res.ok) return [];
+
+    const data: JudgeMeWidgetReviewsResponse = await res.json();
+    return data.reviews || [];
+  } catch (error) {
+    console.error(`Error fetching Judge.me widget reviews for product ${productExternalId}:`, error);
+    return [];
+  }
 }
 
 /**
@@ -184,11 +248,26 @@ export const getJudgeMeProductReviews = cache(async (productExternalId: string, 
     const data: JudgeMeReviewsResponse = await res.json();
 
     const requestedExternalId = Number(productExternalId);
+    const reviews = (data.reviews || []).filter((review) => (
+      Number(review.product_external_id) === requestedExternalId
+    ));
+
+    const widgetReviewsByMatchKey = groupWidgetReviewsByMatchKey(
+      await getJudgeMeWidgetProductReviews(productExternalId)
+    );
+
     return {
       ...data,
-      reviews: (data.reviews || []).filter((review) => (
-        Number(review.product_external_id) === requestedExternalId
-      )),
+      reviews: reviews.map((review) => {
+        const widgetMatches = widgetReviewsByMatchKey.get(reviewMatchKey(review)) || [];
+        // Widget JSON exposes the Admin display name but not the REST review ID.
+        // Only enrich when the REST/body/rating/timestamp key maps to one widget review.
+        const widgetReview = widgetMatches.length === 1 ? widgetMatches[0] : null;
+        return {
+          ...review,
+          reviewer_display_name: widgetReview?.reviewer_name || review.reviewer?.name,
+        };
+      }),
     };
   } catch (error) {
     console.error(`Error fetching Judge.me reviews for product ${productExternalId}:`, error);

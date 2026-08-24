@@ -64,7 +64,7 @@ export default async function ProductJsonLd({ product }: { product: NormalizedPr
         "@type": "Review",
         "author": {
           "@type": "Person",
-          "name": review.reviewer.name
+          "name": review.reviewer_display_name ?? review.reviewer?.name ?? 'Anonymous'
         },
         "datePublished": new Date(review.created_at).toISOString().split('T')[0],
         "reviewBody": review.body,
