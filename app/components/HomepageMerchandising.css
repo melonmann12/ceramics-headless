@@ -33,6 +33,35 @@
   font-size: 1rem;
 }
 
+.craft-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.text-link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--plum);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.text-link-arrow:hover {
+  opacity: 0.8;
+  transform: translateX(4px);
+}
+
+.text-link-arrow .material-symbols-outlined {
+  font-size: 1.1rem;
+}
+
 .section-eyebrow {
   color: rgba(66, 26, 33, 0.62);
   font-size: 0.75rem;
@@ -160,5 +189,9 @@
   .trust-item {
     min-height: 0;
     padding: var(--space-3) 1rem;
+  }
+
+  .craft-actions {
+    gap: var(--space-3);
   }
 }

@@ -17,14 +17,23 @@ export default function HomepageMerchandising() {
           />
         </div>
         <div className="craft-copy">
-          <p className="section-eyebrow">PRODUCT PHILOSOPHY</p>
-          <h2 className="section-title">The weight of daily objects.</h2>
+          <p className="section-eyebrow">OUR STORY</p>
+          <h2 className="section-title">THE OBJECTS WE LIVE WITH.</h2>
           <p className="section-desc">
-            A ceramic piece is used before it is displayed. ASHPIA chooses pieces for the way they meet the hand, serve a daily purpose, and bring visual quiet to your home.
+            ASHPIA began with a simple idea: the ceramics we use every day can be useful, handmade, and full of personality.
           </p>
-          <Link href="/shop" className="pill-btn pill-btn-outline">
-            SHOP THE COLLECTION
-          </Link>
+          <p className="section-desc">
+            What started with two student siblings and a shared love for everyday objects became a small collection of ceramics made to be held, used, and enjoyed every day.
+          </p>
+          <div className="craft-actions">
+            <Link href="/shop" className="pill-btn pill-btn-outline">
+              SHOP THE COLLECTION
+            </Link>
+            <Link href="/about" className="text-link-arrow">
+              READ OUR STORY
+              <span className="material-symbols-outlined">arrow_forward</span>
+            </Link>
+          </div>
         </div>
       </section>
 

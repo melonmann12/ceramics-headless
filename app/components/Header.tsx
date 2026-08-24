@@ -60,6 +60,7 @@ export default function Header() {
           <Link href="/shop" className={`nav-link ${pathname === '/shop' ? 'active' : ''}`}>SHOP ALL</Link>
           <Link href="/collections/matcha-set" className={`nav-link ${pathname === '/collections/matcha-set' ? 'active' : ''}`}>MATCHA SET</Link>
           <Link href="/shop?sort=newest" className="nav-link">NEW ARRIVALS</Link>
+          <Link href="/about" className={`nav-link ${pathname === '/about' ? 'active' : ''}`}>ABOUT US</Link>
         </div>
 
         <div className="nav-icons">
@@ -79,6 +80,7 @@ export default function Header() {
           <Link href="/shop" className={`mobile-nav-link ${pathname === '/shop' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>SHOP ALL</Link>
           <Link href="/collections/matcha-set" className={`mobile-nav-link ${pathname === '/collections/matcha-set' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>MATCHA SET</Link>
           <Link href="/shop?sort=newest" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>NEW ARRIVALS</Link>
+          <Link href="/about" className={`mobile-nav-link ${pathname === '/about' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>ABOUT US</Link>
         </div>
       </div>
       <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
