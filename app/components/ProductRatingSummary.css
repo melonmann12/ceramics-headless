@@ -91,3 +91,29 @@
   font-size: 0.8rem;
   margin-left: 0.25rem;
 }
+
+/* Mobile responsive layout for ProductGrid */
+@media (max-width: 767px) {
+  .products-grid .product-rating {
+    gap: 0.2rem;
+    white-space: nowrap;
+  }
+  
+  .products-grid .star-icon {
+    font-size: 0.95rem;
+  }
+  
+  .products-grid .rating-score {
+    font-size: 0.8rem;
+    margin-left: 0.15rem;
+  }
+  
+  .products-grid .rating-count {
+    font-size: 0.75rem;
+  }
+  
+  /* Hide the "No reviews" text for empty grid items on mobile */
+  .products-grid .rating-grid-empty-text {
+    display: none;
+  }
+}
