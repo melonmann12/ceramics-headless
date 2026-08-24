@@ -1,0 +1,80 @@
+.product-rating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--plum);
+  line-height: 1;
+}
+
+.product-rating-link {
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.product-rating-link:hover {
+  opacity: 0.8;
+}
+
+/* Fractional Stars */
+.rating-stars-wrapper {
+  position: relative;
+  display: inline-flex;
+  line-height: 1;
+}
+
+.rating-stars-empty {
+  display: flex;
+  color: rgba(66, 26, 33, 0.2);
+}
+
+.rating-stars-filled {
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow: hidden;
+  color: #F5A623;
+  white-space: nowrap;
+}
+
+.star-icon {
+  font-size: 1.1rem;
+  font-variation-settings: 'FILL' 1;
+}
+
+.rating-score {
+  font-weight: 700;
+  margin-left: 0.25rem;
+}
+
+.rating-count {
+  color: rgba(66, 26, 33, 0.6); /* plum with opacity */
+  font-size: 0.8rem;
+}
+
+.product-rating-empty {
+  opacity: 0.8;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.product-rating-empty:hover {
+  opacity: 1;
+}
+
+.rating-star-empty {
+  color: rgba(66, 26, 33, 0.2);
+  font-variation-settings: 'FILL' 0;
+}
+
+.rating-empty-text {
+  text-decoration: underline;
+  text-decoration-color: rgba(66, 26, 33, 0.3);
+  text-underline-offset: 3px;
+  font-size: 0.8rem;
+}

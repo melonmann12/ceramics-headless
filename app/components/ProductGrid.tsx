@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import ShopifyImage from '@/app/components/ShopifyImage';
 import type { NormalizedProduct } from '@/lib/shopify/types';
+import ProductRatingSummary from '@/app/components/ProductRatingSummary';
 import './ProductGrid.css';
 
 interface ProductGridProps {
@@ -65,6 +66,7 @@ export default function ProductGrid({
                     </div>
                     <div className="product-info">
                       <h3 className="product-title">{product.title}</h3>
+                      <ProductRatingSummary productId={product.id} />
                       <p className="product-price">
                         {product.compareAtPrice && (
                           <span className="price-original">{product.compareAtPrice}</span>

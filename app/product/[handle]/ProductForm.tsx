@@ -9,6 +9,7 @@ import { SHIPPING_CONFIG } from '@/lib/config';
 
 interface ProductFormProps {
   product: NormalizedProduct;
+  ratingSummary?: React.ReactNode;
 }
 
 // Fallback color map for known glazes if the store uses them, 
@@ -20,7 +21,7 @@ const knownColors: Record<string, string> = {
   'TERRACOTTA': '#C97A63',
 };
 
-export default function ProductForm({ product }: ProductFormProps) {
+export default function ProductForm({ product, ratingSummary }: ProductFormProps) {
   const defaultOptions = useMemo(() => {
     const opts: Record<string, string> = {};
     let initialVariant = product.variants.find((variant) => variant.availableForSale && variant.title.toLowerCase().includes('combo'));
@@ -301,6 +302,9 @@ export default function ProductForm({ product }: ProductFormProps) {
       <div className="pdp-right-col">
         <div>
           <h1 className="pdp-title">{product.title}</h1>
+          <div style={{ marginTop: '0.25rem', marginBottom: '0.75rem', display: 'flex', justifyContent: 'flex-start' }}>
+            {ratingSummary}
+          </div>
           <div className="pdp-prices">
             <span className="pdp-price-current">{price}</span>
             {compareAtPrice && (

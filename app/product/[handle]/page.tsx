@@ -1,8 +1,12 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Header from '@/app/components/Header';
 import Footer from '@/app/components/Footer';
 import ProductForm from './ProductForm';
+import ProductRatingSummary from '@/app/components/ProductRatingSummary';
+import ProductReviews from '@/app/components/ProductReviews';
+import ProductJsonLd from '@/app/components/ProductJsonLd';
 import { getProductByHandle } from '@/lib/shopify/queries';
 import './PDP.css';
 
@@ -51,13 +55,28 @@ export default async function ProductPage({ params }: PageProps) {
 
   return (
     <div className="pdp-page">
+      <Suspense fallback={null}>
+        <ProductJsonLd product={product} />
+      </Suspense>
       <Header />
 
       <div className="pdp-content-wrapper">
         <main className="pdp-main">
-          <ProductForm product={product} />
+          <ProductForm 
+            product={product} 
+            ratingSummary={
+              <Suspense fallback={null}>
+                <ProductRatingSummary productId={product.id} showEmptyPlaceholder={true} linkToReviews={true} />
+              </Suspense>
+            }
+          />
         </main>
       </div>
+      
+      {/* Reviews Section */}
+      <Suspense fallback={null}>
+        <ProductReviews productId={product.id} />
+      </Suspense>
 
       <Footer />
     </div>
