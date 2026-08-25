@@ -1,4 +1,5 @@
 import type { NormalizedProduct } from '@/lib/shopify/types';
+import type { JudgeMeRatingsMap } from '@/lib/judgeme/client';
 
 export function filterAndSortProducts(
   products: NormalizedProduct[],
@@ -6,7 +7,8 @@ export function filterAndSortProducts(
     sort?: string;
     availability?: string;
     price?: string;
-  }
+  },
+  ratingsMap?: JudgeMeRatingsMap
 ): NormalizedProduct[] {
   let result = [...products];
 
@@ -48,8 +50,31 @@ export function filterAndSortProducts(
       const dateB = new Date(b.createdAt).getTime();
       return dateB - dateA; // newest first
     });
-  }
-  // Relevance / Featured (default) relies on Shopify's native ordering in the result array
+  } else if (searchParams.sort === 'highest-rated' && ratingsMap) {
+    // We need the original index to use as a stable tie-breaker
+    const indexedResult = result.map((p, index) => ({ p, index }));
+    
+    indexedResult.sort((a, b) => {
+      const numericIdA = a.p.id.split('/').pop() || '';
+      const numericIdB = b.p.id.split('/').pop() || '';
+      const ratingA = ratingsMap[numericIdA] || { averageRating: 0, reviewCount: 0 };
+      const ratingB = ratingsMap[numericIdB] || { averageRating: 0, reviewCount: 0 };
 
+      // 1. Sort by average rating descending
+      if (ratingB.averageRating !== ratingA.averageRating) {
+        return ratingB.averageRating - ratingA.averageRating;
+      }
+      // 2. Tie-breaker: review count descending
+      if (ratingB.reviewCount !== ratingA.reviewCount) {
+        return ratingB.reviewCount - ratingA.reviewCount;
+      }
+      // 3. Tie-breaker: preserve original sort order (which is Best Selling)
+      return a.index - b.index;
+    });
+    
+    result = indexedResult.map(item => item.p);
+  } else if (searchParams.sort === 'best-selling') {
+    // Do nothing: result is already natively sorted by BEST_SELLING from Shopify
+  }
   return result;
 }

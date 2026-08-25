@@ -6,6 +6,7 @@ import ProductGrid from '@/app/components/ProductGrid';
 import CatalogFilters from '@/app/components/CatalogFilters';
 import { getProducts } from '@/lib/shopify/queries';
 import { filterAndSortProducts } from '@/lib/catalog-utils';
+import { getJudgeMeRatingsMap } from '@/lib/judgeme/client';
 import '@/app/components/CatalogPage.css';
 
 export const metadata: Metadata = {
@@ -22,12 +23,13 @@ export default async function ShopPage(props: {
   await connection();
   const searchParams = await props.searchParams;
   
-  const sort = typeof searchParams?.sort === 'string' ? searchParams.sort : '';
+  const sort = typeof searchParams?.sort === 'string' ? searchParams.sort : 'highest-rated';
   const availability = typeof searchParams?.availability === 'string' ? searchParams.availability : '';
   const price = typeof searchParams?.price === 'string' ? searchParams.price : '';
 
+  const ratingsMap = await getJudgeMeRatingsMap();
   let products = await getProducts(100);
-  products = filterAndSortProducts(products, { sort, availability, price });
+  products = filterAndSortProducts(products, { sort, availability, price }, ratingsMap);
 
   return (
     <>

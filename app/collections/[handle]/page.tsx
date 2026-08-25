@@ -6,6 +6,7 @@ import ProductGrid from '@/app/components/ProductGrid';
 import CatalogFilters from '@/app/components/CatalogFilters';
 import { getCollectionProducts } from '@/lib/shopify/queries';
 import { filterAndSortProducts } from '@/lib/catalog-utils';
+import { getJudgeMeRatingsMap } from '@/lib/judgeme/client';
 import '@/app/components/CatalogPage.css';
 
 interface CollectionPageProps {
@@ -30,7 +31,7 @@ export default async function CollectionPage(props: CollectionPageProps) {
   const { handle } = await props.params;
   const searchParams = await props.searchParams;
   
-  const sort = typeof searchParams?.sort === 'string' ? searchParams.sort : '';
+  const sort = typeof searchParams?.sort === 'string' ? searchParams.sort : 'highest-rated';
   const availability = typeof searchParams?.availability === 'string' ? searchParams.availability : '';
   const price = typeof searchParams?.price === 'string' ? searchParams.price : '';
 
@@ -49,7 +50,8 @@ export default async function CollectionPage(props: CollectionPageProps) {
     );
   }
 
-  let products = filterAndSortProducts(collectionData.products, { sort, availability, price });
+  const ratingsMap = await getJudgeMeRatingsMap();
+  let products = filterAndSortProducts(collectionData.products, { sort, availability, price }, ratingsMap);
 
   return (
     <>

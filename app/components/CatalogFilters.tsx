@@ -40,10 +40,11 @@ export default function CatalogFilters() {
         <select
           id="sort"
           className="search-filter-select"
-          value={searchParams.get('sort') || ''}
+          value={searchParams.get('sort') || 'highest-rated'}
           onChange={(e) => handleFilterChange('sort', e.target.value)}
         >
-          <option value="">Relevance / Featured</option>
+          <option value="highest-rated">Highest Rated</option>
+          <option value="best-selling">Best Selling</option>
           <option value="newest">Newest</option>
           <option value="price-asc">Price: Low to High</option>
           <option value="price-desc">Price: High to Low</option>
@@ -72,9 +73,9 @@ export default function CatalogFilters() {
           onChange={(e) => handleFilterChange('price', e.target.value)}
         >
           <option value="">Any</option>
-          <option value="under-50">Under €50</option>
-          <option value="50-100">€50 - €100</option>
-          <option value="over-100">Over €100</option>
+          <option value="under-50">Under $50</option>
+          <option value="50-100">$50 - $100</option>
+          <option value="over-100">Over $100</option>
         </select>
       </div>
 
