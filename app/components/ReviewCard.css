@@ -13,12 +13,21 @@
 .review-rating {
   display: flex;
   gap: 1px;
-  color: var(--matcha);
   margin-bottom: 0.25rem;
 }
 
 .review-rating .star-icon {
   font-size: 16px;
+}
+
+.review-rating .star-filled {
+  font-variation-settings: 'FILL' 1;
+  color: var(--matcha);
+}
+
+.review-rating .star-empty {
+  font-variation-settings: 'FILL' 0;
+  color: rgba(66, 26, 33, 0.2);
 }
 
 .review-header {
