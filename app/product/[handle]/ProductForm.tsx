@@ -415,6 +415,44 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
                     </div>
                   </div>
                 )}
+                {isSetOption && !isComboSelected && (() => {
+                  const comboVal = option.values.find(v => v.toLowerCase().includes('combo'));
+                  if (!comboVal) return null;
+                  
+                  const isHolder = selectedOptions[option.name]?.toLowerCase().includes('holder');
+                  const isBowl = selectedOptions[option.name]?.toLowerCase().includes('bowl');
+                  
+                  if (isBowl || isHolder) {
+                    return (
+                      <button 
+                        onClick={() => setSelectedOptions({ ...selectedOptions, [option.name]: comboVal })}
+                        style={{
+                          marginTop: '0.75rem', padding: '0.5rem 0.75rem',
+                          backgroundColor: 'transparent',
+                          border: '1px solid rgba(0,0,0,0.1)',
+                          borderRadius: '8px',
+                          fontSize: '0.85rem',
+                          color: 'var(--sage, #1E2E24)',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          width: '100%',
+                          textAlign: 'left',
+                          transition: 'background-color 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.02)')}
+                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                      >
+                        <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>add_circle</span>
+                        <span>
+                          {isBowl ? 'Complete the set with the matching holder for $135.' : 'Complete the set with the matching handmade bowl for $135.'}
+                        </span>
+                      </button>
+                    );
+                  }
+                  return null;
+                })()}
               </div>
             );
           }
