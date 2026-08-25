@@ -327,7 +327,7 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
               <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>local_shipping</span>
-              <span>Free US Shipping</span>
+              <span>Free US & Canada Shipping</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
               <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>package_2</span>

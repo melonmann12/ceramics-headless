@@ -4,7 +4,7 @@ import './PolicyPage.css';
 
 interface PolicySection {
   title: string;
-  body: string[];
+  body: React.ReactNode[];
 }
 
 interface PolicyPageProps {
@@ -41,8 +41,8 @@ export default function PolicyPage({
             {sections.map((section) => (
               <section className="policy-section" key={section.title}>
                 <h2>{section.title}</h2>
-                {section.body.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
+                {section.body.map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
                 ))}
               </section>
             ))}

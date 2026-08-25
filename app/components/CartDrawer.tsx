@@ -159,7 +159,7 @@ export default function CartDrawer() {
               </span>
             </div>
             <p style={{ fontSize: '0.8rem', color: 'var(--sage)', marginBottom: '1rem', textAlign: 'center' }}>
-              Free standard US shipping. Taxes calculated at checkout.
+              Free standard shipping to the US & Canada. Taxes calculated at checkout.
             </p>
             {checkoutError && (
               <p style={{ color: 'red', fontSize: '0.875rem', marginBottom: '1rem', textAlign: 'center' }}>

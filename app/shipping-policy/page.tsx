@@ -25,7 +25,7 @@ export default function ShippingPolicyPage() {
         {
           title: 'Shipping Rates',
           body: [
-            'We offer Free Standard US Shipping. Available upgraded shipping methods, exact rates, taxes, and duties are calculated in Shopify Checkout based on the delivery address and cart contents.',
+            'We offer Free Standard shipping to the US & Canada. Available upgraded shipping methods, exact rates, taxes, and duties are calculated in Shopify Checkout based on the delivery address and cart contents.',
           ],
         },
         {

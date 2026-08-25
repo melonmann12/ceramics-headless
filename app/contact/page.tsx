@@ -16,7 +16,14 @@ export default function ContactPage() {
           title: 'Questions about your order, shipping, returns, or product care?',
           body: [
             'Send us a message using the chat button in the bottom-right corner of the page.',
-            'For order-related questions, please include your order number so we can help you faster.'
+            'For order-related questions, please include your order number so we can help you faster.',
+            <span key="social">
+              You can also reach us through{' '}
+              <a href="https://www.instagram.com/ashpia.ceramic/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline', color: 'var(--plum)', fontWeight: 600 }}>Instagram</a>
+              {' '}or{' '}
+              <a href="https://www.facebook.com/profile.php?id=61593385899498" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline', color: 'var(--plum)', fontWeight: 600 }}>Facebook</a>
+              {' '}using the social links in our footer. We’ll always do our best to reply as soon as possible.
+            </span>
           ],
         },
         {
