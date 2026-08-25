@@ -91,9 +91,9 @@ export default function AboutPage() {
             </div>
 
             <div className="promise-card" style={{ gridColumn: '1 / -1', maxWidth: '500px', margin: '0 auto' }}>
-              <h3>DAMAGED IN TRANSIT?</h3>
+              <h3>SAFE ARRIVAL GUARANTEE</h3>
               <p>
-                If an item arrives broken or damaged, we'll provide appropriate support, including a refund or replacement according to our <Link href="/returns">current policy</Link>.
+                If an item arrives broken or damaged, contact us within 48 hours. Once verified, we will send a free replacement at no extra cost according to our <Link href="/returns">damage policy</Link>.
               </p>
             </div>
           </div>

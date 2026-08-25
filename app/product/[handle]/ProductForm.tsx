@@ -510,10 +510,10 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
           <h3 className="pdp-wcu-title">Why Choose Us?</h3>
           <div className="pdp-wcu-grid">
             {[
-              { icon: 'local_shipping', title: 'FREE SHIPPING', desc: SHIPPING_CONFIG.freeShippingRule },
               { icon: 'assignment_return', title: '14-DAY RETURNS', desc: 'Returns accepted within 14 days of delivery.' },
-              { icon: 'liquor', title: 'FOOD-SAFE GLAZE', desc: 'Food-safe glazed ceramic made for everyday drinking and matcha use.' },
-              { icon: 'local_florist', title: 'HANDMADE CERAMICS', desc: 'Each piece is individually handmade with care.' },
+              { icon: 'inventory_2', title: 'MADE TO ORDER', desc: 'Every piece is crafted specifically for your order.' },
+              { icon: 'local_florist', title: 'UNIQUE VARIATIONS', desc: 'Natural handmade variations make each piece one of a kind.' },
+              { icon: 'verified_user', title: 'SAFE ARRIVAL GUARANTEE', desc: 'Arrived damaged? Contact us within 48 hours with photos and we’ll replace it for free.' },
             ].map(({ icon, title, desc }) => (
               <div key={title} className="pdp-wcu-item">
                 <span className="material-symbols-outlined pdp-wcu-icon">{icon}</span>

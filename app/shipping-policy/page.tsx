@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import PolicyPage from '@/app/components/PolicyPage';
 import Link from 'next/link';
+import { SHIPPING_CONFIG } from '@/lib/config';
 
 export const metadata: Metadata = {
   title: 'Shipping Policy',
@@ -14,21 +15,24 @@ export default function ShippingPolicyPage() {
       intro="This page summarizes how ASHPIA handles order processing and shipping. Final shipping options and costs are shown during Shopify Checkout before payment."
       sections={[
         {
-          title: 'Order Processing',
+          title: 'Production & Shipping Timelines',
           body: [
-            'Orders are prepared after payment is completed. Because ceramics require careful packing, processing details and estimated timelines will be confirmed during checkout.',
+            'Every ASHPIA ceramic piece is uniquely handmade to order. Because of this, production time is required before your item can be shipped.',
+            `• Standard: ${SHIPPING_CONFIG.timelines.standard}`,
+            `• Priority: ${SHIPPING_CONFIG.timelines.priority}`,
           ],
         },
         {
           title: 'Shipping Rates',
           body: [
-            'Available shipping methods, rates, taxes, and duties are calculated in Shopify Checkout based on the delivery address and cart contents.',
+            'We offer Free Standard US Shipping. Available upgraded shipping methods, exact rates, taxes, and duties are calculated in Shopify Checkout based on the delivery address and cart contents.',
           ],
         },
         {
-          title: 'Delivery Issues',
+          title: 'Safe Arrival Guarantee & Delivery Issues',
           body: [
-            'If an order arrives damaged or a shipment appears delayed, please contact ASHPIA with your order number and relevant photos.',
+            'If your ceramic item arrives damaged or broken, contact us within 48 hours of delivery with clear photos of the item and the packaging. Once verified, we will send a replacement at no additional cost, including free replacement shipping.',
+            'If your shipment appears significantly delayed or lost, please contact us with your order number so we can help track it down.',
           ],
         },
       ]}

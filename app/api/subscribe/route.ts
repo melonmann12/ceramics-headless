@@ -78,10 +78,74 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid email address', code: 'VALIDATION_ERROR' }, { status: 400 });
     }
 
-    // 4. Safest duplicate-handling fallback: Attempt customerCreate.
-    // If it fails with TAKEN, return a strict duplicate error without querying the customer ID.
+    // 4. Check if customer exists first to allow existing customers to subscribe
     const consentUpdatedAt = new Date().toISOString();
 
+    const searchQuery = `
+      query searchCustomer($query: String!) {
+        customers(first: 1, query: $query) {
+          edges {
+            node {
+              id
+              emailMarketingConsent {
+                marketingState
+              }
+            }
+          }
+        }
+      }
+    `;
+    const searchRes = await shopifyAdminRequest({ query: searchQuery, variables: { query: `email:${email}` } });
+    const existingCustomer = searchRes.customers?.edges?.[0]?.node;
+
+    if (existingCustomer) {
+      // If already subscribed, return success silently (idempotent)
+      if (existingCustomer.emailMarketingConsent?.marketingState === 'SUBSCRIBED') {
+        return NextResponse.json({ message: 'Success', code: 'SUCCESS' }, { status: 200 });
+      }
+
+      // Update existing customer's marketing consent
+      const updateMutation = `
+        mutation customerEmailMarketingConsentUpdate($input: CustomerEmailMarketingConsentUpdateInput!) {
+          customerEmailMarketingConsentUpdate(input: $input) {
+            customer {
+              id
+              email
+              emailMarketingConsent {
+                marketingState
+                marketingOptInLevel
+              }
+            }
+            userErrors {
+              field
+              message
+            }
+          }
+        }
+      `;
+      const updateVars = {
+        input: {
+          customerId: existingCustomer.id,
+          emailMarketingConsent: {
+            marketingState: 'SUBSCRIBED',
+            marketingOptInLevel: 'SINGLE_OPT_IN',
+            consentUpdatedAt
+          }
+        }
+      };
+      
+      const updateRes = await shopifyAdminRequest({ query: updateMutation, variables: updateVars });
+      const updateErrors = updateRes.customerEmailMarketingConsentUpdate?.userErrors || [];
+      
+      if (updateErrors.length > 0) {
+        console.error('[Subscribe] Shopify GraphQL userErrors on update:', updateErrors.map((e: any) => `${e.field}: ${e.message}`));
+        return NextResponse.json({ error: 'Failed to update subscription', code: 'SHOPIFY_GRAPHQL_FAILED' }, { status: 400 });
+      }
+      
+      return NextResponse.json({ message: 'Success', code: 'SUCCESS' }, { status: 200 });
+    }
+
+    // 5. Customer does not exist, create new customer
     const createMutation = `
       mutation customerCreate($input: CustomerInput!) {
         customerCreate(input: $input) {
@@ -110,18 +174,7 @@ export async function POST(request: Request) {
     const userErrors = createRes.customerCreate?.userErrors || [];
     
     if (userErrors.length > 0) {
-      console.error('[Subscribe] Shopify GraphQL userErrors:', userErrors.map((e: any) => `${e.field}: ${e.message}`));
-      
-      const emailTakenError = userErrors.find((e: any) => e.field?.includes('email') || e.message.toLowerCase().includes('taken') || e.message.toLowerCase().includes('already exists'));
-      
-      if (emailTakenError) {
-         return NextResponse.json({ 
-           success: false, 
-           code: 'EMAIL_ALREADY_EXISTS',
-           error: 'This email is already associated with an existing customer. Please update your email preferences from your account or contact us for help.'
-         }, { status: 409 });
-      }
-
+      console.error('[Subscribe] Shopify GraphQL userErrors on create:', userErrors.map((e: any) => `${e.field}: ${e.message}`));
       return NextResponse.json({ error: 'Failed to subscribe', code: 'SHOPIFY_GRAPHQL_FAILED' }, { status: 400 });
     }
 

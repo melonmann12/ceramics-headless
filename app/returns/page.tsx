@@ -19,9 +19,11 @@ export default function ReturnsPage() {
           ],
         },
         {
-          title: 'Damaged Items',
+          title: 'Damaged on Arrival',
           body: [
-            'Ceramics should be inspected on delivery. If an item arrives damaged, please keep the packaging and provide clear photos with your order details.',
+            'Ceramics should be inspected upon delivery. If an item arrives damaged or broken, please contact us within 48 hours of delivery.',
+            'You must provide clear photos of both the damaged ceramic item and the original shipping packaging.',
+            'Once the damage is verified, we will send a free replacement item at no additional cost, including free replacement shipping.',
           ],
         },
         {

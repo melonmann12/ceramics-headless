@@ -33,7 +33,7 @@ export default function TermsPage() {
         {
           title: 'Policy Changes',
           body: [
-            'ASHPIA may update storefront policies as business operations are finalized. Customers should review the policy pages before placing an order.',
+            'Ashpia may update these Terms from time to time. Any updates will be reflected on this page.',
           ],
         },
       ]}

@@ -22,7 +22,7 @@ export default function ContactPage() {
         {
           title: 'Damaged Items',
           body: [
-            'For damaged ceramic items, please keep the packaging and provide clear photos so the issue can be reviewed.',
+            'For a damaged or broken item, please contact us within 48 hours of delivery and include clear photos of the item and packaging so we can arrange your free replacement.',
           ],
         },
       ]}
