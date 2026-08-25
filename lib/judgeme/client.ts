@@ -80,14 +80,18 @@ export interface JudgeMeReviewer {
   accepts_marketing?: boolean;
 }
 
+export interface JudgeMePictureUrls {
+  small?: string;
+  compact?: string;
+  huge?: string;
+  original?: string;
+}
+
 export interface JudgeMePicture {
-  urls: {
-    small: string;
-    compact: string;
-    huge: string;
-    original: string;
-  };
-  hidden: boolean;
+  urls?: JudgeMePictureUrls;
+  url?: string;
+  src?: string;
+  hidden?: boolean;
 }
 
 export interface JudgeMeReview {
@@ -124,6 +128,7 @@ interface JudgeMeWidgetReview {
   rating: number;
   created_at: string;
   reviewer_name?: string;
+  pictures_urls?: JudgeMePictureUrls[];
 }
 
 interface JudgeMeWidgetReviewsResponse {
@@ -146,13 +151,35 @@ function groupWidgetReviewsByMatchKey(widgetReviews: JudgeMeWidgetReview[]): Map
   const groupedReviews = new Map<string, JudgeMeWidgetReview[]>();
 
   for (const review of widgetReviews) {
-    if (!review.reviewer_name) continue;
-
     const key = reviewMatchKey(review);
     groupedReviews.set(key, [...(groupedReviews.get(key) || []), review]);
   }
 
   return groupedReviews;
+}
+
+function getPictureUrl(picture: JudgeMePicture): string | undefined {
+  return (
+    picture.urls?.compact
+    ?? picture.urls?.small
+    ?? picture.urls?.original
+    ?? picture.urls?.huge
+    ?? picture.url
+    ?? picture.src
+  );
+}
+
+function hasDisplayablePictures(pictures: JudgeMePicture[] | undefined): boolean {
+  return Boolean(pictures?.some((picture) => !picture.hidden && getPictureUrl(picture)));
+}
+
+function normalizeWidgetPictures(widgetReview: JudgeMeWidgetReview | null): JudgeMePicture[] {
+  return (widgetReview?.pictures_urls || [])
+    .filter((urls) => urls.compact || urls.small || urls.original || urls.huge)
+    .map((urls) => ({
+      urls,
+      hidden: false,
+    }));
 }
 
 async function getJudgeMeWidgetProductReviews(productExternalId: string): Promise<JudgeMeWidgetReview[]> {
@@ -166,7 +193,7 @@ async function getJudgeMeWidgetProductReviews(productExternalId: string): Promis
       `https://judge.me/api/v1/widgets/product_review?api_token=${privateToken}&shop_domain=${storeDomain}&external_id=${productExternalId}&json_request=true`,
       {
         next: {
-          revalidate: 900,
+          revalidate: 60,
           tags: [`judgeme-product-${productExternalId}`],
         },
       }
@@ -234,7 +261,7 @@ export const getJudgeMeProductReviews = cache(async (productExternalId: string, 
       `https://judge.me/api/v1/reviews?api_token=${privateToken}&shop_domain=${storeDomain}&product_id=${internalProductId}&page=${page}&per_page=${perPage}&published=true`,
       {
         next: {
-          revalidate: 900,
+          revalidate: 60,
           tags: [`judgeme-product-${productExternalId}`],
         },
       }
@@ -260,12 +287,16 @@ export const getJudgeMeProductReviews = cache(async (productExternalId: string, 
       ...data,
       reviews: reviews.map((review) => {
         const widgetMatches = widgetReviewsByMatchKey.get(reviewMatchKey(review)) || [];
-        // Widget JSON exposes the Admin display name but not the REST review ID.
+        // Widget JSON exposes the Admin display name/media but not the REST review ID.
         // Only enrich when the REST/body/rating/timestamp key maps to one widget review.
         const widgetReview = widgetMatches.length === 1 ? widgetMatches[0] : null;
+        const restPictures = review.pictures || [];
+        const widgetPictures = normalizeWidgetPictures(widgetReview);
+
         return {
           ...review,
           reviewer_display_name: widgetReview?.reviewer_name || review.reviewer?.name,
+          pictures: hasDisplayablePictures(restPictures) ? restPictures : widgetPictures,
         };
       }),
     };

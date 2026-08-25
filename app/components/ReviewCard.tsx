@@ -4,11 +4,36 @@ import { useState, useEffect, useRef } from 'react';
 import type { JudgeMeReview } from '@/lib/judgeme/client';
 import './ReviewCard.css';
 
+function getReviewThumbnailUrl(picture: JudgeMeReview['pictures'][number]) {
+  return (
+    picture.urls?.compact
+    ?? picture.urls?.small
+    ?? picture.urls?.original
+    ?? picture.urls?.huge
+    ?? picture.url
+    ?? picture.src
+  );
+}
+
+function getReviewModalImageUrl(picture: JudgeMeReview['pictures'][number]) {
+  return (
+    picture.urls?.huge
+    ?? picture.urls?.original
+    ?? picture.urls?.compact
+    ?? picture.urls?.small
+    ?? picture.url
+    ?? picture.src
+  );
+}
+
 export default function ReviewCard({ review }: { review: JudgeMeReview }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTruncated, setIsTruncated] = useState(false);
   const textRef = useRef<HTMLParagraphElement>(null);
   const displayName = review.reviewer_display_name ?? review.reviewer?.name ?? 'Anonymous';
+  const visiblePictures = (review.pictures || []).filter((picture) => (
+    !picture.hidden && getReviewThumbnailUrl(picture)
+  ));
 
   useEffect(() => {
     const checkTruncation = () => {
@@ -23,7 +48,7 @@ export default function ReviewCard({ review }: { review: JudgeMeReview }) {
     return () => window.removeEventListener('resize', checkTruncation);
   }, [review.body]);
   
-  const hasImages = review.pictures && review.pictures.filter(p => !p.hidden).length > 0;
+  const hasImages = visiblePictures.length > 0;
   const reply = review.answers && review.answers.length > 0 ? review.answers[0] : null;
 
   useEffect(() => {
@@ -95,10 +120,10 @@ export default function ReviewCard({ review }: { review: JudgeMeReview }) {
 
         {hasImages && (
           <div className="review-media-strip">
-            {review.pictures.filter(p => !p.hidden).map((pic, idx) => (
+            {visiblePictures.map((pic, idx) => (
               <button key={idx} className="review-thumbnail-btn" onClick={() => setIsModalOpen(true)}>
                 <img 
-                  src={pic.urls.compact} 
+                  src={getReviewThumbnailUrl(pic)} 
                   alt={`Review photo ${idx + 1}`}
                   loading="lazy"
                 />
@@ -144,10 +169,10 @@ export default function ReviewCard({ review }: { review: JudgeMeReview }) {
 
             {hasImages && (
               <div className="review-modal-images">
-                {review.pictures.filter(p => !p.hidden).map((pic, idx) => (
+                {visiblePictures.map((pic, idx) => (
                   <div key={idx} className="review-modal-image-wrapper">
                     <img 
-                      src={pic.urls.huge || pic.urls.original} 
+                      src={getReviewModalImageUrl(pic)}
                       alt={`Review photo ${idx + 1}`}
                       loading="lazy"
                     />

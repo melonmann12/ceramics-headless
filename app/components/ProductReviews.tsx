@@ -14,8 +14,15 @@ export default async function ProductReviews({ productId }: { productId: string 
     getJudgeMeProductReviews(numericId)
   ]);
 
-  const summary = ratingsMap[numericId];
   const reviews = reviewsData?.reviews || [];
+  const summary = ratingsMap[numericId] ?? (
+    reviews.length > 0
+      ? {
+          averageRating: Number((reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(2)),
+          reviewCount: reviews.length,
+        }
+      : null
+  );
 
   if (!summary || summary.reviewCount === 0 || reviews.length === 0) {
     return (
