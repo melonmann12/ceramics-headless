@@ -145,12 +145,19 @@ export async function getProductByHandle(handle: string): Promise<NormalizedProd
     }
   `;
 
+  const decodedHandle = decodeURIComponent(handle);
+
   const { data, errors } = await shopifyClient.request(query, {
-    variables: { handle },
+    variables: { handle: decodedHandle },
   });
 
   if (errors || !data?.product) {
-    console.error('[Shopify] getProductByHandle errors:', errors);
+    console.error('[Shopify] Product not found by handle:', {
+      handle: decodedHandle,
+      hasData: Boolean(data),
+      productIsNull: data?.product === null,
+      errors: errors || null
+    });
     return null;
   }
 
