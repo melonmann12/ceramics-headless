@@ -2,6 +2,28 @@
 
 import { revalidateTag } from 'next/cache';
 
+const JUDGEME_SUBMIT_TIMEOUT_MS = 30_000;
+
+async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit, timeoutMs: number) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(input, {
+      ...init,
+      signal: controller.signal
+    });
+  } catch (error) {
+    if (controller.signal.aborted) {
+      throw new Error('Judge.me request timed out');
+    }
+
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 export async function submitJudgeMeReview(formData: FormData) {
   // 1. Honeypot check
   const honeypot = formData.get('bot_field')?.toString();
@@ -69,7 +91,7 @@ export async function submitJudgeMeReview(formData: FormData) {
   }
 
   try {
-    const res = await fetch('https://judge.me/api/v1/reviews', {
+    const res = await fetchWithTimeout('https://judge.me/api/v1/reviews', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -86,7 +108,7 @@ export async function submitJudgeMeReview(formData: FormData) {
         body,
         picture_urls
       })
-    });
+    }, JUDGEME_SUBMIT_TIMEOUT_MS);
 
     if (!res.ok) {
       // Don't log full response or email to avoid exposing PII/secrets unnecessarily
@@ -99,7 +121,7 @@ export async function submitJudgeMeReview(formData: FormData) {
     revalidateTag('judgeme-ratings', 'max');
 
     return { success: true };
-  } catch (error) {
+  } catch {
     console.error('Error submitting review to Judge.me REST API');
     return { success: false, error: 'An unexpected error occurred. Please try again later.' };
   }

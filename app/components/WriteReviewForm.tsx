@@ -4,12 +4,72 @@ import { useState, useEffect, useRef } from 'react';
 import { submitJudgeMeReview } from '@/app/actions/submit-review';
 import './WriteReviewForm.css';
 
+type ReviewSubmitStatus = 'idle' | 'uploading' | 'submitting' | 'success' | 'error';
+
+const CLOUDINARY_FOLDER = 'ashpia/reviews';
+const SIGNATURE_TIMEOUT_MS = 10_000;
+const CLOUDINARY_UPLOAD_TIMEOUT_MS = 30_000;
+const RESPONSE_BODY_TIMEOUT_MS = 10_000;
+const REVIEW_SUBMIT_TIMEOUT_MS = 30_000;
+
+class UploadTimeoutError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'UploadTimeoutError';
+  }
+}
+
+async function withTimeout<T>(step: string, timeoutMs: number, operation: (signal: AbortSignal) => Promise<T>) {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await operation(controller.signal);
+  } catch (error) {
+    if (controller.signal.aborted) {
+      throw new UploadTimeoutError(`${step} timed out`);
+    }
+    throw error;
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+}
+
+async function withPromiseTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string) {
+  let timeoutId: number | undefined;
+
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeoutId = window.setTimeout(() => reject(new UploadTimeoutError(message)), timeoutMs);
+  });
+
+  try {
+    return await Promise.race([promise, timeoutPromise]);
+  } finally {
+    if (timeoutId !== undefined) {
+      window.clearTimeout(timeoutId);
+    }
+  }
+}
+
+function getErrorMessage(error: unknown) {
+  if (error instanceof UploadTimeoutError) {
+    return 'Photo upload timed out. Please try again.';
+  }
+
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+
+  return 'Something went wrong. Please try again.';
+}
+
 export default function WriteReviewForm({ productId }: { productId: string }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [status, setStatus] = useState<'idle' | 'uploading' | 'submitting' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<ReviewSubmitStatus>('idle');
   const [errorMsg, setErrorMsg] = useState('');
   const [rating, setRating] = useState(5);
   const [hoverRating, setHoverRating] = useState(0);
+  const [uploadProgress, setUploadProgress] = useState<{ current: number; total: number } | null>(null);
   
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
@@ -75,87 +135,128 @@ export default function WriteReviewForm({ productId }: { productId: string }) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (status === 'uploading' || status === 'submitting') return;
+
+    const formElement = e.currentTarget;
     setErrorMsg('');
-    
-    // 1. Upload images directly to Cloudinary if any
+    setUploadProgress(null);
+
     const pictureUrls: string[] = [];
-    if (selectedFiles.length > 0) {
-      setStatus('uploading');
-      try {
-        const signRes = await fetch('/api/cloudinary/sign', { method: 'POST' });
+    let completed = false;
+
+    try {
+      // 1. Upload images directly to Cloudinary if any
+      if (selectedFiles.length > 0) {
+        setStatus('uploading');
+
+        const signRes = await withTimeout('signature request', SIGNATURE_TIMEOUT_MS, (signal) => (
+          fetch('/api/cloudinary/sign', { method: 'POST', signal })
+        ));
+
         if (!signRes.ok) throw new Error('Failed to retrieve upload signature');
-        const signData = await signRes.json();
-        
-        for (const file of selectedFiles) {
+        const signData = await withPromiseTimeout(
+          signRes.json(),
+          RESPONSE_BODY_TIMEOUT_MS,
+          'signature response timed out'
+        );
+
+        if (!signData.cloudName || !signData.apiKey || !signData.timestamp || !signData.signature || signData.folder !== CLOUDINARY_FOLDER) {
+          throw new Error('Invalid Cloudinary upload signature response.');
+        }
+
+        for (const [index, file] of selectedFiles.entries()) {
+          setUploadProgress({ current: index + 1, total: selectedFiles.length });
           const uploadFormData = new FormData();
-          uploadFormData.append('folder', signData.folder);
+          uploadFormData.append('file', file);
           uploadFormData.append('api_key', signData.apiKey);
           uploadFormData.append('timestamp', signData.timestamp);
           uploadFormData.append('signature', signData.signature);
-          uploadFormData.append('file', file);
+          uploadFormData.append('folder', signData.folder);
 
-          const uploadRes = await fetch(`https://api.cloudinary.com/v1_1/${signData.cloudName}/image/upload`, {
-            method: 'POST',
-            body: uploadFormData
-          });
+          const uploadUrl = `https://api.cloudinary.com/v1_1/${signData.cloudName}/image/upload`;
+
+          const uploadRes = await withTimeout(`cloudinary upload ${index + 1}`, CLOUDINARY_UPLOAD_TIMEOUT_MS, (signal) => (
+            fetch(uploadUrl, {
+              method: 'POST',
+              body: uploadFormData,
+              signal
+            })
+          ));
           
           if (!uploadRes.ok) {
-            console.error('Cloudinary upload failed:', await uploadRes.text());
             throw new Error('Image upload failed');
           }
           
-          const uploadData = await uploadRes.json();
-          if (uploadData.secure_url) {
-            pictureUrls.push(uploadData.secure_url);
+          const uploadData = await withPromiseTimeout(
+            uploadRes.json(),
+            RESPONSE_BODY_TIMEOUT_MS,
+            `cloudinary upload ${index + 1} response timed out`
+          );
+
+          if (!uploadData.secure_url) {
+            throw new Error('Image upload did not return a secure URL.');
+          }
+
+          pictureUrls.push(uploadData.secure_url);
+        }
+      }
+
+      // 2. Construct a completely fresh, lightweight FormData for the Server Action
+      const reviewPayload = new FormData();
+      reviewPayload.set('productId', productId);
+      reviewPayload.set('rating', rating.toString());
+      
+      const nameInput = formElement.elements.namedItem('name') as HTMLInputElement;
+      const emailInput = formElement.elements.namedItem('email') as HTMLInputElement;
+      const titleInput = formElement.elements.namedItem('title') as HTMLInputElement;
+      const bodyInput = formElement.elements.namedItem('body') as HTMLTextAreaElement;
+      const botInput = formElement.elements.namedItem('bot_field') as HTMLInputElement;
+
+      if (nameInput) reviewPayload.set('name', nameInput.value);
+      if (emailInput) reviewPayload.set('email', emailInput.value);
+      if (titleInput) reviewPayload.set('title', titleInput.value);
+      if (bodyInput) reviewPayload.set('body', bodyInput.value);
+      if (botInput) reviewPayload.set('bot_field', botInput.value);
+
+      for (const url of pictureUrls) {
+        reviewPayload.append('picture_urls', url);
+      }
+      
+      // Development-only sanity check to guarantee NO binary data
+      if (process.env.NODE_ENV === 'development') {
+        for (const [key, value] of Array.from(reviewPayload.entries())) {
+          if (typeof value !== 'string') {
+            throw new Error(`Binary data must not be sent to the review Server Action. Found ${key}.`);
           }
         }
-      } catch (err) {
-        setStatus('error');
-        setErrorMsg('Failed to upload images. Please try again or remove images.');
-        return;
       }
-    }
-    
-    // 2. Construct a completely fresh, lightweight FormData for the Server Action
-    const formElement = e.currentTarget;
-    const reviewPayload = new FormData();
-    reviewPayload.set('productId', productId);
-    reviewPayload.set('rating', rating.toString());
-    
-    const nameInput = formElement.elements.namedItem('name') as HTMLInputElement;
-    const emailInput = formElement.elements.namedItem('email') as HTMLInputElement;
-    const titleInput = formElement.elements.namedItem('title') as HTMLInputElement;
-    const bodyInput = formElement.elements.namedItem('body') as HTMLTextAreaElement;
-    const botInput = formElement.elements.namedItem('bot_field') as HTMLInputElement;
 
-    if (nameInput) reviewPayload.set('name', nameInput.value);
-    if (emailInput) reviewPayload.set('email', emailInput.value);
-    if (titleInput) reviewPayload.set('title', titleInput.value);
-    if (bodyInput) reviewPayload.set('body', bodyInput.value);
-    if (botInput) reviewPayload.set('bot_field', botInput.value);
+      setStatus('submitting');
+      const res = await withPromiseTimeout(
+        submitJudgeMeReview(reviewPayload),
+        REVIEW_SUBMIT_TIMEOUT_MS,
+        'review submit timed out'
+      );
 
-    for (const url of pictureUrls) {
-      reviewPayload.append('picture_urls', url);
-    }
-    
-    // Development-only sanity check to guarantee NO binary data
-    if (process.env.NODE_ENV === 'development') {
-      for (const [key, value] of Array.from(reviewPayload.entries())) {
-        if (typeof value !== 'string') {
-          throw new Error('Binary data must not be sent to the review Server Action.');
-        }
+      if (res.success) {
+        completed = true;
+        setStatus('success');
+        selectedFiles.forEach((_, index) => URL.revokeObjectURL(previews[index]));
+        setSelectedFiles([]);
+        setPreviews([]);
+      } else {
+        throw new Error(res.error || 'Something went wrong. Please try again.');
       }
-    }
-
-    setStatus('submitting');
-    const res = await submitJudgeMeReview(reviewPayload);
-    if (res.success) {
-      setStatus('success');
-      setSelectedFiles([]);
-      setPreviews([]);
-    } else {
+    } catch (err) {
       setStatus('error');
-      setErrorMsg(res.error || 'Something went wrong. Please try again.');
+      setErrorMsg(getErrorMessage(err));
+    } finally {
+      setUploadProgress(null);
+      if (!completed) {
+        setStatus((currentStatus) => (
+          currentStatus === 'uploading' || currentStatus === 'submitting' ? 'error' : currentStatus
+        ));
+      }
     }
   };
 
@@ -275,7 +376,9 @@ export default function WriteReviewForm({ productId }: { productId: string }) {
         </div>
 
         <button type="submit" className="submit-review-btn" disabled={status === 'submitting' || status === 'uploading'}>
-          {status === 'uploading' ? 'Uploading photos...' : (status === 'submitting' ? 'Submitting...' : 'Submit Review')}
+          {status === 'uploading'
+            ? (uploadProgress ? `Uploading photo ${uploadProgress.current} of ${uploadProgress.total}...` : 'Uploading photos...')
+            : (status === 'submitting' ? 'Submitting...' : 'Submit Review')}
         </button>
       </form>
     </div>
