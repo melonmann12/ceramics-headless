@@ -37,9 +37,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return;
     }
     const validEdges = newCart.lines.edges.filter(e => e.node.quantity > 0);
-    if (validEdges.length !== newCart.lines.edges.length) {
-      console.log(`[Diagnostic] Defensive filter removed ${newCart.lines.edges.length - validEdges.length} zero-quantity lines from state.`);
-    }
     setCart({
       ...newCart,
       lines: { edges: validEdges }
@@ -56,22 +53,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
         
         // Prevent late hydration from overwriting a mutation that already happened
         if (hasHydratedRef.current || cartRef.current) {
-          console.log(`[Diagnostic] Skipping hydration set: cart already modified.`);
           return;
-        }
-        
-        if (initialCart) {
-          console.log(`[Diagnostic] Hydrated cart from cookie with ${initialCart.lines.edges.length} lines.`);
-          initialCart.lines.edges.forEach(e => console.log(`[Diagnostic]  - line ${e.node.id.slice(-5)} (variant ${e.node.merchandise.id.slice(-5)}), qty: ${e.node.quantity}, sub: ${e.node.quantity * parseFloat(e.node.merchandise.price.amount)}`));
-        } else {
-          console.log(`[Diagnostic] Hydrated cart from cookie was null/empty.`);
         }
         
         // Remove zero-qty lines from Shopify async if they exist in hydrated cart
         if (initialCart) {
           const zeroQtyLines = initialCart.lines.edges.filter(e => e.node.quantity <= 0);
           if (zeroQtyLines.length > 0) {
-             console.log(`[Diagnostic] Found zero-qty lines on hydration. Firing async removals...`);
              zeroQtyLines.forEach(line => {
                 removeCartItemAction(line.node.id).catch(err => console.error("Failed async remove", err));
              });
@@ -96,12 +84,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (isMutating) return;
     setIsMutating(true);
     try {
-      console.log(`[Diagnostic] Adding variant ${variantId.slice(-5)} qty: ${quantity || 1}`);
       const updatedCart = await addToCartAction(variantId, quantity || 1);
-      if (updatedCart) {
-        console.log(`[Diagnostic] Add to cart returned cart with ${updatedCart.lines.edges.length} lines.`);
-        updatedCart.lines.edges.forEach(e => console.log(`[Diagnostic]  - line ${e.node.id.slice(-5)} (variant ${e.node.merchandise.id.slice(-5)}), qty: ${e.node.quantity}`));
-      }
       setValidCart(updatedCart);
       setIsOpen(true); // Auto-open cart on add
     } finally {
@@ -152,12 +135,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setValidCart(optimisticCart);
 
     try {
-      console.log(`[Diagnostic] Updating line ${lineId.slice(-5)} to ${quantity}`);
       const updatedCart = await updateCartItemAction(lineId, quantity);
-      if (updatedCart) {
-        console.log(`[Diagnostic] Update line returned cart with ${updatedCart.lines.edges.length} lines.`);
-        updatedCart.lines.edges.forEach(e => console.log(`[Diagnostic]  - line ${e.node.id.slice(-5)} (variant ${e.node.merchandise.id.slice(-5)}), qty: ${e.node.quantity}`));
-      }
       setValidCart(updatedCart); // Reconcile with Shopify's authoritative response
     } catch (error) {
       console.error('Update failed, rolling back.', error);
@@ -201,12 +179,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setValidCart(optimisticCart);
 
     try {
-      console.log(`[Diagnostic] Removing line ${lineId.slice(-5)}`);
       const updatedCart = await removeCartItemAction(lineId);
-      if (updatedCart) {
-        console.log(`[Diagnostic] Remove line returned cart with ${updatedCart.lines.edges.length} lines.`);
-        updatedCart.lines.edges.forEach(e => console.log(`[Diagnostic]  - line ${e.node.id.slice(-5)} (variant ${e.node.merchandise.id.slice(-5)}), qty: ${e.node.quantity}`));
-      }
       setValidCart(updatedCart); // Reconcile
     } catch (error) {
       console.error('Remove failed, rolling back.', error);

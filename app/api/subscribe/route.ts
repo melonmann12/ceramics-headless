@@ -40,7 +40,6 @@ function validateEmail(email: any): string | null {
 
 export async function POST(request: Request) {
   try {
-    console.log('[Subscribe] request received');
     // 1. Environment Validation (fail safely if misconfigured)
     const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || process.env.SHOPIFY_STORE_DOMAIN;
     const clientId = process.env.SHOPIFY_ADMIN_CLIENT_ID;
@@ -57,12 +56,10 @@ export async function POST(request: Request) {
       console.error('[Subscribe] Server configuration error: Missing Shopify Admin API credentials.');
       return NextResponse.json({ error: 'Something went wrong. Please try again later.', code: 'CONFIG_MISSING' }, { status: 500 });
     }
-    console.log('[Subscribe] env validation passed');
 
     // 2. Rate Limiting
     const ip = request.headers.get('x-forwarded-for') || 'unknown-ip';
     if (!checkRateLimit(ip)) {
-      console.log('[Subscribe] failure stage: rate limiter');
       return NextResponse.json({ error: 'Too many requests. Please try again later.', code: 'RATE_LIMITED' }, { status: 429 });
     }
 
@@ -72,14 +69,12 @@ export async function POST(request: Request) {
     // Honeypot check (anti-spam)
     // We expect the frontend to pass a visually hidden 'website' or 'hp' field.
     if (body.website) {
-      console.log('[Subscribe] failure stage: honeypot');
       // Silently reject bots that fill the honeypot
       return NextResponse.json({ message: 'Success', code: 'HONEYPOT_REJECT' }, { status: 200 });
     }
 
     const email = validateEmail(body.email);
     if (!email) {
-      console.log('[Subscribe] failure stage: frontend payload');
       return NextResponse.json({ error: 'Invalid email address', code: 'VALIDATION_ERROR' }, { status: 400 });
     }
 
@@ -87,7 +82,6 @@ export async function POST(request: Request) {
     // If it fails with TAKEN, return a strict duplicate error without querying the customer ID.
     const consentUpdatedAt = new Date().toISOString();
 
-    console.log('[Subscribe] customerCreate started');
     const createMutation = `
       mutation customerCreate($input: CustomerInput!) {
         customerCreate(input: $input) {
@@ -121,7 +115,6 @@ export async function POST(request: Request) {
       const emailTakenError = userErrors.find((e: any) => e.field?.includes('email') || e.message.toLowerCase().includes('taken') || e.message.toLowerCase().includes('already exists'));
       
       if (emailTakenError) {
-         console.log('[Subscribe] duplicate email detected');
          return NextResponse.json({ 
            success: false, 
            code: 'EMAIL_ALREADY_EXISTS',
@@ -129,7 +122,6 @@ export async function POST(request: Request) {
          }, { status: 409 });
       }
 
-      console.log('[Subscribe] failure stage: customerCreate');
       return NextResponse.json({ error: 'Failed to subscribe', code: 'SHOPIFY_GRAPHQL_FAILED' }, { status: 400 });
     }
 
@@ -144,7 +136,6 @@ export async function POST(request: Request) {
       errorCode = error.code;
     }
     
-    console.log(`[Subscribe] failure stage: ${errorCode}`);
     // No longer leaking verbose 'missing' array diagnostics to the client
     return NextResponse.json({ 
       error: 'Something went wrong. Please try again later.', 

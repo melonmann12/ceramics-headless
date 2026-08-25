@@ -27,7 +27,7 @@ export async function getCartAction(): Promise<ShopifyCart | null> {
     try {
       cart = await updateCartBuyerIdentity(cartId, DEFAULT_BUYER_COUNTRY) || cart;
     } catch (e) {
-      console.error('[Diagnostic] Failed to upgrade buyer identity on hydration', e);
+      console.error('Failed to upgrade cart buyer identity on hydration', e);
     }
   }
 
@@ -51,7 +51,7 @@ export async function addToCartAction(merchandiseId: string, quantity: number): 
         // Try to add to existing cart
         cart = await addToCart(cartId, [{ merchandiseId, quantity }]);
       } catch (addError: any) {
-        console.warn(`[Diagnostic] Failed to add to existing cart ${cartId}:`, addError.message);
+        console.warn(`Failed to add to existing cart ${cartId}:`, addError.message);
         // Fall through to create a new cart
         cart = null;
       }
@@ -76,7 +76,7 @@ export async function addToCartAction(merchandiseId: string, quantity: number): 
     if (cart) {
       const addedLine = cart.lines.edges.find(e => e.node.merchandise?.id === merchandiseId);
       if (!addedLine || addedLine.node.quantity < 1) {
-        console.error(`[Diagnostic] Add to cart failed. Shopify clamped quantity to 0 for ${merchandiseId} in cart ${cart.id}.`);
+        console.error(`Add to cart failed. Shopify clamped quantity to 0 for ${merchandiseId} in cart ${cart.id}.`);
         throw new Error('This item is currently out of stock and cannot be added to your cart.');
       }
     }

@@ -54,8 +54,6 @@ export async function sendMetaCapiEvent(event: MetaCapiEvent) {
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`Meta CAPI Error (${response.status}):`, errorText);
-    } else {
-      console.log(`[CAPI] successfully sent ${event.event_name} (event_id: ${event.event_id})`);
     }
   } catch (err) {
     console.error('Failed to send Meta CAPI event:', err);

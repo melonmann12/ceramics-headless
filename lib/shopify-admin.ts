@@ -18,13 +18,6 @@ async function getShopifyAdminAccessToken(forceRefresh = false): Promise<string>
   const clientSecret = process.env.SHOPIFY_ADMIN_CLIENT_SECRET;
   const apiVersion = process.env.SHOPIFY_ADMIN_API_VERSION;
 
-  console.log(`[ShopifyAdmin] env:
-${JSON.stringify({
-  clientIdPresent: !!clientId,
-  clientSecretPresent: !!clientSecret,
-  apiVersion: apiVersion || 'missing',
-  shopDomain: domain || 'missing'
-}, null, 2)}`);
   const missingVars: string[] = [];
   if (!domain) missingVars.push('NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN');
   if (!clientId) missingVars.push('SHOPIFY_ADMIN_CLIENT_ID');
@@ -60,7 +53,6 @@ ${JSON.stringify({
   const endpoint = `https://${safeDomain}/admin/oauth/access_token`;
 
   try {
-    console.log('[ShopifyAdmin] OAuth request started');
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
@@ -74,8 +66,6 @@ ${JSON.stringify({
       }),
       cache: 'no-store',
     });
-
-    console.log(`[ShopifyAdmin] OAuth status: ${response.status}`);
 
     if (!response.ok) {
       const contentType = response.headers.get('content-type') || 'unknown';
@@ -94,7 +84,7 @@ ${JSON.stringify({
           if (text.includes('invalid_client')) errorName = 'invalid_client';
           if (text.includes('not permitted')) errorDescription = 'not permitted';
         }
-      } catch (e) {
+      } catch {
         // ignore parse errors safely
       }
 
@@ -119,12 +109,6 @@ ${JSON.stringify({
 
     // Check scopes (read_customers, write_customers)
     const scopes = data.scope ? data.scope.split(',').map((s: string) => s.trim()) : [];
-    
-    console.log(`[ShopifyAdmin] scopes:
-${JSON.stringify({
-  readCustomers: scopes.includes('read_customers'),
-  writeCustomers: scopes.includes('write_customers')
-}, null, 2)}`);
 
     const requiredScopes = ['write_customers'];
     const missingScopes = requiredScopes.filter(scope => !scopes.includes(scope));
