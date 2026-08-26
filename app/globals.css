@@ -147,3 +147,60 @@ button {
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
+
+.shopify-privacy-banner {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 1200;
+  width: min(440px, calc(100vw - 2rem));
+  padding: 1rem;
+  background: var(--cream);
+  color: var(--plum);
+  border: 1px solid rgba(66, 26, 33, 0.16);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+}
+
+.shopify-privacy-banner p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.shopify-privacy-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.shopify-privacy-actions .pill-btn {
+  min-height: 42px;
+  padding: 0.65rem 1rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+}
+
+.shopify-privacy-actions .pill-btn:disabled {
+  cursor: wait;
+  opacity: 0.65;
+  transform: none;
+}
+
+@media (max-width: 560px) {
+  .shopify-privacy-banner {
+    right: 0.75rem;
+    bottom: 0.75rem;
+    width: calc(100vw - 1.5rem);
+  }
+
+  .shopify-privacy-actions {
+    justify-content: stretch;
+  }
+
+  .shopify-privacy-actions .pill-btn {
+    flex: 1 1 100%;
+  }
+}
