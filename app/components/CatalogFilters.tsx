@@ -15,6 +15,7 @@ export default function CatalogFilters() {
     } else {
       params.delete(name);
     }
+    params.delete('page'); // Reset pagination when filters change
     return params.toString();
   };
 

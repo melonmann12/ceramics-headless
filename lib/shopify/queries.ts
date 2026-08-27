@@ -165,11 +165,15 @@ export async function getProductByHandle(handle: string): Promise<NormalizedProd
 }
 
 /** Fetch products for the homepage grid (and sitemap) */
-export async function getProducts(first = 100): Promise<NormalizedProduct[]> {
+export async function getProducts(limit?: number): Promise<NormalizedProduct[]> {
   const query = /* GraphQL */ `
     ${PRODUCT_FIELDS}
-    query GetProducts($first: Int!) {
-      products(first: $first, sortKey: BEST_SELLING) {
+    query GetProducts($first: Int!, $after: String) {
+      products(first: $first, after: $after, sortKey: BEST_SELLING) {
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
         edges {
           node {
             ...ProductFields
@@ -179,28 +183,53 @@ export async function getProducts(first = 100): Promise<NormalizedProduct[]> {
     }
   `;
 
-  const { data, errors } = await shopifyClient.request(query, {
-    variables: { first },
-  });
+  let hasNextPage = true;
+  let endCursor: string | null = null;
+  let allProducts: NormalizedProduct[] = [];
 
-  if (errors || !data?.products) {
-    console.error('[Shopify] getProducts errors:', errors);
-    return [];
+  const fetchSize = limit ? Math.min(limit, 250) : 250;
+
+  while (hasNextPage) {
+    const { data, errors } = await shopifyClient.request<{ products?: any }>(query, {
+      variables: { first: fetchSize, after: endCursor },
+    });
+
+    if (errors || !data?.products) {
+      console.error('[Shopify] getProducts errors:', errors);
+      break;
+    }
+
+    const productsData = data.products as any;
+    
+    const pageProducts = (productsData as { edges: { node: ShopifyProduct }[] }).edges.map((e) =>
+      normalizeProduct(e.node),
+    );
+    allProducts.push(...pageProducts);
+
+    if (limit && allProducts.length >= limit) {
+      allProducts = allProducts.slice(0, limit);
+      break;
+    }
+
+    hasNextPage = productsData.pageInfo.hasNextPage;
+    endCursor = productsData.pageInfo.endCursor;
   }
 
-  return (data.products as { edges: { node: ShopifyProduct }[] }).edges.map((e) =>
-    normalizeProduct(e.node),
-  );
+  return allProducts;
 }
 
 /** Fetch products for a specific collection by handle */
-export async function getCollectionProducts(handle: string, first = 50): Promise<{ title: string; products: NormalizedProduct[] } | null> {
+export async function getCollectionProducts(handle: string, limit?: number): Promise<{ title: string; products: NormalizedProduct[] } | null> {
   const query = /* GraphQL */ `
     ${PRODUCT_FIELDS}
-    query GetCollectionProducts($handle: String!, $first: Int!) {
+    query GetCollectionProducts($handle: String!, $first: Int!, $after: String) {
       collection(handle: $handle) {
         title
-        products(first: $first) {
+        products(first: $first, after: $after) {
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
           edges {
             node {
               ...ProductFields
@@ -211,21 +240,42 @@ export async function getCollectionProducts(handle: string, first = 50): Promise
     }
   `;
 
-  const { data, errors } = await shopifyClient.request(query, {
-    variables: { handle, first },
-  });
+  let hasNextPage = true;
+  let endCursor: string | null = null;
+  let allProducts: NormalizedProduct[] = [];
+  let collectionTitle = '';
 
-  if (errors || !data?.collection) {
-    console.error('[Shopify] getCollectionProducts errors:', errors);
-    return null;
+  const fetchSize = limit ? Math.min(limit, 250) : 250;
+
+  while (hasNextPage) {
+    const { data, errors } = await shopifyClient.request<{ collection?: any }>(query, {
+      variables: { handle, first: fetchSize, after: endCursor },
+    });
+
+    if (errors || !data?.collection) {
+      console.error('[Shopify] getCollectionProducts errors:', errors);
+      if (allProducts.length === 0) return null;
+      break;
+    }
+
+    collectionTitle = data.collection.title;
+    const productsData: any = data.collection.products;
+    
+    const pageProducts = (productsData as { edges: { node: ShopifyProduct }[] }).edges.map((e) =>
+      normalizeProduct(e.node),
+    );
+    allProducts.push(...pageProducts);
+
+    if (limit && allProducts.length >= limit) {
+      allProducts = allProducts.slice(0, limit);
+      break;
+    }
+
+    hasNextPage = productsData.pageInfo.hasNextPage;
+    endCursor = productsData.pageInfo.endCursor;
   }
 
-  const title = data.collection.title;
-  const products = (data.collection.products as { edges: { node: ShopifyProduct }[] }).edges.map((e) =>
-    normalizeProduct(e.node),
-  );
-
-  return { title, products };
+  return { title: collectionTitle, products: allProducts };
 }
 
 /** Search published Shopify products by a shopper-entered query */

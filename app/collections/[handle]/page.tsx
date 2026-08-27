@@ -7,6 +7,7 @@ import CatalogFilters from '@/app/components/CatalogFilters';
 import { getCollectionProducts } from '@/lib/shopify/queries';
 import { filterAndSortProducts } from '@/lib/catalog-utils';
 import { getJudgeMeRatingsMap } from '@/lib/judgeme/client';
+import Pagination from '@/app/components/Pagination';
 import '@/app/components/CatalogPage.css';
 
 interface CollectionPageProps {
@@ -53,6 +54,18 @@ export default async function CollectionPage(props: CollectionPageProps) {
   const ratingsMap = await getJudgeMeRatingsMap();
   let products = filterAndSortProducts(collectionData.products, { sort, availability, price }, ratingsMap);
 
+  const PAGE_SIZE = 48;
+  const totalProducts = products.length;
+  const totalPages = Math.ceil(totalProducts / PAGE_SIZE) || 1;
+  
+  let page = parseInt(typeof searchParams?.page === 'string' ? searchParams.page : '1', 10);
+  if (isNaN(page) || page < 1) page = 1;
+  if (page > totalPages) page = totalPages;
+
+  const startIndex = (page - 1) * PAGE_SIZE;
+  const endIndex = startIndex + PAGE_SIZE;
+  const paginatedProducts = products.slice(startIndex, endIndex);
+
   return (
     <>
       <Header />
@@ -61,7 +74,7 @@ export default async function CollectionPage(props: CollectionPageProps) {
           <header className="catalog-header">
             <h1 className="catalog-title">{collectionData.title.toUpperCase()}</h1>
             <p className="catalog-count">
-              {products.length} {products.length === 1 ? 'product' : 'products'} found
+              {totalProducts} {totalProducts === 1 ? 'product' : 'products'} found
             </p>
           </header>
 
@@ -69,7 +82,8 @@ export default async function CollectionPage(props: CollectionPageProps) {
             <CatalogFilters />
           </div>
 
-          <ProductGrid products={products} title="" className="catalog-product-grid" />
+          <ProductGrid products={paginatedProducts} title="" className="catalog-product-grid" />
+          <Pagination currentPage={page} totalPages={totalPages} />
         </div>
       </main>
       <Footer />

@@ -7,6 +7,7 @@ import CatalogFilters from '@/app/components/CatalogFilters';
 import { getProducts } from '@/lib/shopify/queries';
 import { filterAndSortProducts } from '@/lib/catalog-utils';
 import { getJudgeMeRatingsMap } from '@/lib/judgeme/client';
+import Pagination from '@/app/components/Pagination';
 import '@/app/components/CatalogPage.css';
 
 export const metadata: Metadata = {
@@ -28,8 +29,20 @@ export default async function ShopPage(props: {
   const price = typeof searchParams?.price === 'string' ? searchParams.price : '';
 
   const ratingsMap = await getJudgeMeRatingsMap();
-  let products = await getProducts(100);
+  let products = await getProducts(); // Fetch all products for Shop All page
   products = filterAndSortProducts(products, { sort, availability, price }, ratingsMap);
+
+  const PAGE_SIZE = 48;
+  const totalProducts = products.length;
+  const totalPages = Math.ceil(totalProducts / PAGE_SIZE) || 1;
+  
+  let page = parseInt(typeof searchParams?.page === 'string' ? searchParams.page : '1', 10);
+  if (isNaN(page) || page < 1) page = 1;
+  if (page > totalPages) page = totalPages;
+
+  const startIndex = (page - 1) * PAGE_SIZE;
+  const endIndex = startIndex + PAGE_SIZE;
+  const paginatedProducts = products.slice(startIndex, endIndex);
 
   return (
     <>
@@ -39,7 +52,7 @@ export default async function ShopPage(props: {
           <header className="catalog-header">
             <h1 className="catalog-title">SHOP ALL</h1>
             <p className="catalog-count">
-              {products.length} {products.length === 1 ? 'product' : 'products'} found
+              {totalProducts} {totalProducts === 1 ? 'product' : 'products'} found
             </p>
           </header>
 
@@ -47,7 +60,8 @@ export default async function ShopPage(props: {
             <CatalogFilters />
           </div>
 
-          <ProductGrid products={products} title="" className="catalog-product-grid" />
+          <ProductGrid products={paginatedProducts} title="" className="catalog-product-grid" />
+          <Pagination currentPage={page} totalPages={totalPages} />
         </div>
       </main>
       <Footer />
