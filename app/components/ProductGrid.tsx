@@ -51,15 +51,29 @@ export default function ProductGrid({
                     <div className="product-image-wrapper">
                       {product.badge && <span className="product-badge">{product.badge}</span>}
                       {product.image ? (
-                        <ShopifyImage
-                          src={product.image}
-                          alt={product.title}
-                          className="product-image"
-                          width={600}
-                          height={600}
-                          sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                          loading={shouldEagerLoadImages ? 'eager' : 'lazy'}
-                        />
+                        <>
+                          <ShopifyImage
+                            src={product.image}
+                            alt={product.title}
+                            className={`product-image ${product.images?.length > 1 ? 'primary-image' : ''}`}
+                            width={600}
+                            height={600}
+                            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                            loading={shouldEagerLoadImages ? 'eager' : 'lazy'}
+                          />
+                          {product.images && product.images.length > 1 && (
+                            <ShopifyImage
+                              src={product.images[1]}
+                              alt={`${product.title} alternate view`}
+                              className="product-image secondary-image"
+                              width={600}
+                              height={600}
+                              sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                              loading="lazy"
+                              aria-hidden="true"
+                            />
+                          )}
+                        </>
                       ) : (
                         <div className="product-image-placeholder">Product image unavailable</div>
                       )}

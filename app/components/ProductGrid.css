@@ -131,7 +131,26 @@
   height: 100%;
   object-fit: cover;
   border-radius: max(0px, calc(var(--card-radius) - var(--card-padding)));
-  transition: transform 0.5s ease;
+  transition: transform 0.5s ease, opacity 0.35s ease;
+}
+
+.product-image.secondary-image {
+  position: absolute;
+  top: var(--card-padding);
+  left: var(--card-padding);
+  width: calc(100% - calc(var(--card-padding) * 2));
+  height: calc(100% - calc(var(--card-padding) * 2));
+  opacity: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .product-link:hover .product-image.primary-image {
+    opacity: 0;
+  }
+  
+  .product-link:hover .product-image.secondary-image {
+    opacity: 1;
+  }
 }
 
 .product-image-placeholder {
