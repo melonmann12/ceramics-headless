@@ -1,8 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import ProductGrid from '@/app/components/ProductGrid';
+import type { NormalizedProduct } from '@/lib/shopify/types';
 import './HomepageMerchandising.css';
 
-export default function HomepageMerchandising() {
+interface HomepageMerchandisingProps {
+  mugsProducts?: NormalizedProduct[];
+}
+
+export default function HomepageMerchandising({ mugsProducts = [] }: HomepageMerchandisingProps) {
   return (
     <>
       <section className="craft-section">
@@ -36,6 +42,18 @@ export default function HomepageMerchandising() {
           </div>
         </div>
       </section>
+
+      {mugsProducts.length > 0 && (
+        <ProductGrid
+          products={mugsProducts}
+          className="homepage-mugs"
+          eyebrow="CERAMIC MUGS"
+          title="HANDMADE MUGS FOR EVERYDAY MOMENTS."
+          intro="Playful, functional ceramic mugs made by hand for coffee, tea, and the little rituals of everyday life."
+          ctaHref="/collections/ceramic-mug"
+          ctaLabel="SHOP MUGS →"
+        />
+      )}
 
       <section className="ritual-section" aria-labelledby="ritual-title">
         <div className="ritual-inner">

@@ -72,7 +72,7 @@ export default async function HomePage() {
             ctaLabel="SHOP HALLOWEEN →"
           />
         )}
-        <HomepageMerchandising />
+        <HomepageMerchandising mugsProducts={mugsCollection?.products?.slice(0, 4) || []} />
       </main>
       <Footer />
     </>
