@@ -38,15 +38,22 @@ type ShopifyPrivacyApi = {
 };
 
 type ShopifyPrivacyState = {
-  analyticsAllowed: boolean;
-  marketingAllowed: boolean;
-  saleOfDataAllowed: boolean;
-  consentReady: boolean;
+  status: 'loading' | 'ready' | 'error';
+  analyticsAllowed: boolean | null;
+  marketingAllowed: boolean | null;
+  saleOfDataAllowed: boolean | null;
   shouldShowBanner: boolean;
 };
 
 type ShopifyPrivacyConfig = {
   checkoutRootDomain: string;
+};
+
+type ResolvedShopifyPrivacyState = ShopifyPrivacyState & {
+  status: 'ready';
+  analyticsAllowed: boolean;
+  marketingAllowed: boolean;
+  saleOfDataAllowed: boolean;
 };
 
 declare global {
@@ -62,10 +69,10 @@ declare global {
 }
 
 const initialPrivacyState: ShopifyPrivacyState = {
-  analyticsAllowed: false,
-  marketingAllowed: false,
-  saleOfDataAllowed: false,
-  consentReady: false,
+  status: 'loading',
+  analyticsAllowed: null,
+  marketingAllowed: null,
+  saleOfDataAllowed: null,
   shouldShowBanner: false,
 };
 
@@ -98,12 +105,23 @@ function readPrivacyState(): ShopifyPrivacyState {
   }
 
   return {
+    status: 'ready',
     analyticsAllowed: customerPrivacy.analyticsProcessingAllowed(),
     marketingAllowed: customerPrivacy.marketingAllowed(),
     saleOfDataAllowed: customerPrivacy.saleOfDataAllowed(),
-    consentReady: true,
     shouldShowBanner: customerPrivacy.shouldShowBanner(),
   };
+}
+
+function isResolvedPrivacyState(
+  privacyState: ShopifyPrivacyState
+): privacyState is ResolvedShopifyPrivacyState {
+  return (
+    privacyState.status === 'ready' &&
+    typeof privacyState.analyticsAllowed === 'boolean' &&
+    typeof privacyState.marketingAllowed === 'boolean' &&
+    typeof privacyState.saleOfDataAllowed === 'boolean'
+  );
 }
 
 function loadCustomerPrivacyApi(): Promise<ShopifyPrivacyApi> {
@@ -169,7 +187,7 @@ function useShopifyPrivacy(scriptLoaded: boolean) {
         if (isMounted) {
           setPrivacyState({
             ...initialPrivacyState,
-            consentReady: true,
+            status: 'error',
           });
         }
       }
@@ -222,6 +240,7 @@ function useShopifyPrivacy(scriptLoaded: boolean) {
 
   return {
     privacyState,
+    privacyConfig,
     acceptTracking: () => setTrackingConsent(true, true),
     rejectTracking: () => setTrackingConsent(false, false),
   };
@@ -238,7 +257,7 @@ function ShopifyPrivacyBanner({
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  if (!privacyState.consentReady || !privacyState.shouldShowBanner) {
+  if (privacyState.status !== 'ready' || !privacyState.shouldShowBanner) {
     return null;
   }
 
@@ -272,19 +291,55 @@ function ShopifyPrivacyBanner({
 
 function AnalyticsTracker() {
   const [scriptLoaded, setScriptLoaded] = useState(false);
+  const { privacyState, privacyConfig, acceptTracking, rejectTracking } = useShopifyPrivacy(scriptLoaded);
+
+  return (
+    <>
+      <Script
+        src="https://cdn.shopify.com/shopifycloud/consent-tracking-api/v0.1/consent-tracking-api.js"
+        strategy="afterInteractive"
+        onLoad={() => setScriptLoaded(true)}
+        onError={() => {
+          console.error('[ShopifyPrivacy] failed to load Customer Privacy script');
+          setScriptLoaded(true);
+        }}
+      />
+      <ShopifyPrivacyBanner
+        privacyState={privacyState}
+        onAccept={acceptTracking}
+        onReject={rejectTracking}
+      />
+      {isResolvedPrivacyState(privacyState) && privacyConfig && (
+        <ShopifyTrackingSync
+          privacyState={privacyState}
+          privacyConfig={privacyConfig}
+        />
+      )}
+    </>
+  );
+}
+
+function ShopifyTrackingSync({
+  privacyState,
+  privacyConfig,
+}: {
+  privacyState: ResolvedShopifyPrivacyState;
+  privacyConfig: ShopifyPrivacyConfig;
+}) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const lastPath = useRef<string | null>(null);
-  const { privacyState, acceptTracking, rejectTracking } = useShopifyPrivacy(scriptLoaded);
-  
+
   const isReady = useShopifyCookies({ 
     hasUserConsent: privacyState.analyticsAllowed, 
+    checkoutDomain: privacyConfig.checkoutRootDomain,
+    storefrontAccessToken: publicStorefrontAccessToken,
     fetchTrackingValues: true,
     ignoreDeprecatedCookies: true // Use modern Storefront API tokens, not legacy _shopify_y/s
   });
 
   useEffect(() => {
-    if (!isReady || !privacyState.consentReady || !privacyState.analyticsAllowed) return;
+    if (!isReady || !privacyState.analyticsAllowed) return;
     if (typeof window === 'undefined') return;
 
     const currentPath = `${pathname}${searchParams ? `?${searchParams.toString()}` : ''}`;
@@ -329,24 +384,7 @@ function AnalyticsTracker() {
 
   }, [pathname, searchParams, isReady, privacyState]);
 
-  return (
-    <>
-      <Script
-        src="https://cdn.shopify.com/shopifycloud/consent-tracking-api/v0.1/consent-tracking-api.js"
-        strategy="afterInteractive"
-        onLoad={() => setScriptLoaded(true)}
-        onError={() => {
-          console.error('[ShopifyPrivacy] failed to load Customer Privacy script');
-          setScriptLoaded(true);
-        }}
-      />
-      <ShopifyPrivacyBanner
-        privacyState={privacyState}
-        onAccept={acceptTracking}
-        onReject={rejectTracking}
-      />
-    </>
-  );
+  return null;
 }
 
 export default function ShopifyAnalytics() {
