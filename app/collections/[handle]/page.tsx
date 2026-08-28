@@ -21,9 +21,11 @@ export async function generateMetadata({ params }: CollectionPageProps): Promise
   
   if (!collectionData) return { title: 'Collection Not Found' };
 
+  const displayTitle = handle === 'matcha-set' ? 'Best Seller' : collectionData.title;
+
   return {
-    title: collectionData.title,
-    description: `Shop the ${collectionData.title} collection at Ashpia Ceramics.`,
+    title: displayTitle,
+    description: `Shop the ${displayTitle} collection at Ashpia Ceramics.`,
   };
 }
 
@@ -72,7 +74,7 @@ export default async function CollectionPage(props: CollectionPageProps) {
       <main className="catalog-page">
         <div className="catalog-container">
           <header className="catalog-header">
-            <h1 className="catalog-title">{collectionData.title.toUpperCase()}</h1>
+            <h1 className="catalog-title">{handle === 'matcha-set' ? 'BEST SELLER' : collectionData.title.toUpperCase()}</h1>
             <p className="catalog-count">
               {totalProducts} {totalProducts === 1 ? 'product' : 'products'} found
             </p>

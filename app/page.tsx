@@ -54,11 +54,11 @@ export default async function HomePage() {
         <ProductGrid
           products={products}
           className="homepage-featured"
-          eyebrow="FEATURED CERAMICS"
-          title="Ceramics chosen for daily use, not display alone."
-          intro="ASHPIA focuses on rounded forms, textured surfaces, and functional ceramics that make daily use feel grounded in the hand."
-          ctaHref="/shop"
-          ctaLabel="SHOP ALL"
+          eyebrow="BEST SELLERS"
+          title="OUR MOST-LOVED CERAMICS."
+          intro="Customer favorites made for everyday use, chosen again and again for their playful details and handmade character."
+          ctaHref="/collections/matcha-set"
+          ctaLabel="SHOP BEST SELLERS →"
         />
         <Benefits />
         {halloweenProducts.length > 0 && (

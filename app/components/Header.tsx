@@ -59,12 +59,12 @@ export default function Header() {
 
         <div className="nav-links">
           <Link href="/shop" className={`nav-link ${pathname === '/shop' ? 'active' : ''}`}>SHOP ALL</Link>
-          <Link href="/collections/matcha-set" className={`nav-link ${pathname === '/collections/matcha-set' ? 'active' : ''}`}>MATCHA SET</Link>
+          <Link href="/collections/matcha-set" className={`nav-link ${pathname === '/collections/matcha-set' ? 'active' : ''}`}>BEST SELLER</Link>
           <Link href="/collections/ceramic-mug" className={`nav-link ${pathname === '/collections/ceramic-mug' ? 'active' : ''}`}>MUGS</Link>
           <div className="nav-dropdown-container">
             <button className="nav-link nav-dropdown-toggle">COLLECTIONS ▾</button>
             <div className="nav-dropdown-menu">
-              <Link href="/collections/matcha-set" className="nav-dropdown-item">MATCHA SET</Link>
+              <Link href="/collections/matcha-set" className="nav-dropdown-item">BEST SELLER</Link>
               <Link href="/collections/ceramic-mug" className="nav-dropdown-item">CERAMIC MUGS</Link>
               <Link href="/collections/halloween" className="nav-dropdown-item">HALLOWEEN</Link>
             </div>
@@ -86,7 +86,7 @@ export default function Header() {
         {/* Mobile Navigation Drawer */}
         <div className={`mobile-nav-drawer ${mobileMenuOpen ? 'open' : ''}`}>
           <Link href="/shop" className={`mobile-nav-link ${pathname === '/shop' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>SHOP ALL</Link>
-          <Link href="/collections/matcha-set" className={`mobile-nav-link ${pathname === '/collections/matcha-set' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>MATCHA SET</Link>
+          <Link href="/collections/matcha-set" className={`mobile-nav-link ${pathname === '/collections/matcha-set' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>BEST SELLER</Link>
           <Link href="/collections/ceramic-mug" className={`mobile-nav-link ${pathname === '/collections/ceramic-mug' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>MUGS</Link>
           <div className="mobile-nav-item-group">
             <button 
@@ -97,7 +97,7 @@ export default function Header() {
             </button>
             {productsExpanded && (
               <div className="mobile-nav-subitems">
-                <Link href="/collections/matcha-set" className="mobile-nav-sublink" onClick={() => setMobileMenuOpen(false)}>MATCHA SET</Link>
+                <Link href="/collections/matcha-set" className="mobile-nav-sublink" onClick={() => setMobileMenuOpen(false)}>BEST SELLER</Link>
                 <Link href="/collections/ceramic-mug" className="mobile-nav-sublink" onClick={() => setMobileMenuOpen(false)}>CERAMIC MUGS</Link>
                 <Link href="/collections/halloween" className="mobile-nav-sublink" onClick={() => setMobileMenuOpen(false)}>HALLOWEEN</Link>
               </div>
