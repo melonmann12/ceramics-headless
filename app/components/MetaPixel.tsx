@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { META_PIXEL_ID, trackPageView } from '@/lib/meta-pixel';
+import { trackPageView } from '@/lib/meta-pixel';
 
 /**
  * MetaPixel – renders in root layout to bootstrap the Meta Pixel and
@@ -16,7 +16,7 @@ import { META_PIXEL_ID, trackPageView } from '@/lib/meta-pixel';
  * This version uses an inline <Script> to run the bootstrap, then
  * fbevents.js picks up the queued init/track calls when it executes.
  */
-export default function MetaPixel() {
+export default function MetaPixel({ pixelId }: { pixelId: string }) {
   const pathname = usePathname();
   const hasInitialised = useRef(false);
 
@@ -57,7 +57,7 @@ export default function MetaPixel() {
     s?.parentNode?.insertBefore(t, s);
 
     // Init + first PageView (queued; fbevents.js will flush when it loads)
-    window.fbq('init', META_PIXEL_ID);
+    window.fbq('init', pixelId);
     
     const eventId = crypto.randomUUID();
     trackPageView(eventId);
@@ -70,7 +70,7 @@ export default function MetaPixel() {
         event_source_url: window.location.href,
       }),
     }).catch(console.error);
-  }, []);
+  }, [pixelId]);
 
   // Track PageView on client-side navigations (pathname changes).
   // Skip the very first call because the useEffect above already sent
@@ -101,7 +101,7 @@ export default function MetaPixel() {
         height="1"
         width="1"
         style={{ display: 'none' }}
-        src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
+        src={`https://www.facebook.com/tr?id=${pixelId}&ev=PageView&noscript=1`}
         alt=""
       />
     </noscript>

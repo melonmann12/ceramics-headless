@@ -61,7 +61,7 @@ export default function RootLayout({
           {children}
         </CartProvider>
         <ShopifyAnalytics />
-        <MetaPixel />
+        {process.env.META_PIXEL_ID && <MetaPixel pixelId={process.env.META_PIXEL_ID} />}
         <GorgiasChat />
       </body>
     </html>

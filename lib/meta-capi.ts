@@ -1,4 +1,3 @@
-import { META_PIXEL_ID } from './meta-pixel';
 
 export interface MetaCapiEvent {
   event_name: 'PageView' | 'ViewContent' | 'AddToCart';
@@ -40,7 +39,13 @@ export async function sendMetaCapiEvent(event: MetaCapiEvent) {
     ...(testEventCode && { test_event_code: testEventCode }),
   };
 
-  const url = `https://graph.facebook.com/${graphApiVersion}/${META_PIXEL_ID}/events?access_token=${accessToken}`;
+  const pixelId = process.env.META_PIXEL_ID;
+  if (!pixelId) {
+    console.warn('META_PIXEL_ID is not defined. CAPI event skipped.');
+    return;
+  }
+
+  const url = `https://graph.facebook.com/${graphApiVersion}/${pixelId}/events?access_token=${accessToken}`;
 
   try {
     const response = await fetch(url, {
