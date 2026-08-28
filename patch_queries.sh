@@ -1,0 +1,1 @@
+sed -i '' -e 's/console.error('\''\[Shopify\] getCollectionProducts errors:'\'', errors);/console.error('\''[Shopify] getCollectionProducts errors:'', errors);\n    console.log('\''[Diagnostic] Requested handle:'\'', handle, '\''HTTP status: 200, data.collection is null:'\'', data?.collection === null);/' lib/shopify/queries.ts

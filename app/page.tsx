@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   await connection();
-  const featuredCollection = await getCollectionProducts('matcha-set', 20);
+  const featuredCollection = await getCollectionProducts('best-seller', 20);
   const mugsCollection = await getCollectionProducts('ceramic-mug', 50);
   
   const mugHandles = new Set((mugsCollection?.products || []).map(p => p.handle));
@@ -57,7 +57,7 @@ export default async function HomePage() {
           eyebrow="BEST SELLERS"
           title="OUR MOST-LOVED CERAMICS."
           intro="Customer favorites made for everyday use, chosen again and again for their playful details and handmade character."
-          ctaHref="/collections/matcha-set"
+          ctaHref="/collections/best-seller"
           ctaLabel="SHOP BEST SELLERS →"
         />
         <Benefits />

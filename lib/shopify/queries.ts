@@ -252,8 +252,17 @@ export async function getCollectionProducts(handle: string, limit?: number): Pro
       variables: { handle, first: fetchSize, after: endCursor },
     });
 
-    if (errors || !data?.collection) {
+    if (errors) {
       console.error('[Shopify] getCollectionProducts errors:', errors);
+      break;
+    }
+
+    if (!data?.collection) {
+      console.error('[Shopify] Collection not found or unavailable', {
+        handle,
+        status: 200,
+        collectionIsNull: true
+      });
       if (allProducts.length === 0) return null;
       break;
     }
