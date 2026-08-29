@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import PolicyPage from '@/app/components/PolicyPage';
+import { SOCIAL_LINKS } from '@/lib/config';
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -19,9 +20,9 @@ export default function ContactPage() {
             'For order-related questions, please include your order number so we can help you faster.',
             <span key="social">
               You can also reach us through{' '}
-              <a href="https://www.instagram.com/ashpia.ceramic/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline', color: 'var(--plum)', fontWeight: 600 }}>Instagram</a>
+              <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline', color: 'var(--plum)', fontWeight: 600 }}>Instagram</a>
               {' '}or{' '}
-              <a href="https://www.facebook.com/profile.php?id=61593385899498" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline', color: 'var(--plum)', fontWeight: 600 }}>Facebook</a>
+              <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline', color: 'var(--plum)', fontWeight: 600 }}>Facebook</a>
               {' '}using the social links in our footer. We’ll always do our best to reply as soon as possible.
             </span>
           ],
