@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { trackPageView } from '@/lib/meta-pixel';
+import { trackPageView, waitForMetaCookie } from '@/lib/meta-pixel';
 
 /**
  * MetaPixel – renders in root layout to bootstrap the Meta Pixel and
@@ -60,16 +60,20 @@ export default function MetaPixel({ pixelId }: { pixelId: string }) {
     window.fbq('init', pixelId);
     
     const eventId = crypto.randomUUID();
+    const eventSourceUrl = window.location.href;
     trackPageView(eventId);
-    fetch('/api/meta/events', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        event_name: 'PageView',
-        event_id: eventId,
-        event_source_url: window.location.href,
-      }),
-    }).catch(console.error);
+    
+    waitForMetaCookie('_fbp', 1500).then(() => {
+      fetch('/api/meta/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event_name: 'PageView',
+          event_id: eventId,
+          event_source_url: eventSourceUrl,
+        }),
+      }).catch(console.error);
+    });
   }, [pixelId]);
 
   // Track PageView on client-side navigations (pathname changes).
@@ -82,16 +86,20 @@ export default function MetaPixel({ pixelId }: { pixelId: string }) {
       return;
     }
     const eventId = crypto.randomUUID();
+    const eventSourceUrl = window.location.href;
     trackPageView(eventId);
-    fetch('/api/meta/events', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        event_name: 'PageView',
-        event_id: eventId,
-        event_source_url: window.location.href,
-      }),
-    }).catch(console.error);
+    
+    waitForMetaCookie('_fbp', 1500).then(() => {
+      fetch('/api/meta/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event_name: 'PageView',
+          event_id: eventId,
+          event_source_url: eventSourceUrl,
+        }),
+      }).catch(console.error);
+    });
   }, [pathname]);
 
   // noscript fallback image for browsers with JS disabled

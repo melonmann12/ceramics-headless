@@ -23,7 +23,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const client_ip_address = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip');
+    const rawIp = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip');
+    const client_ip_address = rawIp ? rawIp.split(',').map(ip => ip.trim()).find(ip => ip.length > 0) || null : null;
     const client_user_agent = req.headers.get('user-agent');
     
     // Retrieve Meta cookies if available

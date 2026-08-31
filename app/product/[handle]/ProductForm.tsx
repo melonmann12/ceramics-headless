@@ -5,7 +5,7 @@ import ShopifyImage from '@/app/components/ShopifyImage';
 import type { NormalizedProduct } from '@/lib/shopify/types';
 import { useCart } from '@/app/context/CartContext';
 import Link from 'next/link';
-import { trackViewContent, trackAddToCart, normalizeVariantId } from '@/lib/meta-pixel';
+import { trackViewContent, trackAddToCart, normalizeVariantId, waitForMetaCookie } from '@/lib/meta-pixel';
 import { SHIPPING_CONFIG } from '@/lib/config';
 
 interface ProductFormProps {
@@ -79,18 +79,21 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
           value: parseFloat(selectedVariant.price.amount),
           currency: selectedVariant.price.currencyCode,
         };
+        const eventSourceUrl = window.location.href;
         trackViewContent(payload, eventId);
 
-        fetch('/api/meta/events', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            event_name: 'ViewContent',
-            event_id: eventId,
-            event_source_url: window.location.href,
-            custom_data: payload,
-          }),
-        }).catch(console.error);
+        waitForMetaCookie('_fbp', 1500).then(() => {
+          fetch('/api/meta/events', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              event_name: 'ViewContent',
+              event_id: eventId,
+              event_source_url: eventSourceUrl,
+              custom_data: payload,
+            }),
+          }).catch(console.error);
+        });
       }
     }
   }, [product, selectedVariant]);

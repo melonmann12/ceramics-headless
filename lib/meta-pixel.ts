@@ -90,3 +90,36 @@ export function trackAddToCart(params: AddToCartParams, eventId: string): void {
 export function normalizeVariantId(gid: string): string {
   return gid.split('/').pop()?.split('?')[0] || gid;
 }
+
+/**
+ * Wait for a Meta cookie (like _fbp) to become available, bounded by a timeout.
+ * Does not block UI.
+ */
+export async function waitForMetaCookie(cookieName: string = '_fbp', maxWaitMs: number = 1500): Promise<string | null> {
+  if (typeof document === 'undefined') return null;
+
+  const getCookie = () => {
+    const match = document.cookie.match(new RegExp('(^| )' + cookieName + '=([^;]+)'));
+    return match ? match[2] : null;
+  };
+
+  const initial = getCookie();
+  if (initial) return initial;
+
+  return new Promise((resolve) => {
+    const interval = 100;
+    let elapsed = 0;
+    
+    const timer = setInterval(() => {
+      elapsed += interval;
+      const val = getCookie();
+      if (val) {
+        clearInterval(timer);
+        resolve(val);
+      } else if (elapsed >= maxWaitMs) {
+        clearInterval(timer);
+        resolve(null);
+      }
+    }, interval);
+  });
+}
