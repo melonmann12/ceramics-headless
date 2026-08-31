@@ -1,5 +1,7 @@
 export const SHIPPING_CONFIG = {
-  freeShippingRule: "Free standard shipping to the US & Canada.",
+  supportedRegions: "United States, Canada, the United Kingdom, Australia, and Europe",
+  coverageText: "We currently ship to the United States, Canada, the United Kingdom, Australia, and Europe.",
+  freeShippingRule: "Free standard shipping is available to the United States, Canada, the United Kingdom, Australia, and Europe.",
   timelines: {
     standard: "15–20 days making + 8–10 days shipping",
     priority: "7–14 days making + 8–10 days shipping",

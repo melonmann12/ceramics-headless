@@ -330,7 +330,7 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
               <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>local_shipping</span>
-              <span>Free US & Canada Shipping</span>
+              <span>Free Shipping to US, Canada, UK, AU & Europe</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
               <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>package_2</span>
@@ -523,6 +523,7 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
                 */}
                   {tab === 'SHIPPING & DELIVERY' && (
                     <ul className="pdp-care-list">
+                      <li>{SHIPPING_CONFIG.coverageText}</li>
                       <li>Each piece is made to order with care.</li>
                       <li><strong>Standard:</strong> {SHIPPING_CONFIG.timelines.standard}.</li>
                       <li><strong>Priority:</strong> {SHIPPING_CONFIG.timelines.priority}.</li>
@@ -551,7 +552,7 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
           <h3 className="pdp-wcu-title">Why Choose Us?</h3>
           <div className="pdp-wcu-grid">
             {[
-              { icon: 'assignment_return', title: '14-DAY RETURNS', desc: 'Returns accepted within 14 days of delivery.' },
+              { icon: 'assignment_return', title: '48-HOUR RETURNS', desc: 'Returns accepted within 48 hours of delivery.' },
               { icon: 'inventory_2', title: 'MADE TO ORDER', desc: 'Every piece is crafted specifically for your order.' },
               { icon: 'local_florist', title: 'UNIQUE VARIATIONS', desc: 'Natural handmade variations make each piece one of a kind.' },
               { icon: 'verified_user', title: 'SAFE ARRIVAL GUARANTEE', desc: 'Arrived damaged? Contact us within 48 hours with photos and we’ll replace it for free.' },

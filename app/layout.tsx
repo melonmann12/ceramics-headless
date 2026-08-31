@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     template: "%s | ASHPIA CERAMICS",
   },
   description:
-    "Handcrafted ceramic pieces built for daily use. Hand-glazed in kilns, shipped worldwide.",
+    "Handcrafted ceramic pieces built for daily use. Hand-glazed in kilns, shipped to the US, Canada, UK, Australia, and Europe.",
   keywords: [
     "handmade ceramics",
     "ceramic pieces",

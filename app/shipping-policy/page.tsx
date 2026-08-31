@@ -23,9 +23,16 @@ export default function ShippingPolicyPage() {
           ],
         },
         {
-          title: 'Shipping Rates',
+          title: 'Shipping Rates & Destinations',
           body: [
-            'We offer Free Standard shipping to the US & Canada. Available upgraded shipping methods, exact rates, taxes, and duties are calculated in Shopify Checkout based on the delivery address and cart contents.',
+            SHIPPING_CONFIG.coverageText,
+            'We offer free standard shipping to the United States, Canada, the United Kingdom, Australia, and Europe. Available upgraded shipping methods, exact rates, taxes, and duties are calculated in Shopify Checkout based on the delivery address and cart contents.',
+          ],
+        },
+        {
+          title: 'International Customs & Duties',
+          body: [
+            'International orders may be subject to customs duties, import taxes, or local fees charged by the destination country. These charges, if applicable, are the customer\'s responsibility.',
           ],
         },
         {
