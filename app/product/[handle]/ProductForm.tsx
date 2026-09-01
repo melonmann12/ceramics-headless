@@ -340,7 +340,13 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
         </div>
 
         {/* Dynamic Selectors */}
-        {product.options.map(option => {
+        {product.options.slice().sort((a, b) => {
+          const aIsSet = a.values.some(v => v.toLowerCase().includes('bowl') || v.toLowerCase().includes('combo') || v.toLowerCase().includes('holder'));
+          const bIsSet = b.values.some(v => v.toLowerCase().includes('bowl') || v.toLowerCase().includes('combo') || v.toLowerCase().includes('holder'));
+          if (aIsSet && !bIsSet) return 1;
+          if (!aIsSet && bIsSet) return -1;
+          return 0;
+        }).map(option => {
           const isColorType = option.name.toLowerCase().includes('color') || option.name.toLowerCase().includes('glaze');
 
           if (isColorType) {
