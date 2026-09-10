@@ -232,8 +232,27 @@
   font-size: 0.75rem;
   color: rgba(241, 235, 224, 0.8);
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .footer-copyright {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+.footer-contact-link {
+  color: inherit;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.footer-contact-link:hover {
+  color: var(--cream);
 }
 
 

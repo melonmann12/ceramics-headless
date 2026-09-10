@@ -89,7 +89,8 @@ export default function Footer() {
         {/* Bottom Copyright Bar */}
         <div className="footer-bottom">
           <div className="footer-copyright">
-            <span>© 2026 ASHPIA. ALL RIGHTS RESERVED.</span>
+            <span>© 2026 ASHPIA. All Rights Reserved.</span>
+            <span>Operated by Dang Tran LLC, Wyoming, USA.</span>
           </div>
         </div>
       </div>
