@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import NewsletterForm from './NewsletterForm';
+import PaymentMethods from './PaymentMethods';
 import { SOCIAL_LINKS } from '@/lib/config';
 import './Footer.css';
 
@@ -83,14 +84,17 @@ export default function Footer() {
               </Link>
             </div>
             */}
+            <div className="footer-payments">
+              <PaymentMethods />
+            </div>
           </div>
         </div>
 
         {/* Bottom Copyright Bar */}
         <div className="footer-bottom">
           <div className="footer-copyright">
-            <span>© 2026 ASHPIA. All Rights Reserved.</span>
-            <span>Operated by Dang Tran LLC, Wyoming, USA.</span>
+            <span>© 2026 ASHPIA. All rights reserved.</span>
+            <span>ASHPIA is operated by Dang Tran LLC, Wyoming, USA.</span>
           </div>
         </div>
       </div>

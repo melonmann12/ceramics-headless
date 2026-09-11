@@ -7,6 +7,7 @@ import { useCart } from '@/app/context/CartContext';
 import Link from 'next/link';
 import { trackViewContent, trackAddToCart, normalizeVariantId, waitForMetaCookie } from '@/lib/meta-pixel';
 import { SHIPPING_CONFIG } from '@/lib/config';
+import PaymentMethods from '@/app/components/PaymentMethods';
 
 interface ProductFormProps {
   product: NormalizedProduct;
@@ -490,13 +491,10 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
           </button>
         </div>
 
-        {/* 
-        <div className="pdp-payment-icons">
-          <span className="material-symbols-outlined">credit_card</span>
-          <span className="material-symbols-outlined">payments</span>
-          <span className="material-symbols-outlined">account_balance_wallet</span>
+        <div className="pdp-payment-container" style={{ marginTop: '1rem', marginBottom: '0' }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--sage)', marginBottom: '0.5rem', fontWeight: 500, letterSpacing: '0.05em' }}>SECURE CHECKOUT WITH</p>
+          <PaymentMethods />
         </div>
-        */}
 
         {/* Accordions */}
         <div className="pdp-accordions">

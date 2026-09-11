@@ -223,13 +223,14 @@
 @media (min-width: 768px) {
   .footer-bottom {
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
+    align-items: center;
   }
 }
 
 .footer-copyright {
   font-family: var(--font-body);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: rgba(241, 235, 224, 0.8);
   display: flex;
   flex-direction: column;
@@ -242,6 +243,25 @@
   .footer-copyright {
     align-items: flex-start;
     text-align: left;
+  }
+}
+
+.footer-payments {
+  display: flex;
+  justify-content: center;
+}
+
+.footer-payments .payment-methods {
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .footer-payments {
+    justify-content: flex-end;
+    max-width: 400px; /* Constrain width so icons wrap into two rows instead of stretching across the screen */
+  }
+  .footer-payments .payment-methods {
+    justify-content: flex-end;
   }
 }
 
