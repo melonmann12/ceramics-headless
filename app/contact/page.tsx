@@ -55,6 +55,22 @@ export default function ContactPage() {
           TRACK YOUR ORDER <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>arrow_forward</span>
         </Link>
       </section>
+
+      <section className="policy-section" style={{ marginTop: '2rem' }}>
+        <h2>Business Information</h2>
+        <p style={{ marginBottom: '0.5rem' }}>
+          <strong>Company:</strong> Dang Tran LLC
+        </p>
+        <p style={{ marginBottom: '0.5rem' }}>
+          <strong>Brand:</strong> ASHPIA is operated by Dang Tran LLC.
+        </p>
+        <p>
+          <strong>Address:</strong><br />
+          30 N Gould St, Ste N<br />
+          Sheridan, WY 82801<br />
+          USA
+        </p>
+      </section>
     </PolicyPage>
   );
 }
