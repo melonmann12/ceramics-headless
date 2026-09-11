@@ -13,6 +13,7 @@ const paymentMethods = [
   { name: 'Apple Pay', src: '/payment-logos/wallets/apple-pay.svg' },
   { name: 'Google Pay', src: '/payment-logos/wallets/google-pay.svg' },
   { name: 'PayPal', src: '/payment-logos/apm/paypal.svg' },
+  { name: 'Shop Pay', src: '/payment-logos/wallets/shop-pay.svg' },
 ];
 
 export default function PaymentMethods() {
