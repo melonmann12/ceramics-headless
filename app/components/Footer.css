@@ -29,6 +29,7 @@
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
     "logo logo"
+    "payments payments"
     "nav1 nav2"
     "social social";
   row-gap: 2rem;
@@ -262,6 +263,33 @@
   }
   .footer-payments .payment-methods {
     justify-content: flex-end;
+  }
+}
+
+.footer-nav-wrapper .footer-payments-mobile {
+  grid-area: payments;
+  justify-content: flex-start;
+  margin-top: -1rem; /* Compact spacing below logo */
+  margin-bottom: 0.5rem;
+}
+
+.footer-nav-wrapper .footer-payments-mobile .payment-methods {
+  justify-content: flex-start;
+}
+
+@media (min-width: 1024px) {
+  .footer-nav-wrapper .footer-payments-mobile {
+    display: none;
+  }
+}
+
+.footer-payments-desktop {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .footer-payments-desktop {
+    display: flex;
   }
 }
 

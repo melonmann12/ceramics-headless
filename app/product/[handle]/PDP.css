@@ -474,13 +474,68 @@
   margin-top: -0.5rem;
 }
 
+/* Trust Card */
+.pdp-trust-card {
+  background-color: var(--sage);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-heavy);
+  padding: 1.25rem;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.pdp-trust-card-title {
+  font-family: var(--font-header);
+  font-size: 1.05rem;
+  color: var(--cream);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.pdp-trust-card-body {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: rgba(253, 251, 247, 0.9);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.pdp-trust-card-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  background-color: var(--cream);
+  color: var(--sage);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.75rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--cream);
+  margin-top: 0.25rem;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.pdp-trust-card-cta:hover {
+  background-color: transparent;
+  color: var(--cream);
+}
+
 /* Accordions */
 .pdp-accordions {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
   border-top: 1px solid rgba(30, 46, 36, 0.1);
-  padding-top: var(--space-5);
+  padding-top: 1.25rem;
+  margin-top: 0;
 }
 
 .pdp-accordion-item {

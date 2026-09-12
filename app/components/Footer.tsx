@@ -34,6 +34,10 @@ export default function Footer() {
               <Image src="/logo/ashpialogo.png" alt="Ashpia" width={100} height={31} className="footer-logo-img" />
             </div>
 
+            <div className="footer-payments footer-payments-mobile">
+              <PaymentMethods />
+            </div>
+
             <div className="footer-links footer-links-main">
               <Link href="/" className="footer-link">HOME</Link>
               <Link href="/shop" className="footer-link">SHOP ALL</Link>
@@ -43,6 +47,7 @@ export default function Footer() {
             </div>
 
             <div className="footer-links footer-links-legal">
+              <Link href="/shop-with-confidence" className="footer-link">SHOP WITH CONFIDENCE</Link>
               <Link href="/shipping-policy" className="footer-link">SHIPPING</Link>
               <Link href="/returns" className="footer-link">RETURNS</Link>
               <Link href="/privacy-policy" className="footer-link">PRIVACY</Link>
@@ -84,7 +89,7 @@ export default function Footer() {
               </Link>
             </div>
             */}
-            <div className="footer-payments">
+            <div className="footer-payments footer-payments-desktop">
               <PaymentMethods />
             </div>
           </div>

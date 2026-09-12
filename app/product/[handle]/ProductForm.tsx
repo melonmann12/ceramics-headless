@@ -491,9 +491,25 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
           </button>
         </div>
 
-        <div className="pdp-payment-container" style={{ marginTop: '1rem', marginBottom: '0' }}>
-          <p style={{ fontSize: '0.75rem', color: 'var(--sage)', marginBottom: '0.5rem', fontWeight: 500, letterSpacing: '0.05em' }}>SECURE CHECKOUT WITH</p>
+        <div className="pdp-payment-container" style={{ marginTop: '0.15rem', marginBottom: '0' }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--sage)', marginBottom: '0.25rem', fontWeight: 500, letterSpacing: '0.05em' }}>SECURE CHECKOUT WITH</p>
           <PaymentMethods />
+        </div>
+
+        {/* Trust Card */}
+        <div className="pdp-trust-card">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'rgba(253, 251, 247, 0.8)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '-0.25rem' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>verified_user</span>
+            <span>SHOP WITH CONFIDENCE</span>
+          </div>
+          <h4 className="pdp-trust-card-title">FIRST TIME SHOPPING WITH ASHPIA?</h4>
+          <div className="pdp-trust-card-body">
+            <p style={{ marginBottom: '0.5rem' }}>We know ordering handmade pieces from a small online studio can feel unfamiliar.</p>
+            <p>ASHPIA is operated by Dang Tran LLC in Wyoming, USA. Your checkout is securely processed through Shopify, every dispatched order includes tracking, and we’re here to help if your item arrives damaged.</p>
+          </div>
+          <Link href="/shop-with-confidence" className="pdp-trust-card-cta">
+            WHY YOU CAN SHOP WITH CONFIDENCE <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>arrow_forward</span>
+          </Link>
         </div>
 
         {/* Accordions */}
