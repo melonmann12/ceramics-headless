@@ -498,14 +498,14 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
 
         {/* Trust Card */}
         <div className="pdp-trust-card">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'rgba(253, 251, 247, 0.8)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '-0.25rem' }}>
-            <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>verified_user</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#C9B072', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '-0.25rem' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '1rem', color: '#C9B072' }}>verified_user</span>
             <span>SHOP WITH CONFIDENCE</span>
           </div>
           <h4 className="pdp-trust-card-title">FIRST TIME SHOPPING WITH ASHPIA?</h4>
           <div className="pdp-trust-card-body">
             <p style={{ marginBottom: '0.5rem' }}>We know ordering handmade pieces from a small online studio can feel unfamiliar.</p>
-            <p>ASHPIA is operated by Dang Tran LLC in Wyoming, USA. Your checkout is securely processed through Shopify, every dispatched order includes tracking, and we’re here to help if your item arrives damaged.</p>
+            <p>ASHPIA is operated by <strong style={{ color: '#C9B072', fontWeight: 700 }}>Dang Tran LLC</strong> in Wyoming, USA. Your checkout is securely processed through Shopify, every dispatched order includes tracking, and we’re here to help if your item arrives damaged.</p>
           </div>
           <Link href="/shop-with-confidence" className="pdp-trust-card-cta">
             WHY YOU CAN SHOP WITH CONFIDENCE <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>arrow_forward</span>
