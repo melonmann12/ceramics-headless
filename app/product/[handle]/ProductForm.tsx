@@ -419,7 +419,7 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
                   })}
                 </div>
                 {isSetOption && isComboSelected && (
-                  <div style={{ marginTop: '0.75rem', padding: '0.75rem', backgroundColor: 'var(--cream, #FDFBF7)', borderRadius: '8px', fontSize: '0.85rem', color: 'var(--sage, #1E2E24)', border: '1px solid rgba(0,0,0,0.05)' }}>
+                  <div style={{ marginTop: '0.5rem', padding: '0.75rem', backgroundColor: 'var(--cream, #FDFBF7)', borderRadius: '8px', fontSize: '0.85rem', color: 'var(--sage, #1E2E24)', border: '1px solid rgba(0,0,0,0.05)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>inventory_2</span>
                       <span>Includes 1 handmade Matcha Bowl + 1 matching ceramic Holder.</span>
@@ -438,7 +438,7 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
                       <button 
                         onClick={() => setSelectedOptions({ ...selectedOptions, [option.name]: comboVal })}
                         style={{
-                          marginTop: '0.75rem', padding: '0.5rem 0.75rem',
+                          marginTop: '0.5rem', padding: '0.5rem 0.75rem',
                           backgroundColor: 'transparent',
                           border: '1px solid rgba(0,0,0,0.1)',
                           borderRadius: '8px',

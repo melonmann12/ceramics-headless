@@ -28,8 +28,18 @@
   }
 
   .pdp-main {
-    gap: var(--space-5);
-    padding: var(--space-5) 1rem var(--space-3);
+    gap: calc(var(--space-5) * 0.8);
+    padding: calc(var(--space-5) * 0.8) 1rem var(--space-3);
+  }
+
+  /* Tighten spacing between vertical sections in the purchase flow */
+  .pdp-right-col {
+    gap: calc(var(--space-4) * 0.8);
+  }
+
+  /* Tighten spacing between quantity selector and add to cart */
+  .pdp-cart-actions {
+    gap: calc(var(--space-4) * 0.75);
   }
 }
 
