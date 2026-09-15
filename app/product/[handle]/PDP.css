@@ -465,6 +465,24 @@
   box-shadow: var(--shadow-md);
 }
 
+/* Purchase Actions Group */
+.pdp-purchase-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  width: 100%;
+}
+
+.pdp-shop-pay-wrapper {
+  width: 100%;
+  --shop-pay-button-border-radius: 32px;
+  --shopify-accelerated-checkout-button-border-radius: 32px;
+  /* Match Add to Cart mobile height: ~64px */
+  --shop-pay-button-height: 64px;
+  --shopify-accelerated-checkout-button-block-size: 64px;
+  --shopify-accelerated-checkout-button-height: 64px;
+}
+
 .pdp-payment-icons {
   display: flex;
   justify-content: center;
@@ -768,6 +786,13 @@
   .pdp-add-to-cart {
     padding: 1rem;
     font-size: 1.125rem;
+  }
+
+  .pdp-shop-pay-wrapper {
+    /* Match Desktop Add to Cart height: ~54px */
+    --shop-pay-button-height: 54px;
+    --shopify-accelerated-checkout-button-block-size: 54px;
+    --shopify-accelerated-checkout-button-height: 54px;
   }
 }
 

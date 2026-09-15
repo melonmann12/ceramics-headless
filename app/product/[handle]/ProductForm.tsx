@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { trackViewContent, trackAddToCart, normalizeVariantId, waitForMetaCookie } from '@/lib/meta-pixel';
 import { SHIPPING_CONFIG } from '@/lib/config';
 import PaymentMethods from '@/app/components/PaymentMethods';
+import { ShopPayButton } from '@shopify/hydrogen-react';
 
 interface ProductFormProps {
   product: NormalizedProduct;
@@ -479,16 +480,34 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
             </div>
           </div>
 
-          {/* Add to Cart */}
-          {errorMsg && <div style={{ color: 'red', fontSize: '0.875rem', marginBottom: '0.5rem', textAlign: 'center' }}>{errorMsg}</div>}
-          <button
-            className="pdp-add-to-cart"
-            disabled={!isAvailable || isAdding}
-            style={{ opacity: isAvailable && !isAdding ? 1 : 0.5, cursor: isAvailable && !isAdding ? 'pointer' : 'not-allowed' }}
-            onClick={handleAddToCart}
-          >
-            {!isAvailable ? 'OUT OF STOCK' : isAdding ? 'ADDING...' : 'ADD TO CART'}
-          </button>
+          {/* Add to Cart & Shop Pay Group */}
+          <div className="pdp-purchase-actions">
+            {errorMsg && <div style={{ color: 'red', fontSize: '0.875rem', marginBottom: '0.5rem', textAlign: 'center' }}>{errorMsg}</div>}
+            <button
+              className="pdp-add-to-cart"
+              disabled={!isAvailable || isAdding}
+              style={{ opacity: isAvailable && !isAdding ? 1 : 0.5, cursor: isAvailable && !isAdding ? 'pointer' : 'not-allowed' }}
+              onClick={handleAddToCart}
+            >
+              {!isAvailable ? 'OUT OF STOCK' : isAdding ? 'ADDING...' : 'ADD TO CART'}
+            </button>
+            
+            {/* Shop Pay Button */}
+            {isAvailable && selectedVariant && (
+              <div className="pdp-shop-pay-wrapper">
+                <ShopPayButton
+                  storeDomain={
+                    process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN
+                      ? `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}`
+                      : 'https://matcha-9500.myshopify.com'
+                  }
+                  variantIdsAndQuantities={[{ id: selectedVariant.id, quantity: qty }]}
+                  channel="headless"
+                  width="100%"
+                />
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="pdp-payment-container" style={{ marginTop: '0.15rem', marginBottom: '0' }}>
@@ -510,6 +529,23 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
           <Link href="/shop-with-confidence" className="pdp-trust-card-cta">
             WHY YOU CAN SHOP WITH CONFIDENCE <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>arrow_forward</span>
           </Link>
+          <div style={{ textAlign: 'center', marginTop: '-0.25rem' }}>
+            <a 
+              href="https://shop.app/m/ashpia_ceramic?dynamicFilterVAvailability=%7B%22available%22%3Atrue%7D&inStock=true&utm_source=shop_app&sortBy=MOST_SALES"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontSize: '0.75rem',
+                color: 'rgba(253, 251, 247, 0.8)',
+                textDecoration: 'underline',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.25rem'
+              }}
+            >
+              View ASHPIA on Shop <span className="material-symbols-outlined" style={{ fontSize: '0.8rem' }}>open_in_new</span>
+            </a>
+          </div>
         </div>
 
         {/* Accordions */}

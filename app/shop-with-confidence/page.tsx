@@ -55,6 +55,32 @@ export default function ShopWithConfidencePage() {
           ],
         },
         {
+          title: 'ALSO AVAILABLE ON SHOP',
+          body: [
+            'You can also browse ASHPIA through our Shop storefront, giving you another way to discover our products within Shopify\'s shopping ecosystem.',
+            <a 
+              key="shop-store-link"
+              href="https://shop.app/m/ashpia_ceramic?dynamicFilterVAvailability=%7B%22available%22%3Atrue%7D&inStock=true&utm_source=shop_app&sortBy=MOST_SALES" 
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: '0.35rem', 
+                color: 'var(--plum)', 
+                fontWeight: 700, 
+                fontSize: '0.85rem', 
+                textTransform: 'uppercase', 
+                letterSpacing: '0.05em',
+                textDecoration: 'none',
+                marginTop: '0.5rem'
+              }}
+            >
+              VIEW ASHPIA ON SHOP <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>open_in_new</span>
+            </a>
+          ],
+        },
+        {
           title: 'NEED HELP?',
           body: [
             'If you have a question before or after placing an order, you can contact us through our Contact page.',
