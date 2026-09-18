@@ -54,25 +54,31 @@ export default function Footer() {
               <Link href="/terms" className="footer-link">TERMS</Link>
             </div>
 
-            <div className="footer-socials">
-              <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noopener noreferrer" aria-label="ASHPIA on Facebook" className="footer-social-link">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                </svg>
-              </a>
-              <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" aria-label="ASHPIA on Instagram" className="footer-social-link">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                </svg>
-              </a>
-              <a href={SOCIAL_LINKS.pinterest} target="_blank" rel="noopener noreferrer" aria-label="ASHPIA on Pinterest" className="footer-social-link">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <circle cx="12" cy="12" r="9"></circle>
-                  <line x1="8" y1="20" x2="12" y2="11"></line>
-                  <path d="M10.7 14c.437 1.263 1.43 2 2.55 2c2.071 0 3.75 -1.554 3.75 -4a5 5 0 1 0 -9.7 1.7"></path>
-                </svg>
+            <div className="footer-social-wrapper">
+              <div className="footer-socials">
+                <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noopener noreferrer" aria-label="ASHPIA on Facebook" className="footer-social-link">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                  </svg>
+                </a>
+                <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" aria-label="ASHPIA on Instagram" className="footer-social-link">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                  </svg>
+                </a>
+                <a href={SOCIAL_LINKS.pinterest} target="_blank" rel="noopener noreferrer" aria-label="ASHPIA on Pinterest" className="footer-social-link">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <line x1="8" y1="20" x2="12" y2="11"></line>
+                    <path d="M10.7 14c.437 1.263 1.43 2 2.55 2c2.071 0 3.75 -1.554 3.75 -4a5 5 0 1 0 -9.7 1.7"></path>
+                  </svg>
+                </a>
+              </div>
+              <a href={`mailto:${SOCIAL_LINKS.email}`} className="footer-email-pill" aria-label="Email Ashpia">
+                <span className="material-symbols-outlined">mail</span>
+                {SOCIAL_LINKS.email}
               </a>
             </div>
           </div>

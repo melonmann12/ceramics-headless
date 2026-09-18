@@ -50,8 +50,14 @@
   grid-area: nav2;
 }
 
-.footer-socials {
+.footer-social-wrapper {
   grid-area: social;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.footer-socials {
   display: flex;
   align-items: center;
   gap: 1.5rem;
@@ -119,6 +125,32 @@
 
 .footer-link:hover {
   color: var(--cream);
+}
+
+.footer-email-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-pill, 9999px);
+  border: 1px solid rgba(241, 235, 224, 0.2);
+  color: rgba(241, 235, 224, 0.9);
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  width: fit-content;
+}
+
+.footer-email-pill:hover {
+  color: var(--cream);
+  border-color: rgba(241, 235, 224, 0.4);
+  background: rgba(241, 235, 224, 0.05);
+}
+
+.footer-email-pill .material-symbols-outlined {
+  font-size: 1.1rem;
+  opacity: 0.9;
 }
 
 .footer-newsletter-wrapper {

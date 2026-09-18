@@ -16,7 +16,11 @@ export default function ContactPage() {
         {
           title: 'Questions about your order, shipping, returns, or product care?',
           body: [
-            'Send us a message using the chat button in the bottom-right corner of the page.',
+            <span key="email">
+              Email us at{' '}
+              <a href={`mailto:${SOCIAL_LINKS.email}`} style={{ textDecoration: 'underline', color: 'var(--plum)', fontWeight: 600 }}>{SOCIAL_LINKS.email}</a>
+              {' '}or send us a message using the chat button in the bottom-right corner of the page.
+            </span>,
             'For order-related questions, please include your order number so we can help you faster.',
             <span key="social">
               You can also reach us through{' '}

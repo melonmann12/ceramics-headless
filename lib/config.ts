@@ -12,4 +12,5 @@ export const SOCIAL_LINKS = {
   facebook: "https://www.facebook.com/profile.php?id=61593868438485",
   instagram: "https://www.instagram.com/ashpia_ceramic/",
   pinterest: "https://www.pinterest.com/ashpia_ceramic/matcha-tea-aesthetics/",
+  email: "hello@ashpia.com",
 };

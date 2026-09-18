@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import PolicyPage from '@/app/components/PolicyPage';
 import Link from 'next/link';
+import { SOCIAL_LINKS } from '@/lib/config';
 
 export const metadata: Metadata = {
   title: 'Shop With Confidence | ASHPIA',
@@ -83,7 +84,10 @@ export default function ShopWithConfidencePage() {
         {
           title: 'NEED HELP?',
           body: [
-            'If you have a question before or after placing an order, you can contact us through our Contact page.',
+            <span key="help-text">
+              Questions before or after ordering?<br />
+              Contact us at <a href={`mailto:${SOCIAL_LINKS.email}`} style={{ textDecoration: 'underline', color: 'var(--plum)', fontWeight: 600 }}>{SOCIAL_LINKS.email}</a> or through our Contact page.
+            </span>,
             <Link 
               key="contact-link"
               href="/contact" 
