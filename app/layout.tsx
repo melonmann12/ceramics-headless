@@ -62,7 +62,7 @@ export default function RootLayout({
         </CartProvider>
         <ShopifyAnalytics />
         {process.env.META_PIXEL_ID && <MetaPixel pixelId={process.env.META_PIXEL_ID} />}
-        <GorgiasChat />
+        {/* <GorgiasChat /> - Temporarily disabled chatbox, can be re-enabled later */}
       </body>
     </html>
   );
