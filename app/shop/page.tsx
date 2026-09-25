@@ -24,7 +24,7 @@ export default async function ShopPage(props: {
   await connection();
   const searchParams = await props.searchParams;
   
-  const sort = typeof searchParams?.sort === 'string' ? searchParams.sort : 'highest-rated';
+  const sort = typeof searchParams?.sort === 'string' ? searchParams.sort : 'best-selling';
   const availability = typeof searchParams?.availability === 'string' ? searchParams.availability : '';
   const price = typeof searchParams?.price === 'string' ? searchParams.price : '';
 

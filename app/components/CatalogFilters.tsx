@@ -41,7 +41,7 @@ export default function CatalogFilters() {
         <select
           id="sort"
           className="search-filter-select"
-          value={searchParams.get('sort') || 'highest-rated'}
+          value={searchParams.get('sort') || 'best-selling'}
           onChange={(e) => handleFilterChange('sort', e.target.value)}
         >
           <option value="highest-rated">Highest Rated</option>
