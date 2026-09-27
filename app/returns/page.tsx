@@ -17,8 +17,8 @@ export default function ReturnsPage() {
           body: [
             'Because ASHPIA pieces are handmade and often made to order, work on your order may begin shortly after it is placed. If you change your mind, please contact us as soon as possible.',
             'If you request cancellation within 72 hours of placing your order and the order has not been dispatched, you may receive an 80% refund of the eligible product subtotal.',
-            'If you request cancellation more than 72 hours after placing your order but before 14 days have passed, and the order has not been dispatched, you may receive a 50% refund of the eligible product subtotal.',
-            'Once 14 days have passed from the time the order was placed, voluntary order cancellation is no longer eligible for a refund.',
+            'If you request cancellation more than 72 hours after placing your order but before 10 days have passed, and the order has not been dispatched, you may receive a 50% refund of the eligible product subtotal.',
+            'Once 10 days have passed from the time the order was placed, voluntary order cancellation is no longer eligible for a refund.',
             'Once an order has been dispatched, it can no longer be cancelled under this pre-dispatch cancellation policy.',
             'This cancellation policy is separate from our damaged-item, shipping, and applicable post-delivery return policies.',
             'Nothing in this voluntary cancellation policy limits any rights you may have under applicable consumer law.',

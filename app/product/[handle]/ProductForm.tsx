@@ -601,8 +601,8 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
                     <ul className="pdp-care-list">
                       <li>Because each piece is handmade and often made to order, cancellation refunds decrease as work progresses.</li>
                       <li>Cancel within 72 hours before dispatch: 80% refund of the eligible product subtotal.</li>
-                      <li>After 72 hours but before 14 days, before dispatch: 50% refund.</li>
-                      <li>After 14 days: no voluntary cancellation refund.</li>
+                      <li>After 72 hours but before 10 days, before dispatch: 50% refund.</li>
+                      <li>From 10 days onward: no voluntary cancellation refund.</li>
                       <li>Once dispatched, the order is no longer eligible for pre-dispatch cancellation.</li>
                       <li style={{ marginTop: '0.5rem' }}>View our full <Link href="/returns" style={{ textDecoration: 'underline', color: 'var(--plum)', fontWeight: 600 }}>Returns & Refunds Policy</Link> for details.</li>
                     </ul>
