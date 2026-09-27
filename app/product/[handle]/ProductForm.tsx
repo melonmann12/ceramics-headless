@@ -187,7 +187,7 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
 
   // Temporarily hide DESCRIPTION tab
   // const accordionTabs = ['DESCRIPTION', 'SHIPPING & RETURNS'];
-  const accordionTabs = ['SHIPPING & DELIVERY', 'HANDMADE & CARE'];
+  const accordionTabs = ['SHIPPING & DELIVERY', 'HANDMADE & CARE', 'CANCELLATIONS & REFUNDS'];
 
   // Format currency
   const price = selectedVariant
@@ -597,6 +597,16 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
                       <li>Wash with soap and water. Colors are designed to remain vibrant with normal use.</li>
                     </ul>
                   )}
+                  {tab === 'CANCELLATIONS & REFUNDS' && (
+                    <ul className="pdp-care-list">
+                      <li>Because each piece is handmade and often made to order, cancellation refunds decrease as work progresses.</li>
+                      <li>Cancel within 72 hours before dispatch: 80% refund of the eligible product subtotal.</li>
+                      <li>After 72 hours but before 14 days, before dispatch: 50% refund.</li>
+                      <li>After 14 days: no voluntary cancellation refund.</li>
+                      <li>Once dispatched, the order is no longer eligible for pre-dispatch cancellation.</li>
+                      <li style={{ marginTop: '0.5rem' }}>View our full <Link href="/returns" style={{ textDecoration: 'underline', color: 'var(--plum)', fontWeight: 600 }}>Returns & Refunds Policy</Link> for details.</li>
+                    </ul>
+                  )}
                 </div>
               </div>
             );
@@ -608,7 +618,7 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
           <h3 className="pdp-wcu-title">Why Choose Us?</h3>
           <div className="pdp-wcu-grid">
             {[
-              { icon: 'assignment_return', title: '48-HOUR RETURNS', desc: 'Returns accepted within 48 hours of delivery.' },
+              { icon: 'support_agent', title: '48-HOUR DAMAGE SUPPORT', desc: 'If your item arrives damaged, contact us within 48 hours of delivery with photos and we’ll help arrange a replacement.' },
               { icon: 'inventory_2', title: 'MADE TO ORDER', desc: 'Every piece is crafted specifically for your order.' },
               { icon: 'local_florist', title: 'UNIQUE VARIATIONS', desc: 'Natural handmade variations make each piece one of a kind.' },
               { icon: 'verified_user', title: 'SAFE ARRIVAL GUARANTEE', desc: 'Arrived damaged? Contact us within 48 hours with photos and we’ll replace it for free.' },
