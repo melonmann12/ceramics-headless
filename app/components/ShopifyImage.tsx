@@ -14,6 +14,31 @@ const shopifyLoader = ({ src, width }: ImageLoaderProps) => {
   }
 };
 
-export default function ShopifyImage(props: ImageProps) {
-  return <Image {...props} loader={shopifyLoader} />;
+export default function ShopifyImage({ 
+  onContextMenu, 
+  onDragStart, 
+  draggable, 
+  style, 
+  ...rest 
+}: ImageProps) {
+  return (
+    <Image 
+      {...rest} 
+      loader={shopifyLoader}
+      draggable={draggable ?? false}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        if (onContextMenu) onContextMenu(e);
+      }}
+      onDragStart={(e) => {
+        e.preventDefault();
+        if (onDragStart) onDragStart(e);
+      }}
+      style={{
+        userSelect: 'none',
+        WebkitUserSelect: 'none',
+        ...style
+      }}
+    />
+  );
 }

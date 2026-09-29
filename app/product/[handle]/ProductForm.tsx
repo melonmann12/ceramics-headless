@@ -338,6 +338,15 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
               <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>package_2</span>
               <span>Trackable after dispatch</span>
             </div>
+            {isAvailable && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 500 }}>
+                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>account_balance_wallet</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', flexWrap: 'wrap' }}>
+                  Buy now, pay later with 
+                  <img src="/payment-logos/wallets/shop-pay.svg" alt="Shop Pay" style={{ height: '14px', width: 'auto', display: 'inline-block' }} loading="lazy" />
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -419,7 +428,7 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
                   })}
                 </div>
                 {isSetOption && isComboSelected && (
-                  <div style={{ marginTop: '0.5rem', padding: '0.75rem', backgroundColor: 'var(--cream, #FDFBF7)', borderRadius: '8px', fontSize: '0.85rem', color: 'var(--sage, #1E2E24)', border: '1px solid rgba(0,0,0,0.05)' }}>
+                  <div style={{ marginTop: '0.35rem', padding: '0.75rem', backgroundColor: 'var(--cream, #FDFBF7)', borderRadius: '8px', fontSize: '0.85rem', color: 'var(--sage, #1E2E24)', border: '1px solid rgba(0,0,0,0.05)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>inventory_2</span>
                       <span>Includes 1 handmade Matcha Bowl + 1 matching ceramic Holder.</span>
@@ -438,7 +447,7 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
                       <button 
                         onClick={() => setSelectedOptions({ ...selectedOptions, [option.name]: comboVal })}
                         style={{
-                          marginTop: '0.5rem', padding: '0.5rem 0.75rem',
+                          marginTop: '0.35rem', padding: '0.5rem 0.75rem',
                           backgroundColor: 'transparent',
                           border: '1px solid rgba(0,0,0,0.1)',
                           borderRadius: '8px',
@@ -510,7 +519,7 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
           </div>
         </div>
 
-        <div className="pdp-payment-container" style={{ marginTop: '0.15rem', marginBottom: '0' }}>
+        <div className="pdp-payment-container" style={{ marginTop: '0.625rem', marginBottom: '0' }}>
           <p style={{ fontSize: '0.75rem', color: 'var(--sage)', marginBottom: '0.25rem', fontWeight: 500, letterSpacing: '0.05em' }}>SECURE CHECKOUT WITH</p>
           <PaymentMethods />
         </div>
