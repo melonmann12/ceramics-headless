@@ -106,6 +106,23 @@ export default function CartDrawer() {
                     <p className="cart-item-options">
                       {merchandise.title !== 'Default Title' ? merchandise.title : ''}
                     </p>
+
+                    {node.attributes && node.attributes.length > 0 && (
+                      <div className="cart-item-attributes" style={{ marginTop: '0.25rem', marginBottom: '0.25rem' }}>
+                        {node.attributes.map((attr: { key: string, value: string }, idx: number) => (
+                          <div key={idx} style={{ fontSize: '0.75rem', color: 'var(--sage)', display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.25rem' }}>
+                            <span style={{ fontWeight: 600 }}>{attr.key}:</span>
+                            {attr.value.startsWith('http') || attr.value.startsWith('/uploads') ? (
+                              <a href={attr.value} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center' }}>
+                                <img src={attr.value} alt={attr.key} style={{ width: '32px', height: '32px', objectFit: 'cover', borderRadius: '4px', border: '1px solid rgba(0,0,0,0.1)' }} />
+                              </a>
+                            ) : (
+                              <span>{attr.value}</span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     
                     <p className="cart-item-price">{price}</p>
                     

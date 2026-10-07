@@ -11,7 +11,7 @@ interface CartContextType {
   updatingLineId: string | null;
   openCart: () => void;
   closeCart: () => void;
-  addCartItem: (variantId: string, quantity: number) => Promise<void>;
+  addCartItem: (variantId: string, quantity: number, attributes?: { key: string; value: string }[]) => Promise<void>;
   updateCartItem: (lineId: string, quantity: number) => Promise<void>;
   removeCartItem: (lineId: string) => Promise<void>;
 }
@@ -80,11 +80,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
 
-  const addCartItem = async (variantId: string, quantity: number) => {
+  const addCartItem = async (variantId: string, quantity: number, attributes?: { key: string; value: string }[]) => {
     if (isMutating) return;
     setIsMutating(true);
     try {
-      const updatedCart = await addToCartAction(variantId, quantity || 1);
+      const updatedCart = await addToCartAction(variantId, quantity || 1, attributes);
       setValidCart(updatedCart);
       setIsOpen(true); // Auto-open cart on add
     } finally {

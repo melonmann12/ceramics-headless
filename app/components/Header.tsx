@@ -61,6 +61,7 @@ export default function Header() {
           <Link href="/collections/best-seller" className={`nav-link ${pathname === '/collections/best-seller' ? 'active' : ''}`}>BEST SELLER</Link>
           <Link href="/collections/matcha-set" className={`nav-link ${pathname === '/collections/matcha-set' ? 'active' : ''}`}>MATCHA SET</Link>
           <Link href="/collections/ceramic-mug" className={`nav-link ${pathname === '/collections/ceramic-mug' ? 'active' : ''}`}>MUGS</Link>
+          <Link href="/collections/whimsy-walls" className={`nav-link ${pathname === '/collections/whimsy-walls' ? 'active' : ''}`}>WALL DECOR</Link>
           <div className="nav-dropdown-container">
             <button className="nav-link nav-dropdown-toggle">COLLECTIONS ▾</button>
             <div className="nav-dropdown-menu">
@@ -68,6 +69,7 @@ export default function Header() {
               <Link href="/collections/matcha-set" className="nav-dropdown-item">MATCHA SET</Link>
               <Link href="/collections/ceramic-mug" className="nav-dropdown-item">CERAMIC MUGS</Link>
               <Link href="/collections/halloween" className="nav-dropdown-item">HALLOWEEN</Link>
+              <Link href="/collections/whimsy-walls" className="nav-dropdown-item">WALL DECOR</Link>
             </div>
           </div>
         </div>
@@ -89,6 +91,7 @@ export default function Header() {
           <Link href="/collections/best-seller" className={`mobile-nav-link ${pathname === '/collections/best-seller' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>BEST SELLER</Link>
           <Link href="/collections/matcha-set" className={`mobile-nav-link ${pathname === '/collections/matcha-set' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>MATCHA SET</Link>
           <Link href="/collections/ceramic-mug" className={`mobile-nav-link ${pathname === '/collections/ceramic-mug' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>MUGS</Link>
+          <Link href="/collections/whimsy-walls" className={`mobile-nav-link ${pathname === '/collections/whimsy-walls' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>WALL DECOR</Link>
           <div className="mobile-nav-item-group">
             <button 
               className="mobile-nav-link mobile-dropdown-toggle" 
@@ -102,6 +105,7 @@ export default function Header() {
                 <Link href="/collections/matcha-set" className="mobile-nav-sublink" onClick={() => setMobileMenuOpen(false)}>MATCHA SET</Link>
                 <Link href="/collections/ceramic-mug" className="mobile-nav-sublink" onClick={() => setMobileMenuOpen(false)}>CERAMIC MUGS</Link>
                 <Link href="/collections/halloween" className="mobile-nav-sublink" onClick={() => setMobileMenuOpen(false)}>HALLOWEEN</Link>
+                <Link href="/collections/whimsy-walls" className="mobile-nav-sublink" onClick={() => setMobileMenuOpen(false)}>WALL DECOR</Link>
               </div>
             )}
           </div>

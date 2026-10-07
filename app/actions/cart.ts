@@ -34,7 +34,7 @@ export async function getCartAction(): Promise<ShopifyCart | null> {
   return cart;
 }
 
-export async function addToCartAction(merchandiseId: string, quantity: number): Promise<ShopifyCart | null> {
+export async function addToCartAction(merchandiseId: string, quantity: number, attributes?: { key: string; value: string }[]): Promise<ShopifyCart | null> {
   const cookieStore = await cookies();
   const cartId = cookieStore.get(CART_COOKIE_NAME)?.value;
   let cart: ShopifyCart | null = null;
@@ -49,7 +49,7 @@ export async function addToCartAction(merchandiseId: string, quantity: number): 
         }
 
         // Try to add to existing cart
-        cart = await addToCart(cartId, [{ merchandiseId, quantity }]);
+        cart = await addToCart(cartId, [{ merchandiseId, quantity, attributes }]);
       } catch (addError: any) {
         console.warn(`Failed to add to existing cart ${cartId}:`, addError.message);
         // Fall through to create a new cart
@@ -59,7 +59,7 @@ export async function addToCartAction(merchandiseId: string, quantity: number): 
 
     // If no cart id, or if adding failed (e.g. invalid cart), create a new one
     if (!cart) {
-      cart = await createCart([{ merchandiseId, quantity }]);
+      cart = await createCart([{ merchandiseId, quantity, attributes }]);
       if (cart) {
         cookieStore.set(CART_COOKIE_NAME, cart.id, {
           maxAge: 60 * 60 * 24 * 7, // 7 days

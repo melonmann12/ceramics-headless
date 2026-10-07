@@ -55,6 +55,10 @@ const CART_FRAGMENT = /* GraphQL */ `
               }
             }
           }
+          attributes {
+            key
+            value
+          }
         }
       }
     }
@@ -82,7 +86,7 @@ export async function getCart(cartId: string): Promise<ShopifyCart | null> {
   return data.cart as ShopifyCart;
 }
 
-export async function createCart(lines: { merchandiseId: string; quantity: number }[]): Promise<ShopifyCart | null> {
+export async function createCart(lines: { merchandiseId: string; quantity: number; attributes?: { key: string; value: string }[] }[]): Promise<ShopifyCart | null> {
   const mutation = /* GraphQL */ `
     ${CART_FRAGMENT}
     mutation cartCreate($input: CartInput) {
@@ -156,7 +160,7 @@ export async function updateCartBuyerIdentity(cartId: string, countryCode: strin
   return data?.cartBuyerIdentityUpdate?.cart as ShopifyCart;
 }
 
-export async function addToCart(cartId: string, lines: { merchandiseId: string; quantity: number }[]): Promise<ShopifyCart | null> {
+export async function addToCart(cartId: string, lines: { merchandiseId: string; quantity: number; attributes?: { key: string; value: string }[] }[]): Promise<ShopifyCart | null> {
   const mutation = /* GraphQL */ `
     ${CART_FRAGMENT}
     mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {

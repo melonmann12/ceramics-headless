@@ -11,6 +11,7 @@
   "dependencies": {
     "@shopify/hydrogen-react": "^2026.4.3",
     "@shopify/storefront-api-client": "^1.0.0",
+    "browser-image-compression": "^2.0.2",
     "dotenv": "^17.4.2",
     "next": "16.3.1",
     "react": "19.2.8",

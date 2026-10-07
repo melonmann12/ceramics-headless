@@ -96,6 +96,10 @@ export interface ShopifyCartLine {
     };
     price: MoneyV2;
   };
+  attributes?: {
+    key: string;
+    value: string;
+  }[];
 }
 
 export interface ShopifyCart {
@@ -137,4 +141,5 @@ export interface NormalizedProduct {
   variants: ShopifyProductVariant[];
   availableForSale: boolean;
   createdAt: string;
+  productType: string;
 }

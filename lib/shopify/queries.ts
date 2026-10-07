@@ -125,6 +125,7 @@ function normalizeProduct(product: ShopifyProduct): NormalizedProduct {
     variants: product.variants.edges.map((e) => e.node),
     availableForSale: product.variants.edges.some((e) => e.node.availableForSale),
     createdAt: product.createdAt || new Date().toISOString(),
+    productType: product.productType,
     // Derive a badge from tags if the store uses them (e.g. tag: "bestseller")
     badge: product.tags.find((t) =>
       ['bestseller', 'new', 'set', 'sale'].includes(t.toLowerCase()),
@@ -220,6 +221,8 @@ export async function getProducts(limit?: number): Promise<NormalizedProduct[]> 
 
 /** Fetch products for a specific collection by handle */
 export async function getCollectionProducts(handle: string, limit?: number): Promise<{ title: string; products: NormalizedProduct[] } | null> {
+  const handlesToTry = handle === 'whimsy-walls' ? ['whimsy-walls', 'candle-holder'] : [handle];
+
   const query = /* GraphQL */ `
     ${PRODUCT_FIELDS}
     query GetCollectionProducts($handle: String!, $first: Int!, $after: String) {
@@ -240,51 +243,59 @@ export async function getCollectionProducts(handle: string, limit?: number): Pro
     }
   `;
 
-  let hasNextPage = true;
-  let endCursor: string | null = null;
-  let allProducts: NormalizedProduct[] = [];
-  let collectionTitle = '';
+  for (const currentHandle of handlesToTry) {
+    let hasNextPage = true;
+    let endCursor: string | null = null;
+    let allProducts: NormalizedProduct[] = [];
+    let collectionTitle = '';
 
-  const fetchSize = limit ? Math.min(limit, 250) : 250;
+    const fetchSize = limit ? Math.min(limit, 250) : 250;
 
-  while (hasNextPage) {
-    const { data, errors } = await shopifyClient.request<{ collection?: any }>(query, {
-      variables: { handle, first: fetchSize, after: endCursor },
-    });
-
-    if (errors) {
-      console.error('[Shopify] getCollectionProducts errors:', errors);
-      break;
-    }
-
-    if (!data?.collection) {
-      console.error('[Shopify] Collection not found or unavailable', {
-        handle,
-        status: 200,
-        collectionIsNull: true
+    while (hasNextPage) {
+      const { data, errors } = await shopifyClient.request<{ collection?: any }>(query, {
+        variables: { handle: currentHandle, first: fetchSize, after: endCursor },
       });
-      if (allProducts.length === 0) return null;
-      break;
+
+      if (errors) {
+        console.error('[Shopify] getCollectionProducts errors:', errors);
+        break;
+      }
+
+      if (!data?.collection) {
+        break;
+      }
+
+      collectionTitle = data.collection.title;
+      const productsData: any = data.collection.products;
+      
+      const pageProducts = (productsData as { edges: { node: ShopifyProduct }[] }).edges.map((e) =>
+        normalizeProduct(e.node),
+      );
+      allProducts.push(...pageProducts);
+
+      if (limit && allProducts.length >= limit) {
+        allProducts = allProducts.slice(0, limit);
+        break;
+      }
+
+      hasNextPage = productsData.pageInfo.hasNextPage;
+      endCursor = productsData.pageInfo.endCursor;
     }
 
-    collectionTitle = data.collection.title;
-    const productsData: any = data.collection.products;
-    
-    const pageProducts = (productsData as { edges: { node: ShopifyProduct }[] }).edges.map((e) =>
-      normalizeProduct(e.node),
-    );
-    allProducts.push(...pageProducts);
-
-    if (limit && allProducts.length >= limit) {
-      allProducts = allProducts.slice(0, limit);
-      break;
+    if (allProducts.length > 0 || collectionTitle) {
+      return { 
+        title: handle === 'whimsy-walls' && collectionTitle === 'candle-holder' ? 'Whimsy Walls' : collectionTitle || 'Whimsy Walls', 
+        products: allProducts 
+      };
     }
-
-    hasNextPage = productsData.pageInfo.hasNextPage;
-    endCursor = productsData.pageInfo.endCursor;
   }
 
-  return { title: collectionTitle, products: allProducts };
+  console.error('[Shopify] Collection not found or unavailable', {
+    handle,
+    status: 200,
+    collectionIsNull: true
+  });
+  return null;
 }
 
 /** Search published Shopify products by a shopper-entered query */

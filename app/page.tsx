@@ -21,6 +21,7 @@ export default async function HomePage() {
   await connection();
   const featuredCollection = await getCollectionProducts('best-seller', 20);
   const mugsCollection = await getCollectionProducts('ceramic-mug', 50);
+  const wallDecorCollection = await getCollectionProducts('whimsy-walls', 20);
   
   const mugHandles = new Set((mugsCollection?.products || []).map(p => p.handle));
   const products = (featuredCollection?.products || [])
@@ -72,7 +73,10 @@ export default async function HomePage() {
             ctaLabel="SHOP HALLOWEEN →"
           />
         )}
-        <HomepageMerchandising mugsProducts={mugsCollection?.products?.slice(0, 4) || []} />
+        <HomepageMerchandising 
+          mugsProducts={mugsCollection?.products?.slice(0, 4) || []} 
+          wallDecorProducts={wallDecorCollection?.products?.slice(0, 4) || []}
+        />
       </main>
       <Footer />
     </>

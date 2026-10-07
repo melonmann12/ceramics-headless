@@ -6,9 +6,13 @@ import './HomepageMerchandising.css';
 
 interface HomepageMerchandisingProps {
   mugsProducts?: NormalizedProduct[];
+  wallDecorProducts?: NormalizedProduct[];
 }
 
-export default function HomepageMerchandising({ mugsProducts = [] }: HomepageMerchandisingProps) {
+export default function HomepageMerchandising({ 
+  mugsProducts = [],
+  wallDecorProducts = []
+}: HomepageMerchandisingProps) {
   return (
     <>
       <section className="craft-section">
@@ -52,6 +56,18 @@ export default function HomepageMerchandising({ mugsProducts = [] }: HomepageMer
           intro="Playful, functional ceramic mugs made by hand for coffee, tea, and the little rituals of everyday life."
           ctaHref="/collections/ceramic-mug"
           ctaLabel="SHOP MUGS →"
+        />
+      )}
+
+      {wallDecorProducts.length > 0 && (
+        <ProductGrid
+          products={wallDecorProducts}
+          className="homepage-wall-decor"
+          eyebrow="WALL DECOR & HOLDERS"
+          title="HANDMADE WALL HOLDERS & CERAMIC ART FOR YOUR SPACE."
+          intro="Whimsical, functional ceramic key holders and wall sconces handcrafted to bring warmth and charm to your home."
+          ctaHref="/collections/whimsy-walls"
+          ctaLabel="SHOP WALL DECOR →"
         />
       )}
 

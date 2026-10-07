@@ -9,6 +9,7 @@ import { trackViewContent, trackAddToCart, normalizeVariantId, waitForMetaCookie
 import { SHIPPING_CONFIG } from '@/lib/config';
 import PaymentMethods from '@/app/components/PaymentMethods';
 import { ShopPayButton } from '@shopify/hydrogen-react';
+import PhotoUploader from '@/app/components/PhotoUploader';
 
 interface ProductFormProps {
   product: NormalizedProduct;
@@ -125,15 +126,37 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
   const [qty, setQty] = useState(1);
   const [errorMsg, setErrorMsg] = useState('');
   const [isAdding, setIsAdding] = useState(false);
+  const [uploadedPhotoUrl, setUploadedPhotoUrl] = useState<string | null>(null);
+
+  const isWallHolder = product.productType?.toLowerCase().includes('wall holder') || 
+                       product.productType?.toLowerCase().includes('key holder') ||
+                       product.title.toLowerCase().includes('wall holder') ||
+                       product.title.toLowerCase().includes('key holder');
+
+  const isHolderOrSconce = Boolean(
+    (product as any).collections?.some((c: any) => 
+      ['wall-holders', 'holders', 'sconces', 'candle-holders'].includes(c.handle)
+    ) || 
+    /holder|sconce|candle/i.test(product.productType || '') || 
+    /holder|sconce|candle/i.test(product.title || '')
+  );
 
   const { addCartItem } = useCart();
 
   const handleAddToCart = async () => {
     if (!selectedVariant) return;
+    if (isWallHolder && !uploadedPhotoUrl) {
+      setErrorMsg('Please upload a photo for your custom wall holder.');
+      return;
+    }
+
     setErrorMsg('');
     setIsAdding(true);
     try {
-      await addCartItem(selectedVariant.id, qty);
+      const attributes = uploadedPhotoUrl 
+        ? [{ key: 'Custom Printed Photo', value: uploadedPhotoUrl }] 
+        : undefined;
+      await addCartItem(selectedVariant.id, qty, attributes);
 
       const itemPrice = parseFloat(selectedVariant.price.amount);
       const numericVariantId = normalizeVariantId(selectedVariant.id);
@@ -364,25 +387,42 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
             return (
               <div key={option.id} className="pdp-selector-section">
                 <div className="pdp-selector-header">
-                  <h4 className="pdp-selector-title">{option.name.toUpperCase()}: {selectedOptions[option.name]}</h4>
+                  <h4 className="pdp-selector-title">
+                    {isHolderOrSconce ? `CHOOSE YOUR ${option.name.toUpperCase()}:` : `${option.name.toUpperCase()}: ${selectedOptions[option.name]}`}
+                  </h4>
                 </div>
-                <div className="pdp-swatches-grid">
-                  {option.values.map((val) => (
-                    <button
-                      key={val}
-                      className={`pdp-swatch-wrapper ${selectedOptions[option.name] === val ? 'active' : ''}`}
-                      onClick={() => setSelectedOptions({ ...selectedOptions, [option.name]: val })}
-                      aria-label={`Select ${val} ${option.name}`}
-                      aria-pressed={selectedOptions[option.name] === val}
-                    >
-                      <div
-                        className="pdp-swatch-color"
-                        style={{ backgroundColor: knownColors[val.toUpperCase()] || '#ccc' }}
-                      ></div>
-                      <span className="pdp-swatch-label">{val}</span>
-                    </button>
-                  ))}
-                </div>
+                {isHolderOrSconce ? (
+                  <div className="pdp-pill-swatches">
+                    {option.values.map((val) => (
+                      <button
+                        key={val}
+                        className={`pdp-pill-swatch ${selectedOptions[option.name] === val ? 'active' : ''}`}
+                        onClick={() => setSelectedOptions({ ...selectedOptions, [option.name]: val })}
+                        aria-pressed={selectedOptions[option.name] === val}
+                      >
+                        {val}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="pdp-swatches-grid">
+                    {option.values.map((val) => (
+                      <button
+                        key={val}
+                        className={`pdp-swatch-wrapper ${selectedOptions[option.name] === val ? 'active' : ''}`}
+                        onClick={() => setSelectedOptions({ ...selectedOptions, [option.name]: val })}
+                        aria-label={`Select ${val} ${option.name}`}
+                        aria-pressed={selectedOptions[option.name] === val}
+                      >
+                        <div
+                          className="pdp-swatch-color"
+                          style={{ backgroundColor: knownColors[val.toUpperCase()] || '#ccc' }}
+                        ></div>
+                        <span className="pdp-swatch-label">{val}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             );
           } else {
@@ -478,6 +518,11 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
           }
         })}
 
+        {/* Photo Uploader for Wall Holders */}
+        {isWallHolder && (
+          <PhotoUploader onPhotoUploaded={(url) => setUploadedPhotoUrl(url)} />
+        )}
+
         {/* Cart Actions Container */}
         <div className="pdp-cart-actions">
           {/* Quantity + Availability */}
@@ -494,15 +539,15 @@ export default function ProductForm({ product, ratingSummary }: ProductFormProps
             {errorMsg && <div style={{ color: 'red', fontSize: '0.875rem', marginBottom: '0.5rem', textAlign: 'center' }}>{errorMsg}</div>}
             <button
               className="pdp-add-to-cart"
-              disabled={!isAvailable || isAdding}
-              style={{ opacity: isAvailable && !isAdding ? 1 : 0.5, cursor: isAvailable && !isAdding ? 'pointer' : 'not-allowed' }}
+              disabled={!isAvailable || isAdding || (isWallHolder && !uploadedPhotoUrl)}
+              style={{ opacity: isAvailable && !isAdding && !(isWallHolder && !uploadedPhotoUrl) ? 1 : 0.5, cursor: isAvailable && !isAdding && !(isWallHolder && !uploadedPhotoUrl) ? 'pointer' : 'not-allowed' }}
               onClick={handleAddToCart}
             >
               {!isAvailable ? 'OUT OF STOCK' : isAdding ? 'ADDING...' : 'ADD TO CART'}
             </button>
             
             {/* Shop Pay Button */}
-            {isAvailable && selectedVariant && (
+            {isAvailable && selectedVariant && !isWallHolder && (
               <div className="pdp-shop-pay-wrapper">
                 <ShopPayButton
                   storeDomain={
