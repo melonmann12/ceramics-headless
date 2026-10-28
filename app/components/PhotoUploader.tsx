@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import imageCompression from 'browser-image-compression';
 import './PhotoUploader.css';
 
@@ -14,12 +14,23 @@ export default function PhotoUploader({ onPhotoUploaded }: PhotoUploaderProps) {
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-      setError('Please upload an image file.');
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      setError('Please upload a JPG, PNG, or WEBP image.');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError('The image must be 5MB or smaller.');
       return;
     }
 
@@ -48,17 +59,24 @@ export default function PhotoUploader({ onPhotoUploaded }: PhotoUploaderProps) {
         body: formData,
       });
 
+      const data: unknown = await res.json().catch(() => null);
       if (!res.ok) {
-        throw new Error('Upload failed');
+        const message = typeof data === 'object' && data !== null
+          && 'error' in data && typeof data.error === 'string'
+          ? data.error
+          : 'Failed to upload photo. Please try again.';
+        throw new Error(message);
       }
 
-      const data = await res.json();
+      if (typeof data !== 'object' || data === null || !('url' in data) || typeof data.url !== 'string') {
+        throw new Error('The upload completed without a valid image reference. Please try again.');
+      }
       
       // Pass the uploaded URL back to the parent
       onPhotoUploaded(data.url);
     } catch (err) {
-      console.error(err);
-      setError('Failed to upload photo. Please try again.');
+      console.error('[photo-uploader] Upload failed');
+      setError(err instanceof Error ? err.message : 'Failed to upload photo. Please try again.');
       setPreviewUrl(null);
       onPhotoUploaded(null);
     } finally {
@@ -104,6 +122,7 @@ export default function PhotoUploader({ onPhotoUploaded }: PhotoUploaderProps) {
       {previewUrl && !isUploading && (
         <div className="photo-uploader-preview-container">
           <img src={previewUrl} alt="Uploaded preview" className="photo-uploader-preview-img" />
+          <p role="status">Photo uploaded successfully.</p>
           <button className="photo-uploader-remove-btn" onClick={handleRemove}>
             <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>delete</span>
             Remove / Change Photo
@@ -121,7 +140,7 @@ export default function PhotoUploader({ onPhotoUploaded }: PhotoUploaderProps) {
         type="file"
         ref={fileInputRef}
         onChange={handleFileChange}
-        accept="image/*"
+        accept="image/jpeg,image/png,image/webp"
         style={{ display: 'none' }}
       />
     </div>
