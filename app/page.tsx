@@ -62,7 +62,12 @@ export default async function HomePage() {
           ctaLabel="SHOP BEST SELLERS →"
         />
         <Benefits />
-        {halloweenProducts.length > 0 && (
+        {/*
+          HALLOWEEN CERAMICS SECTION
+          Temporarily hidden because Halloween season has ended.
+          Uncomment the component below to restore it.
+        */}
+        {/* {halloweenProducts.length > 0 && (
           <ProductGrid
             products={halloweenProducts}
             className="homepage-halloween"
@@ -72,7 +77,7 @@ export default async function HomePage() {
             ctaHref="/collections/halloween"
             ctaLabel="SHOP HALLOWEEN →"
           />
-        )}
+        )} */}
         <HomepageMerchandising 
           mugsProducts={mugsCollection?.products?.slice(0, 4) || []} 
           wallDecorProducts={wallDecorCollection?.products?.slice(0, 4) || []}
